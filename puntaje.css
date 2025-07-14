@@ -1,0 +1,114 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: rgb(247, 231, 204);
+  color: #2e2a1c;
+  min-height: 100vh;
+  padding: 20px;
+}
+.boton-menu {
+  background: none;
+  border: none;
+  color: #3e2f1c;
+  font-size: 2rem;
+  cursor: pointer;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+}
+.boton-menu:hover {
+  color: #8b5e34;
+}
+.navegacion-lateral {
+  position: fixed;
+  top: 0;
+  left: -220px;
+  width: 220px;
+  height: 100%;
+  background-color: #e8dcb1;
+  padding: 80px 20px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+.navegacion-lateral.abierto {
+  left: 0;
+}
+.lista-menu {
+  list-style: none;
+}
+.lista-menu li {
+  margin-bottom: 20px;
+}
+.lista-menu a {
+  color: #3b2d15;
+  text-decoration: none;
+  font-weight: bold;
+  display: block;
+}
+.lista-menu a:hover {
+  color: #7b4c29;
+}
+.titulo-puntaje {
+  text-align: center;
+  margin-top: 80px;
+  font-size: 2rem;
+  color: #3b2d15;
+  font-family: 'Papyrus', fantasy;
+}
+.contenido-puntaje {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 40px;
+  gap: 50px;
+}
+.ganador-partida,
+.ranking-top5 {
+  background-color: #fef6e1;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  width: 280px;
+  text-align: center;
+}
+
+.caja-ganador {
+  border: 2px solid #3b2d15;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+.btn-secundario {
+  background-color: #3b2d15;
+  color: #fef6e1;
+  border: none;
+  padding: 8px 16px;
+  margin-top: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.btn-secundario:hover {
+  background-color: #6b4f28;
+}
+.lista-ranking {
+  list-style: decimal inside;
+  margin-top: 15px;
+  padding-left: 0;
+}
+.lista-ranking li {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+@media (max-width: 600px) {
+  .contenido-puntaje {
+    flex-direction: column;
+    align-items: center;
+  }
+}
