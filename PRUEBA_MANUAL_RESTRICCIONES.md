@@ -1,6 +1,5 @@
-# 🧪 Prueba Manual de Restricciones - Paso a Paso
-
-## 🚀 **Instrucciones de Prueba Inmediata**
+Debuggin usado para probar las restricciones de recintos
+##  **Instrucciones de Prueba Inmediata**
 
 ### **Opción 1: Página de Prueba Dedicada (RECOMENDADA)**
 
@@ -198,7 +197,3 @@ console.log('PruebasRestricciones:', typeof PruebasRestricciones);
 const validador = new ValidadorZona();
 console.log('Validador creado:', validador);
 ```
-
----
-
-**¡Con estas instrucciones deberías poder verificar inmediatamente si las restricciones están funcionando correctamente!** 🎉
