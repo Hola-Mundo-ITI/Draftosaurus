@@ -1,0 +1,270 @@
+/* ======= DISEÑO RESPONSIVO ======= */
+
+/* ======= ESTILOS PARA TABLETS (max-width: 768px) ======= */
+@media (max-width: 768px) {
+  /* Ajustes de diseño */
+  .main-content,
+  #contenido {
+    padding: 100px 15px 60px;
+  }
+
+  #contenido.desplazado {
+    transform: none;
+  }
+
+  /* Typography */
+  .question {
+    font-size: 1.1rem;
+  }
+
+  .titulo {
+    font-size: 1.4rem;
+  }
+
+  /* Buttons */
+  .btn {
+    font-size: 1rem;
+    padding: 12px;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  /* Forms */
+  .form-grid {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .campo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Game specific */
+  .zona-juego {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .encabezado-partida {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+    padding: 15px 20px;
+  }
+
+  .ronda-actual {
+    padding-left: 0;
+  }
+
+  .titulo {
+    padding-right: 0;
+  }
+
+  .datos-juego {
+    justify-content: center;
+  }
+
+  /* Score screen */
+  .contenido-puntaje {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+}
+
+/* ======= ESTILOS PARA MÓVILES (max-width: 600px) ======= */
+@media (max-width: 600px) {
+  /* Forms */
+  .campo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #contenido.desplazado {
+    transform: none;
+  }
+
+  /* Score screen */
+  .contenido-puntaje {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* ======= ESTILOS PARA MÓVILES PEQUEÑOS (max-width: 480px) ======= */
+@media (max-width: 480px) {
+  /* Diseño */
+  body {
+    padding: 20px 15px 60px;
+  }
+
+  /* Typography */
+  .question {
+    font-size: 1rem;
+  }
+
+  .titulo {
+    font-size: 1.2rem;
+  }
+
+  /* Imágenes */
+  .logo-image {
+    max-width: 180px;
+  }
+
+  /* Buttons */
+  .btn {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+
+  .boton-accion,
+  .enlace-texto {
+    font-size: 0.95rem;
+  }
+
+  /* Forms */
+  .caja-formulario {
+    padding: 24px;
+  }
+
+  .grupo-campo input {
+    font-size: 0.95rem;
+  }
+
+  /* Game specific */
+  .dinosaurio {
+    width: 80px;
+    height: 80px;
+  }
+
+  .tablero-juego {
+    width: 90vw;
+    height: 90vw;
+    max-width: 400px;
+    max-height: 400px;
+  }
+
+  .dado-virtual {
+    width: 70px;
+    height: 70px;
+  }
+
+  .boton-puntaje {
+    width: 100px;
+    height: 45px;
+    font-size: 20px;
+  }
+
+  /* Ajustes del menú */
+  .boton-menu,
+  .menu-icon {
+    font-size: 1.6rem;
+  }
+
+  .offcanvas-menu,
+  .navegacion-lateral,
+  .menu-lateral {
+    width: 200px;
+    left: -200px;
+  }
+
+  #contenido.desplazado {
+    transform: translateX(200px);
+  }
+}
+
+/* ======= ESTILOS PARA MÓVILES EXTRA PEQUEÑOS (max-width: 360px) ======= */
+@media (max-width: 360px) {
+  /* Reducir aún más los tamaños para pantallas muy pequeñas */
+  .main-content,
+  #contenido {
+    padding: 80px 10px 60px;
+  }
+
+  .caja-formulario {
+    padding: 20px;
+  }
+
+  .form-grid {
+    gap: 20px;
+  }
+
+  .columna {
+    min-width: 200px;
+  }
+
+  .zona-juego {
+    gap: 20px;
+    padding: 20px 10px 80px;
+  }
+
+  .contenido-puntaje {
+    gap: 20px;
+  }
+
+  .ganador-partida,
+  .ranking-top5 {
+    width: 100%;
+    max-width: 260px;
+  }
+}
+
+/* ======= AJUSTES PARA ORIENTACIÓN HORIZONTAL ======= */
+@media (max-height: 500px) and (orientation: landscape) {
+  .main-content,
+  #contenido {
+    padding: 60px 20px 40px;
+  }
+
+  .logo-image {
+    max-width: 150px;
+    margin: 15px auto;
+  }
+
+  .zona-juego {
+    padding: 20px 20px 60px;
+  }
+
+  .tablero-juego {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+/* ======= PANTALLAS DE ALTA RESOLUCIÓN ======= */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .dinosaurio img,
+  .dado-virtual img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* ======= ESTILOS PARA IMPRESIÓN ======= */
+@media print {
+  .boton-menu,
+  .menu-icon,
+  .offcanvas-menu,
+  .navegacion-lateral,
+  .menu-lateral,
+  .site-footer,
+  .footer-prehistorico {
+    display: none !important;
+  }
+
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+
+  .main-content,
+  #contenido {
+    padding: 20px !important;
+    transform: none !important;
+  }
+}

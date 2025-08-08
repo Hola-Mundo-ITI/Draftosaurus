@@ -1,0 +1,41 @@
+/* ======= ESTILOS ESPECÍFICOS PARA LA PÁGINA DE INICIO ======= */
+
+/* Contenido principal de inicio */
+.main-content {
+  padding-top: 100px;
+  padding-bottom: 40px;
+}
+
+/* Pregunta principal */
+.question {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* Grupo de botones de selección de modo */
+.button-group {
+  max-width: 220px;
+  margin: auto;
+}
+
+/* Logo específico de la página de inicio */
+.logo-image {
+  max-width: 250px;
+  margin: 30px auto;
+  display: block;
+}
+
+/* Footer específico de inicio */
+.site-footer {
+  background-color: #3b351f;
+  color: #fceabb;
+  text-align: center;
+  font-family: 'Papyrus', fantasy;
+  font-size: 1rem;
+  padding: 15px 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.15);
+}

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Validación - Draftosaurus</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5dc; }
+        .test { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🐛 Debug de Validación</h1>
+    <button onclick="probarValidacionBasica()">Probar Validación Básica</button>
+    <button onclick="probarValidacionConDado()">Probar con Dado</button>
+    <button onclick="probarTodosLosDinos()">Probar Todos los Dinos</button>
+    <button onclick="limpiar()">Limpiar</button>
+    
+    <div id="resultados"></div>
+
+    <!-- Scripts -->
+    <script src="JS/tablero/ManejadorDado.js"></script>
+    <script src="JS/utils/validadorDado.js"></script>
+    <script src="JS/tablero/ValidadorZona.js"></script>
+    <script src="JS/tablero/EstadoJuego.js"></script>
+
+    <script>
+        let validadorZona, estadoJuego, manejadorDado, validadorDado;
+
+        function log(mensaje, tipo = 'info') {
+            const div = document.createElement('div');
+            div.className = `test ${tipo}`;
+            div.innerHTML = mensaje;
+            document.getElementById('resultados').appendChild(div);
+        }
+
+        function inicializar() {
+            try {
+                validadorZona = new ValidadorZona();
+                estadoJuego = new EstadoJuego();
+                manejadorDado = new ManejadorDado();
+                validadorDado = new ValidadorDado(manejadorDado);
+                
+                window.validadorZona = validadorZona;
+                window.estadoJuego = estadoJuego;
+                window.manejadorDado = manejadorDado;
+                window.validadorDado = validadorDado;
+                
+                log('✅ Sistema inicializado correctamente', 'success');
+                return true;
+            } catch (error) {
+                log(`❌ Error inicializando: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        function probarValidacionBasica() {
+            limpiar();
+            if (!inicializar()) return;
+            
+            log('<h3>🧪 Prueba de Validación Básica (Sin Dado)</h3>', 'info');
+            
+            const tiposDino = ['triceratops', 'stegosaurus', 'brontosaurus', 'trex', 'velociraptor', 'pteranodon'];
+            const zonas = ['bosque-semejanza', 'trio-frondoso', 'prado-diferencia', 'pradera-amor', 'isla-solitaria', 'rey-selva', 'dinos-rio'];
+            
+            zonas.forEach(zonaId => {
+                log(`<h4>📍 Zona: ${zonaId}</h4>`, 'info');
+                
+                tiposDino.forEach(tipoDino => {
+                    const dinosaurio = { tipo: tipoDino, id: `test_${tipoDino}` };
+                    const dinosauriosEnZona = [];
+                    
+                    try {
+                        // Probar solo validación de recinto (sin jugadorId)
+                        const validacion = validadorZona.validarColocacion(zonaId, dinosauriosEnZona, dinosaurio, null);
+                        
+                        const resultado = validacion.valido ? '✅' : '❌';
+                        log(`${resultado} ${tipoDino}: ${validacion.razon}`, validacion.valido ? 'success' : 'error');
+                        
+                    } catch (error) {
+                        log(`💥 Error con ${tipoDino}: ${error.message}`, 'error');
+                    }
+                });
+            });
+        }
+
+        function probarValidacionConDado() {
+            limpiar();
+            if (!inicializar()) return;
+            
+            log('<h3>🎲 Prueba de Validación Con Dado</h3>', 'info');
+            
+            // Lanzar dado
+            const estadoDado = manejadorDado.lanzarDadoParaRonda(1, 2);
+            log(`🎲 Dado lanzado: ${estadoDado.caraActual} (${manejadorDado.reglasDado[estadoDado.caraActual].nombre})`, 'info');
+            log(`👤 Jugador que lanzó: ${estadoDado.jugadorQueLanzo}`, 'info');
+            
+            const tiposDino = ['triceratops', 'stegosaurus', 'brontosaurus', 'trex', 'velociraptor', 'pteranodon'];
+            const zonas = ['bosque-semejanza', 'trio-frondoso', 'prado-diferencia', 'pradera-amor', 'isla-solitaria', 'rey-selva', 'dinos-rio'];
+            
+            // Probar para jugador 1 (puede estar exento o restringido)
+            log('<h4>👤 Jugador 1:</h4>', 'info');
+            zonas.forEach(zonaId => {
+                const dinosaurio = { tipo: 'triceratops', id: 'test_triceratops' };
+                const dinosauriosEnZona = [];
+                const jugadorId = 1;
+                const estadoJuegoActual = estadoJuego.obtenerEstado();
+                
+                try {
+                    const validacion = validadorZona.validarColocacion(
+                        zonaId, 
+                        dinosauriosEnZona, 
+                        dinosaurio, 
+                        null, 
+                        jugadorId, 
+                        estadoJuegoActual
+                    );
+                    
+                    const resultado = validacion.valido ? '✅' : '❌';
+                    const tipoMsg = validacion.tipo || 'sin-tipo';
+                    log(`${resultado} ${zonaId} (${tipoMsg}): ${validacion.razon}`, validacion.valido ? 'success' : 'error');
+                    
+                } catch (error) {
+                    log(`💥 Error en ${zonaId}: ${error.message}`, 'error');
+                    console.error('Error completo:', error);
+                }
+            });
+            
+            // Probar para jugador 2
+            log('<h4>👤 Jugador 2:</h4>', 'info');
+            zonas.forEach(zonaId => {
+                const dinosaurio = { tipo: 'triceratops', id: 'test_triceratops' };
+                const dinosauriosEnZona = [];
+                const jugadorId = 2;
+                const estadoJuegoActual = estadoJuego.obtenerEstado();
+                
+                try {
+                    const validacion = validadorZona.validarColocacion(
+                        zonaId, 
+                        dinosauriosEnZona, 
+                        dinosaurio, 
+                        null, 
+                        jugadorId, 
+                        estadoJuegoActual
+                    );
+                    
+                    const resultado = validacion.valido ? '✅' : '❌';
+                    const tipoMsg = validacion.tipo || 'sin-tipo';
+                    log(`${resultado} ${zonaId} (${tipoMsg}): ${validacion.razon}`, validacion.valido ? 'success' : 'error');
+                    
+                } catch (error) {
+                    log(`💥 Error en ${zonaId}: ${error.message}`, 'error');
+                    console.error('Error completo:', error);
+                }
+            });
+        }
+
+        function probarTodosLosDinos() {
+            limpiar();
+            if (!inicializar()) return;
+            
+            log('<h3>🦕 Prueba Todos los Dinosaurios en Bosque de la Semejanza</h3>', 'info');
+            
+            const tiposDino = ['triceratops', 'stegosaurus', 'brontosaurus', 'trex', 'velociraptor', 'pteranodon'];
+            const zonaId = 'bosque-semejanza';
+            const dinosauriosEnZona = []; // Zona vacía
+            
+            tiposDino.forEach(tipoDino => {
+                const dinosaurio = { tipo: tipoDino, id: `test_${tipoDino}` };
+                
+                log(`<h4>🦕 Probando ${tipoDino}:</h4>`, 'info');
+                
+                try {
+                    // 1. Solo validación de recinto
+                    const validacionRecinto = validadorZona.validarRestriccionRecinto(zonaId, dinosauriosEnZona, dinosaurio, null);
+                    log(`🏛️ Recinto: ${validacionRecinto.valido ? '✅' : '❌'} ${validacionRecinto.razon}`, validacionRecinto.valido ? 'success' : 'error');
+                    
+                    // 2. Solo validación de dado (jugador 1)
+                    if (validadorDado) {
+                        const validacionDado = validadorDado.validarRestriccionDado(zonaId, dinosauriosEnZona, dinosaurio, 1, estadoJuego.obtenerEstado());
+                        log(`🎲 Dado (J1): ${validacionDado.valido ? '✅' : '❌'} ${validacionDado.razon}`, validacionDado.valido ? 'success' : 'error');
+                    }
+                    
+                    // 3. Validación completa
+                    const validacionCompleta = validadorZona.validarColocacion(zonaId, dinosauriosEnZona, dinosaurio, null, 1, estadoJuego.obtenerEstado());
+                    log(`🔄 Completa: ${validacionCompleta.valido ? '✅' : '❌'} ${validacionCompleta.razon} (${validacionCompleta.tipo})`, validacionCompleta.valido ? 'success' : 'error');
+                    
+                } catch (error) {
+                    log(`💥 Error con ${tipoDino}: ${error.message}`, 'error');
+                    console.error('Error completo:', error);
+                }
+                
+                log('<hr>', 'info');
+            });
+        }
+
+        function limpiar() {
+            document.getElementById('resultados').innerHTML = '';
+        }
+
+        // Inicializar automáticamente
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                log('🚀 Página cargada. Haz clic en los botones para probar.', 'info');
+            }, 500);
+        });
+    </script>
+</body>
+</html>

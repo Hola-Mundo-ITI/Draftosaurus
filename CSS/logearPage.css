@@ -1,0 +1,110 @@
+/* ======= ESTILOS ESPECÍFICOS PARA LA PÁGINA DE LOGIN ======= */
+
+/* Layout centrado para login */
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Pantalla de login/registro */
+.pantalla {
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Caja del formulario de login */
+.caja-formulario {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  text-align: center;
+}
+
+/* Logo específico del login */
+.imagen-logo {
+  width: 90px;
+  margin-bottom: 20px;
+}
+
+/* Contenedor de botones del login */
+.contenedor-botones {
+  margin-top: 20px;
+}
+
+/* Grupos de campos del formulario */
+.grupo-campo {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.grupo-campo label {
+  display: block;
+  margin-bottom: 5px;
+  color: #444;
+  font-weight: bold;
+}
+
+.grupo-campo input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.grupo-campo input:focus {
+  border-color: #107e35;
+  outline: none;
+}
+
+/* Botón de acción específico del login */
+.boton-accion {
+  background-color: #107e35;
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.boton-accion:hover {
+  background-color: #0d6229;
+}
+
+/* Variante verde del botón */
+.boton-verde {
+  background-color: #28a745;
+}
+
+.boton-verde:hover {
+  background-color: #1e7e34;
+}
+
+/* Enlaces de texto para cambiar entre login/registro */
+.enlace-texto {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 1rem;
+  text-decoration: underline;
+  margin-top: 10px;
+  transition: color 0.3s;
+}
+
+.enlace-texto:hover {
+  color: #0056b3;
+}

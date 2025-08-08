@@ -1,0 +1,47 @@
+/* ======= ESTILOS ESPECÍFICOS PARA LA PÁGINA DE CONFIGURACIÓN ======= */
+
+/* Contenido de configuración */
+#contenido {
+  text-align: center;
+  padding: 100px 20px 40px;
+  max-width: 600px;
+  margin: auto;
+  transition: transform 0.3s ease;
+}
+
+#contenido.desplazado {
+  transform: translateX(220px);
+}
+
+/* Campos de configuración */
+.campo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 1.1rem;
+}
+
+/* Controles específicos de configuración */
+input[type="range"] {
+  width: 150px;
+}
+
+select {
+  padding: 5px 10px;
+  font-size: 1rem;
+}
+
+/* Enlace de cerrar sesión */
+.cerrar-sesion {
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.cerrar-sesion a {
+  text-decoration: underline;
+  color: #000;
+}
+
+.cerrar-sesion a:hover {
+  color: #555;
+}

@@ -1,0 +1,76 @@
+/* ======= ESTILOS ESPECÍFICOS PARA LA PÁGINA FÍSICO (SEGUIMIENTO) ======= */
+
+/* Contenido principal del modo físico */
+#contenido {
+  max-width: 900px;
+  width: 100%;
+  padding: 100px 20px 60px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+#contenido.desplazado {
+  transform: translateX(220px);
+}
+
+/* Grilla del formulario de seguimiento */
+.form-grid {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.columna {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  min-width: 250px;
+}
+
+/* Campos de entrada específicos */
+input[type="text"] {
+  padding: 10px;
+  border-radius: 5px;
+  border: 2px solid #ccc;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+  border-color: #00cc66;
+}
+
+/* Botón de envío del formulario */
+button[type="submit"] {
+  padding: 12px 30px;
+  background-color: #3b351f;
+  color: #fceabb;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+  background-color: #5c3a21;
+}
+
+/* Footer específico del modo físico */
+.footer-prehistorico {
+  background-color: #3b351f;
+  color: #fceabb;
+  text-align: center;
+  padding: 15px 0;
+  font-family: 'Papyrus', fantasy;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  z-index: 99;
+}

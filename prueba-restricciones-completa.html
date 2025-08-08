@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Restricciones Completas - Draftosaurus</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .contenedor-pruebas {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .titulo-principal {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .seccion-prueba {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+        .titulo-seccion {
+            color: #2196F3;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        .boton-prueba {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .boton-prueba:hover {
+            background-color: #45a049;
+        }
+        .boton-prueba.peligro {
+            background-color: #f44336;
+        }
+        .boton-prueba.peligro:hover {
+            background-color: #da190b;
+        }
+        .resultado-pruebas {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 4px solid #2196F3;
+        }
+        .log-consola {
+            background-color: #000;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        .instrucciones {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196F3;
+        }
+        .estado-zona {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .estado-implementado {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .estado-parcial {
+            background-color: #FF9800;
+            color: white;
+        }
+        .estado-pendiente {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor-pruebas">
+        <h1 class="titulo-principal">🦕 Prueba de Restricciones Completas - Draftosaurus</h1>
+        
+        <div class="instrucciones">
+            <h3>📋 Instrucciones de Prueba</h3>
+            <p><strong>1.</strong> Abre las herramientas de desarrollador (F12) y ve a la pestaña "Console"</p>
+            <p><strong>2.</strong> Haz clic en "Ejecutar Todas las Pruebas" para verificar el funcionamiento</p>
+            <p><strong>3.</strong> Revisa los resultados en la consola y en la sección de resultados abajo</p>
+            <p><strong>4.</strong> Usa los botones individuales para probar zonas específicas</p>
+        </div>
+
+        <div class="seccion-prueba">
+            <h2 class="titulo-seccion">🧪 Estado Actual de Implementación</h2>
+            <div>
+                <span class="estado-zona estado-implementado">🌲 Bosque de la Semejanza</span>
+                <span class="estado-zona estado-implementado">🌾 Prado de la Diferencia</span>
+                <span class="estado-zona estado-implementado">💕 Pradera del Amor</span>
+                <span class="estado-zona estado-implementado">🌿 Trío Frondoso</span>
+                <span class="estado-zona estado-implementado">🏝️ Isla Solitaria</span>
+                <span class="estado-zona estado-implementado">👑 Rey de la Selva</span>
+                <span class="estado-zona estado-implementado">🌊 Dinosaurios en el Río</span>
+                <span class="estado-zona estado-implementado">🦖 Zona del T-Rex</span>
+            </div>
+        </div>
+
+        <div class="seccion-prueba">
+            <h2 class="titulo-seccion">🚀 Pruebas Automatizadas</h2>
+            <button class="boton-prueba" onclick="ejecutarTodasLasPruebas()">
+                🧪 Ejecutar Todas las Pruebas
+            </button>
+            <button class="boton-prueba peligro" onclick="limpiarConsola()">
+                🗑️ Limpiar Consola
+            </button>
+        </div>
+
+        <div class="seccion-prueba">
+            <h2 class="titulo-seccion">🎯 Pruebas por Zona Individual</h2>
+            <button class="boton-prueba" onclick="probarZona('bosque')">🌲 Bosque de la Semejanza</button>
+            <button class="boton-prueba" onclick="probarZona('prado')">🌾 Prado de la Diferencia</button>
+            <button class="boton-prueba" onclick="probarZona('pradera')">💕 Pradera del Amor</button>
+            <button class="boton-prueba" onclick="probarZona('trio')">🌿 Trío Frondoso</button>
+            <button class="boton-prueba" onclick="probarZona('isla')">🏝️ Isla Solitaria</button>
+            <button class="boton-prueba" onclick="probarZona('rey')">👑 Rey de la Selva</button>
+            <button class="boton-prueba" onclick="probarZona('rio')">🌊 Dinosaurios en el Río</button>
+            <button class="boton-prueba" onclick="probarZona('trex')">🦖 Zona del T-Rex</button>
+        </div>
+
+        <div class="seccion-prueba">
+            <h2 class="titulo-seccion">🔍 Pruebas de Validación Específicas</h2>
+            <button class="boton-prueba" onclick="probarColocacionSecuencial()">📏 Colocación Secuencial</button>
+            <button class="boton-prueba" onclick="probarRestriccionesEspecies()">🦕 Restricciones de Especies</button>
+            <button class="boton-prueba" onclick="probarLimitesSlots()">🔢 Límites de Slots</button>
+            <button class="boton-prueba" onclick="probarPuntuacionContextual()">🏆 Puntuación Contextual</button>
+        </div>
+
+        <div class="resultado-pruebas">
+            <h3>📊 Resultados de Pruebas</h3>
+            <div id="resultados-container">
+                <p>Haz clic en "Ejecutar Todas las Pruebas" para ver los resultados aquí.</p>
+            </div>
+        </div>
+
+        <div class="log-consola" id="log-consola">
+            <div>🖥️ Consola de Pruebas - Los resultados aparecerán aquí...</div>
+        </div>
+    </div>
+
+    <!-- Cargar todos los archivos JavaScript necesarios -->
+    <script src="JS/tablero/ValidadorZona.js"></script>
+    <script src="JS/tablero/CalculadoraPuntuacion.js"></script>
+    <script src="JS/pruebas/pruebasRestricciones.js"></script>
+
+    <script>
+        // Interceptar console.log para mostrar en la página
+        const logConsola = document.getElementById('log-consola');
+        const originalLog = console.log;
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const mensaje = args.join(' ');
+            const div = document.createElement('div');
+            div.textContent = mensaje;
+            div.style.marginBottom = '2px';
+            logConsola.appendChild(div);
+            logConsola.scrollTop = logConsola.scrollHeight;
+        };
+
+        // Función para ejecutar todas las pruebas
+        function ejecutarTodasLasPruebas() {
+            limpiarConsola();
+            console.log('🚀 Iniciando pruebas completas de restricciones...');
+            console.log('='.repeat(60));
+            
+            try {
+                const pruebas = new PruebasRestricciones();
+                const resultado = pruebas.ejecutarTodasLasPruebas();
+                
+                // Mostrar resumen en la interfaz
+                const container = document.getElementById('resultados-container');
+                container.innerHTML = `
+                    <h4>📈 Resumen de Resultados:</h4>
+                    <p><strong>Total de pruebas:</strong> ${resultado.total}</p>
+                    <p><strong>✅ Exitosas:</strong> ${resultado.exitosas}</p>
+                    <p><strong>❌ Fallidas:</strong> ${resultado.fallidas}</p>
+                    <p><strong>📊 Porcentaje de éxito:</strong> ${resultado.porcentajeExito.toFixed(1)}%</p>
+                    ${resultado.fallidas === 0 ? 
+                        '<p style="color: green; font-weight: bold;">🎉 ¡Todas las pruebas pasaron exitosamente!</p>' : 
+                        '<p style="color: red; font-weight: bold;">⚠️ Algunas pruebas fallaron. Revisa la consola para más detalles.</p>'
+                    }
+                `;
+                
+                return resultado;
+            } catch (error) {
+                console.error('❌ Error al ejecutar las pruebas:', error);
+                const container = document.getElementById('resultados-container');
+                container.innerHTML = `<p style="color: red;">❌ Error al ejecutar las pruebas: ${error.message}</p>`;
+            }
+        }
+
+        // Función para probar zona específica
+        function probarZona(nombreZona) {
+            limpiarConsola();
+            console.log(`🎯 Probando zona específica: ${nombreZona}`);
+            console.log('='.repeat(40));
+            
+            try {
+                const pruebas = new PruebasRestricciones();
+                pruebas.probarZonaEspecifica(nombreZona);
+            } catch (error) {
+                console.error(`❌ Error al probar zona ${nombreZona}:`, error);
+            }
+        }
+
+        // Función para limpiar la consola
+        function limpiarConsola() {
+            logConsola.innerHTML = '<div>🖥️ Consola limpiada...</div>';
+        }
+
+        // Pruebas específicas adicionales
+        function probarColocacionSecuencial() {
+            limpiarConsola();
+            console.log('📏 Probando colocación secuencial...');
+            console.log('='.repeat(40));
+            
+            const validador = new ValidadorZona();
+            const crearSlot = (num) => ({ dataset: { slot: num.toString() } });
+            
+            // Prueba Bosque
+            console.log('🌲 Probando Bosque de la Semejanza:');
+            let resultado = validador.validarBosqueSemejanza([], { tipo: 'triceratops' }, crearSlot(2));
+            console.log(`   Primer dino en slot 2: ${resultado.valido ? '✅' : '❌'} - ${resultado.razon}`);
+            
+            resultado = validador.validarBosqueSemejanza([], { tipo: 'triceratops' }, crearSlot(1));
+            console.log(`   Primer dino en slot 1: ${resultado.valido ? '✅' : '❌'} - ${resultado.razon}`);
+            
+            // Prueba Prado
+            console.log('🌾 Probando Prado de la Diferencia:');
+            resultado = validador.validarPradoDiferencia([], { tipo: 'stegosaurus' }, crearSlot(3));
+            console.log(`   Primer dino en slot 3: ${resultado.valido ? '✅' : '❌'} - ${resultado.razon}`);
+            
+            resultado = validador.validarPradoDiferencia([], { tipo: 'stegosaurus' }, crearSlot(1));
+            console.log(`   Primer dino en slot 1: ${resultado.valido ? '✅' : '❌'} - ${resultado.razon}`);
+            
+            // Prueba Río
+            console.log('🌊 Probando Dinosaurios en el Río:');
+            resultado = validador.validarDinosRio([], { tipo: 'brontosaurus' }, crearSlot(4));
+            console.log(`   Primer dino en slot 4: ${resultado.valido ? '✅' : '❌'} - ${resultado.razon}`);
+            
+            resultado = validador.validarDinosRio([], { tipo: 'brontosaurus' }, crearSlot(1));
+            console.log(`   Primer dino en slot 1: ${resultado.valido ? '✅' : '❌'} - ${resultado.razon}`);
+        }
+
+        function probarRestriccionesEspecies() {
+            limpiarConsola();
+            console.log('🦕 Probando restricciones de especies...');
+            console.log('='.repeat(40));
+            
+            const validador = new ValidadorZona();
+            const crearSlot = (num) => ({ dataset: { slot: num.toString() } });
+            
+            // Zona T-Rex
+            console.log('🦖 Probando Zona del T-Rex:');
+            let resultado = validador.validarZonaTRex([], { tipo: 'triceratops' }, crearSlot(1));
+            console.log(`   Triceratops en zona T-Rex: ${resultado.valido ? '✅' : '❌'} - ${resultado.razon}`);
+            
+            resultado = validador.validarZonaTRex([], { tipo: 'trex' }, crearSlot(1));
+            console.log(`   T-Rex en zona T-Rex: ${resultado.valido ? '✅' : '❌'} - ${resultado.razon}`);
+            
+            // Pradera del Amor
+            console.log('💕 Probando Pradera del Amor:');
+            const dinosauriosAmor = [
+                { tipo: 'triceratops' },
+                { tipo: 'triceratops' }
+            ];
+            resultado = validador.validarPraderaAmor(dinosauriosAmor, { tipo: 'triceratops' }, crearSlot(3));
+            console.log(`   Tercer Triceratops (excede pareja): ${resultado.valido ? '✅' : '❌'} - ${resultado.razon}`);
+            
+            resultado = validador.validarPraderaAmor(dinosauriosAmor, { tipo: 'stegosaurus' }, crearSlot(3));
+            console.log(`   Stegosaurus (nueva especie): ${resultado.valido ? '✅' : '❌'} - ${resultado.razon}`);
+        }
+
+        function probarLimitesSlots() {
+            limpiarConsola();
+            console.log('🔢 Probando límites de slots...');
+            console.log('='.repeat(40));
+            
+            const validador = new ValidadorZona();
+            const crearSlot = (num) => ({ dataset: { slot: num.toString() } });
+            
+            // Isla Solitaria
+            console.log('🏝️ Probando Isla Solitaria:');
+            let resultado = validador.validarIslaSolitaria([], { tipo: 'pteranodon' }, crearSlot(1));
+            console.log(`   Primer dinosaurio: ${resultado.valido ? '✅' : '❌'} - ${resultado.razon}`);
+            
+            const dinosauriosIsla = [{ tipo: 'pteranodon' }];
+            resultado = validador.validarIslaSolitaria(dinosauriosIsla, { tipo: 'triceratops' }, crearSlot(1));
+            console.log(`   Segundo dinosaurio: ${resultado.valido ? '✅' : '❌'} - ${resultado.razon}`);
+            
+            // Trío Frondoso
+            console.log('🌿 Probando Trío Frondoso:');
+            const dinosauriosTrio = [
+                { tipo: 'triceratops' },
+                { tipo: 'stegosaurus' },
+                { tipo: 'brontosaurus' }
+            ];
+            resultado = validador.validarTrioFrondoso(dinosauriosTrio, { tipo: 'trex' }, crearSlot(4));
+            console.log(`   Cuarto dinosaurio (excede límite): ${resultado.valido ? '✅' : '❌'} - ${resultado.razon}`);
+        }
+
+        function probarPuntuacionContextual() {
+            limpiarConsola();
+            console.log('🏆 Probando puntuación contextual...');
+            console.log('='.repeat(40));
+            
+            const calculadora = new CalculadoraPuntuacion();
+            
+            // Pradera del Amor
+            console.log('💕 Probando Pradera del Amor:');
+            const dinosauriosAmor = [
+                { tipo: 'triceratops', jugadorColocado: 1 },
+                { tipo: 'triceratops', jugadorColocado: 1 },
+                { tipo: 'stegosaurus', jugadorColocado: 1 }
+            ];
+            const puntosAmor = calculadora.calcularPraderaAmor(dinosauriosAmor);
+            console.log(`   2 Triceratops + 1 Stegosaurus = ${puntosAmor} puntos (esperado: 5)`);
+            
+            // Trío Frondoso
+            console.log('🌿 Probando Trío Frondoso:');
+            const dinosauriosTrio = [
+                { tipo: 'triceratops', jugadorColocado: 1 },
+                { tipo: 'stegosaurus', jugadorColocado: 1 },
+                { tipo: 'brontosaurus', jugadorColocado: 1 }
+            ];
+            const puntosTrio = calculadora.calcularTrioFrondoso(dinosauriosTrio);
+            console.log(`   3 dinosaurios = ${puntosTrio} puntos (esperado: 7)`);
+            
+            // Zona T-Rex
+            console.log('🦖 Probando Zona del T-Rex:');
+            const dinosauriosTRex = [{ tipo: 'trex', jugadorColocado: 1 }];
+            const puntosTRex = calculadora.calcularZonaTRex(dinosauriosTRex);
+            console.log(`   1 T-Rex = ${puntosTRex} puntos (esperado: 12)`);
+        }
+
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🦕 Sistema de pruebas de restricciones cargado correctamente');
+            console.log('💡 Haz clic en "Ejecutar Todas las Pruebas" para comenzar');
+        });
+    </script>
+</body>
+</html>

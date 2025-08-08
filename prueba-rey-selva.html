@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba Rey de la Selva - Draftosaurus</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .contenedor-prueba {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .zona-dinosaurios {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #e8f4f8;
+            border-radius: 5px;
+        }
+        
+        .dinosaurio {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .dinosaurio:hover {
+            border-color: #007bff;
+            transform: scale(1.05);
+        }
+        
+        .dinosaurio.seleccionado {
+            border-color: #ffd700;
+            background: #fffacd;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .zona-rey {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 2px solid #FF9800;
+            border-radius: 8px;
+            background: #fff3e0;
+        }
+        
+        .titulo-zona {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #e65100;
+        }
+        
+        .slot {
+            width: 80px;
+            height: 80px;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .slot.disponible {
+            border-color: #FF9800;
+            background: #fff3e0;
+            border-style: solid;
+            animation: pulso-rey 2s infinite;
+        }
+        
+        .slot.no-disponible {
+            border-color: #dc3545;
+            background: #f8d7da;
+            border-style: dashed;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .slot[data-ocupado="true"] {
+            border-color: #FF9800;
+            background: #ffcc80;
+        }
+        
+        .controles {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 5px;
+        }
+        
+        .boton {
+            padding: 8px 16px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .boton-primario {
+            background: #007bff;
+            color: white;
+        }
+        
+        .boton-secundario {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .mensaje {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .mensaje.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .mensaje.exito {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .log-pruebas {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        @keyframes pulso-rey {
+            0%, 100% { 
+                border-color: #FF9800;
+                box-shadow: 0 0 10px rgba(255, 152, 0, 0.7);
+            }
+            50% { 
+                border-color: #F57C00;
+                box-shadow: 0 0 15px rgba(255, 152, 0, 1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor-prueba">
+        <h1>👑 Prueba Específica: Rey de la Selva</h1>
+        
+        <div class="controles">
+            <button class="boton boton-primario" onclick="probarValidacion()">🧪 Probar Validación</button>
+            <button class="boton boton-secundario" onclick="reiniciarPrueba()">🔄 Reiniciar</button>
+        </div>
+        
+        <div id="area-mensajes"></div>
+        
+        <div class="zona-dinosaurios">
+            <div class="dinosaurio" data-tipo="triceratops" onclick="seleccionarDinosaurio(this)">🦕<br>Tric</div>
+            <div class="dinosaurio" data-tipo="stegosaurus" onclick="seleccionarDinosaurio(this)">🦴<br>Steg</div>
+            <div class="dinosaurio" data-tipo="brontosaurus" onclick="seleccionarDinosaurio(this)">🦕<br>Bron</div>
+            <div class="dinosaurio" data-tipo="trex" onclick="seleccionarDinosaurio(this)">🦖<br>T-Rex</div>
+            <div class="dinosaurio" data-tipo="velociraptor" onclick="seleccionarDinosaurio(this)">🦖<br>Velo</div>
+            <div class="dinosaurio" data-tipo="pteranodon" onclick="seleccionarDinosaurio(this)">🦅<br>Pter</div>
+        </div>
+        
+        <div class="zona-rey">
+            <div class="titulo-zona">👑 Rey de la Selva (Debe aceptar CUALQUIER dinosaurio)</div>
+            <div class="slot" data-slot="1" data-ocupado="false" onclick="intentarColocar(this)">
+                Slot 1
+            </div>
+        </div>
+        
+        <div class="log-pruebas" id="log-pruebas">
+            <strong>📋 Log de Pruebas:</strong><br>
+            Selecciona cualquier dinosaurio y haz clic en el slot del Rey de la Selva.<br>
+            TODOS los dinosaurios deberían ser aceptados.<br><br>
+        </div>
+    </div>
+
+    <!-- Cargar ValidadorZona -->
+    <script src="JS/tablero/ValidadorZona.js"></script>
+    
+    <script>
+        // Variables globales
+        let validadorZona;
+        let dinosaurioSeleccionado = null;
+        let estadoTablero = {
+            'rey-selva': []
+        };
+        
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            validadorZona = new ValidadorZona();
+            log('✅ ValidadorZona inicializado');
+            log('💡 Selecciona cualquier dinosaurio y haz clic en el slot');
+        });
+        
+        function seleccionarDinosaurio(elemento) {
+            // Limpiar selección anterior
+            document.querySelectorAll('.dinosaurio').forEach(d => d.classList.remove('seleccionado'));
+            document.querySelectorAll('.slot').forEach(s => s.classList.remove('disponible', 'no-disponible'));
+            
+            // Seleccionar nuevo
+            elemento.classList.add('seleccionado');
+            dinosaurioSeleccionado = {
+                tipo: elemento.dataset.tipo,
+                elemento: elemento
+            };
+            
+            log(`👑 Dinosaurio seleccionado: ${dinosaurioSeleccionado.tipo}`);
+            
+            // Resaltar slot si está disponible
+            resaltarSlot();
+        }
+        
+        function resaltarSlot() {
+            if (!dinosaurioSeleccionado) return;
+            
+            const slot = document.querySelector('.slot');
+            if (slot.dataset.ocupado === 'false') {
+                const validacion = validadorZona.validarColocacion(
+                    'rey-selva',
+                    estadoTablero['rey-selva'],
+                    dinosaurioSeleccionado,
+                    slot
+                );
+                
+                if (validacion.valido) {
+                    slot.classList.add('disponible');
+                    log(`✅ Slot disponible para ${dinosaurioSeleccionado.tipo}: ${validacion.razon}`);
+                } else {
+                    slot.classList.add('no-disponible');
+                    log(`❌ Slot NO disponible para ${dinosaurioSeleccionado.tipo}: ${validacion.razon}`);
+                }
+            }
+        }
+        
+        function intentarColocar(slot) {
+            if (!dinosaurioSeleccionado) {
+                mostrarMensaje('❌ Primero selecciona un dinosaurio', 'error');
+                return;
+            }
+            
+            if (slot.dataset.ocupado === 'true') {
+                mostrarMensaje('❌ El Rey de la Selva ya tiene un dinosaurio', 'error');
+                return;
+            }
+            
+            const validacion = validadorZona.validarColocacion(
+                'rey-selva',
+                estadoTablero['rey-selva'],
+                dinosaurioSeleccionado,
+                slot
+            );
+            
+            if (validacion.valido) {
+                // Colocar dinosaurio
+                slot.innerHTML = `${dinosaurioSeleccionado.tipo}<br>👑`;
+                slot.dataset.ocupado = 'true';
+                slot.classList.remove('disponible', 'no-disponible');
+                
+                // Actualizar estado
+                estadoTablero['rey-selva'].push({
+                    tipo: dinosaurioSeleccionado.tipo,
+                    slot: slot.dataset.slot
+                });
+                
+                // Ocultar dinosaurio usado
+                dinosaurioSeleccionado.elemento.style.display = 'none';
+                
+                mostrarMensaje(`✅ ${dinosaurioSeleccionado.tipo} colocado como Rey de la Selva`, 'exito');
+                log(`✅ ÉXITO: ${dinosaurioSeleccionado.tipo} colocado en Rey de la Selva`);
+                log(`📊 Razón: ${validacion.razon}`);
+                
+                // Limpiar selección
+                limpiarSeleccion();
+            } else {
+                mostrarMensaje(`❌ ${validacion.razon}`, 'error');
+                log(`❌ ERROR: ${validacion.razon}`);
+            }
+        }
+        
+        function limpiarSeleccion() {
+            document.querySelectorAll('.dinosaurio').forEach(d => d.classList.remove('seleccionado'));
+            document.querySelectorAll('.slot').forEach(s => {
+                s.classList.remove('disponible', 'no-disponible');
+            });
+            dinosaurioSeleccionado = null;
+        }
+        
+        function reiniciarPrueba() {
+            // Limpiar slot
+            const slot = document.querySelector('.slot');
+            slot.innerHTML = 'Slot 1';
+            slot.dataset.ocupado = 'false';
+            slot.classList.remove('disponible', 'no-disponible');
+            
+            // Mostrar dinosaurios
+            document.querySelectorAll('.dinosaurio').forEach(dino => {
+                dino.style.display = 'flex';
+            });
+            
+            // Reiniciar estado
+            estadoTablero = { 'rey-selva': [] };
+            
+            limpiarSeleccion();
+            document.getElementById('area-mensajes').innerHTML = '';
+            log('🔄 Prueba reiniciada');
+        }
+        
+        function probarValidacion() {
+            log('🧪 PROBANDO VALIDACIÓN DEL REY DE LA SELVA...');
+            log('='.repeat(50));
+            
+            const tiposDinosaurios = ['triceratops', 'stegosaurus', 'brontosaurus', 'trex', 'velociraptor', 'pteranodon'];
+            const slot = { dataset: { slot: '1' } };
+            
+            tiposDinosaurios.forEach(tipo => {
+                const validacion = validadorZona.validarColocacion(
+                    'rey-selva',
+                    [], // Sin dinosaurios previos
+                    { tipo: tipo },
+                    slot
+                );
+                
+                const resultado = validacion.valido ? '✅ VÁLIDO' : '❌ INVÁLIDO';
+                log(`${tipo}: ${resultado} - ${validacion.razon}`);
+            });
+            
+            log('='.repeat(50));
+            log('🎯 RESULTADO: Todos los dinosaurios deberían ser VÁLIDOS');
+        }
+        
+        function mostrarMensaje(mensaje, tipo) {
+            const area = document.getElementById('area-mensajes');
+            area.innerHTML = `<div class="mensaje ${tipo}">${mensaje}</div>`;
+            
+            setTimeout(() => {
+                area.innerHTML = '';
+            }, 3000);
+        }
+        
+        function log(mensaje) {
+            const logArea = document.getElementById('log-pruebas');
+            const timestamp = new Date().toLocaleTimeString();
+            logArea.innerHTML += `[${timestamp}] ${mensaje}<br>`;
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+    </script>
+</body>
+</html>

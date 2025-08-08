@@ -1,0 +1,57 @@
+/* Posiciones calibradas del tablero */
+
+.bosque-semejanza {
+    top: 207px;
+    left: 157px;
+    width: 160px;
+    height: 100px;
+}
+
+.trio-frondoso {
+    top: 337px;
+    left: 195px;
+    width: 90px;
+    height: 80px;
+}
+
+.prado-diferencia {
+    top: 319px;
+    left: 489px;
+    width: 120px;
+    height: 90px;
+}
+
+.pradera-amor {
+    top: 466px;
+    left: 160px;
+    width: 160px;
+    height: 100px;
+}
+
+.isla-solitaria {
+    top: 468px;
+    left: 519px;
+    width: 70px;
+    height: 60px;
+}
+
+.rey-selva {
+    top: 179px;
+    left: 521px;
+    width: 70px;
+    height: 60px;
+}
+
+.dinos-rio {
+    top: 533px;
+    left: 156px;
+    width: 480px;
+    height: 70px;
+}
+
+.zona-trex {
+    top: 94px;
+    left: 680px;
+    width: 90px;
+    height: 180px;
+}

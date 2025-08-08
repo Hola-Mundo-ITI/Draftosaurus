@@ -1,0 +1,1586 @@
+/* ======= ESTILOS ESPECÍFICOS PARA LA PÁGINA DIGITAL (JUEGO) ======= */
+
+/* Encabezado de la partida */
+.encabezado-partida {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(247, 231, 204);
+  padding: 20px 30px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.ronda-actual {
+  font-weight: bold;
+  color: #060606;
+  font-size: 1rem;
+  padding-left: 240px;
+}
+
+.datos-juego {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.cantidad-jugadores,
+.valor {
+  background-color: rgb(247, 231, 204);
+  color: #3b2d15;
+  font-weight: bold;
+  border-radius: 10px;
+  padding: 6px 12px;
+}
+
+.valor {
+  padding: 3px 8px;
+  font-weight: normal;
+  margin-left: 5px;
+}
+
+/* Zona de juego principal */
+.zona-juego {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding: 40px 20px 100px;
+}
+
+.zona-dinos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Dinosaurios arrastrables */
+.dinosaurio {
+  width: 100px;
+  height: 100px;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  cursor: grab;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.dinosaurio:active {
+  cursor: grabbing;
+  transform: scale(0.96);
+}
+
+.dinosaurio img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+.dragging {
+  opacity: 0.5;
+}
+
+/* Contenedor del tablero */
+.contenedor-tablero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  background-color: rgb(247, 231, 204);
+  border: none;
+}
+
+.tablero-juego {
+  width: 770px;
+  height: 768px;
+  background-image: url('../Recursos/img/tablero.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  margin: 0 auto;
+}
+
+/* Estilos para las zonas del tablero - INVISIBLES */
+.zona-tablero {
+  position: absolute;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.zona-tablero:hover {
+  background-color: transparent;
+  border: none;
+}
+
+.titulo-zona {
+  display: none;
+  /* Ocultar títulos completamente */
+}
+
+.slots-zona {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.slot {
+  width: 19px;
+  height: 19px;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.slot:hover {
+  background-color: transparent;
+  border: none;
+}
+
+.slot.disponible {
+  background-color: transparent;
+  border: 2px solid #4CAF50;
+  border-radius: 4px;
+  box-shadow: 0 0 6px rgba(76, 175, 80, 0.6);
+}
+
+.slot.seleccionado {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.slot[data-ocupado="true"] {
+  background-color: transparent;
+  border: none;
+}
+
+/* Posicionamiento específico de cada zona sobre el SVG */
+/* Coordenadas optimizadas para el tablero SVG de 770x768px */
+
+.bosque-semejanza {
+  top: 120px;
+  left: 80px;
+  width: 160px;
+  height: 100px;
+}
+
+.bosque-semejanza .slots-zona {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.trio-frondoso {
+  top: 120px;
+  left: 520px;
+  width: 90px;
+  height: 80px;
+}
+
+.trio-frondoso .slots-zona {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.prado-diferencia {
+  top: 250px;
+  left: 80px;
+  width: 180px;
+  height: 90px;
+}
+
+.prado-diferencia .slots-zona {
+  display: flex;
+  flex-direction: row;
+  gap: 5.5px;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.pradera-amor {
+  top: 250px;
+  left: 220px;
+  width: 160px;
+  height: 100px;
+}
+
+.pradera-amor .slots-zona {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 3px;
+}
+
+.isla-solitaria {
+  top: 380px;
+  left: 80px;
+  width: 70px;
+  height: 60px;
+}
+
+.rey-selva {
+  top: 380px;
+  left: 170px;
+  width: 70px;
+  height: 60px;
+}
+
+.dinos-rio {
+  top: 480px;
+  left: 80px;
+  width: 80px;
+  height: 140px;
+}
+
+.dinos-rio .slots-zona {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  gap: 3px;
+  justify-items: center;
+  align-items: center;
+  height: 100%;
+}
+
+.dinos-rio .slot {
+  width: 19px;
+  height: 19px;
+}
+
+/* Posicionar el slot 7 centrado en la última fila */
+.dinos-rio .slot:nth-child(7) {
+  grid-column: 1 / 3;
+}
+
+
+
+/* Estilos para el modo calibrado */
+.modo-calibrado .zona-tablero {
+  border: 2px solid #FFD700 !important;
+  background-color: rgba(255, 215, 0, 0.2) !important;
+  cursor: move !important;
+}
+
+.modo-calibrado .zona-tablero:hover {
+  background-color: rgba(255, 215, 0, 0.4) !important;
+}
+
+.panel-calibrado {
+  font-size: 12px;
+}
+
+.panel-calibrado h3 {
+  margin: 0 0 10px 0;
+  color: #FFD700;
+}
+
+.controles-calibrado {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.controles-calibrado button {
+  padding: 5px 10px;
+  background: #333;
+  color: white;
+  border: 1px solid #666;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.controles-calibrado button:hover {
+  background: #555;
+}
+
+.info-zona {
+  border-top: 1px solid #666;
+  padding-top: 10px;
+  font-size: 11px;
+}
+
+/* Estados de los dinosaurios */
+.dinosaurio.seleccionado {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+  border: 3px solid #FFD700;
+  border-radius: 10px;
+}
+
+.dinosaurio.no-disponible {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Dado virtual */
+.dado-virtual {
+  background-color: rgb(247, 231, 204);
+  width: 90px;
+  height: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid #6b4f28;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.dado-virtual:hover {
+  background-color: #e8d5b7;
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dado-virtual:active {
+  transform: scale(0.95);
+}
+
+.dado-virtual img {
+  max-width: 60%;
+  max-height: 60%;
+  object-fit: contain;
+  transition: all 0.3s ease;
+}
+
+.texto-dado {
+  font-size: 10px;
+  font-weight: bold;
+  color: #3b2d15;
+  margin-top: 2px;
+  text-align: center;
+  font-family: 'Papyrus', fantasy;
+}
+
+/* Estados del dado */
+.dado-virtual.lanzando {
+  animation: rotar-dado 1s ease-in-out;
+}
+
+.dado-virtual.resultado {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+}
+
+.dado-virtual.resultado .texto-dado {
+  color: white;
+  font-weight: bold;
+}
+
+.dado-virtual.bloqueado {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.dado-virtual.bloqueado:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Animación de lanzamiento */
+@keyframes rotar-dado {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  25% {
+    transform: rotate(90deg) scale(1.1);
+  }
+
+  50% {
+    transform: rotate(180deg) scale(1.2);
+  }
+
+  75% {
+    transform: rotate(270deg) scale(1.1);
+  }
+
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+/* Indicador de cara del dado */
+.cara-dado-resultado {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.dado-virtual.resultado .cara-dado-resultado {
+  opacity: 1;
+}
+
+/* Botón de puntaje */
+.boton-puntaje {
+  width: 120px;
+  height: 50px;
+  background-color: #6b4f28;
+  color: #fffce2;
+  border-radius: 12px;
+  font-size: 24px;
+  font-family: 'Papyrus', fantasy;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.boton-puntaje:hover {
+  background-color: #8b5e34;
+  transform: scale(1.05);
+}
+
+/* Botón de lanzar dado */
+.boton-lanzar-dado {
+  width: 140px;
+  height: 50px;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: #fffce2;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-family: 'Papyrus', fantasy;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  margin-right: 15px;
+  font-weight: bold;
+}
+
+.boton-lanzar-dado:hover {
+  background: linear-gradient(135deg, #c0392b, #a93226);
+  transform: scale(1.05);
+  box-shadow: 2px 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.boton-lanzar-dado:active {
+  transform: scale(0.95);
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.boton-lanzar-dado:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Contenedor de acciones del juego */
+.acciones-juego {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/*
+ ======= ESTILOS PARA EL SISTEMA POINT AND CLICK ======= */
+
+/* Controles del juego */
+.controles-juego {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(247, 231, 204, 0.9);
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-top: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.grupo-controles {
+  display: flex;
+  gap: 10px;
+}
+
+.boton-control {
+  background-color: #6b4f28;
+  color: #fffce2;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 15px;
+  font-size: 14px;
+  font-family: 'Papyrus', fantasy;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.boton-control:hover {
+  background-color: #8b5e34;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.boton-control:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.info-turno {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  color: #3b2d15;
+}
+
+.etiqueta-turno {
+  font-size: 14px;
+}
+
+.numero-jugador {
+  background-color: #6b4f28;
+  color: #fffce2;
+  padding: 5px 12px;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: bold;
+  min-width: 30px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.numero-jugador.jugador-1 {
+  background-color: #2196F3;
+}
+
+.numero-jugador.jugador-2 {
+  background-color: #FF5722;
+}
+
+/* Tooltips para zonas */
+.tooltip-zona {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  display: none;
+  pointer-events: none;
+}
+
+.tooltip-zona::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Área de mensajes */
+.area-mensajes {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  max-width: 300px;
+}
+
+.mensaje {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  animation: deslizar-entrada 0.3s ease-out;
+}
+
+.mensaje.info {
+  background-color: #2196F3;
+  color: white;
+}
+
+.mensaje.exito {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.mensaje.advertencia {
+  background-color: #FF9800;
+  color: white;
+}
+
+.mensaje.error {
+  background-color: #F44336;
+  color: white;
+}
+
+/* Modal de puntuación */
+.modal-puntuacion {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: aparecer-modal 0.3s ease-out;
+}
+
+.contenido-modal-puntuacion {
+  background-color: rgb(247, 231, 204);
+  border-radius: 15px;
+  padding: 30px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  animation: escalar-modal 0.3s ease-out;
+}
+
+.contenido-modal-puntuacion h3 {
+  text-align: center;
+  color: #3b2d15;
+  margin-bottom: 20px;
+  font-family: 'Papyrus', fantasy;
+  font-size: 24px;
+}
+
+.comparacion-jugadores {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.puntuacion-jugador {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  border: 2px solid #6b4f28;
+}
+
+.puntuacion-jugador h4 {
+  color: #3b2d15;
+  margin-bottom: 10px;
+  font-family: 'Papyrus', fantasy;
+}
+
+.puntos-totales {
+  font-size: 28px;
+  font-weight: bold;
+  color: #6b4f28;
+  margin-bottom: 15px;
+}
+
+.detalles-puntuacion {
+  text-align: left;
+}
+
+.detalle-zona {
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(107, 79, 40, 0.2);
+  font-size: 14px;
+  color: #3b2d15;
+}
+
+.acciones-modal {
+  text-align: center;
+}
+
+.boton-cerrar {
+  background-color: #6b4f28;
+  color: #fffce2;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-family: 'Papyrus', fantasy;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.boton-cerrar:hover {
+  background-color: #8b5e34;
+  transform: scale(1.05);
+}
+
+/* Error de inicialización */
+.error-inicializacion {
+  background-color: #ffebee;
+  border: 2px solid #f44336;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  color: #c62828;
+}
+
+.error-inicializacion h3 {
+  margin-bottom: 10px;
+  color: #d32f2f;
+}
+
+.boton-recargar {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.boton-recargar:hover {
+  background-color: #d32f2f;
+}
+
+/* Efectos visuales para slots */
+.efecto-confirmacion,
+.efecto-error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  font-weight: bold;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.efecto-confirmacion {
+  color: #4CAF50;
+  animation: pulso-confirmacion 1s ease-out;
+}
+
+.efecto-error {
+  color: #F44336;
+  animation: pulso-error 1s ease-out;
+}
+
+.movimiento-valido {
+  background-color: rgba(76, 175, 80, 0.3) !important;
+  border-color: #4CAF50 !important;
+}
+
+.movimiento-invalido {
+  background-color: rgba(244, 67, 54, 0.3) !important;
+  border-color: #F44336 !important;
+}
+
+.slot.no-disponible {
+  background-color: rgba(139, 94, 52, 0.2);
+  border-color: #8b5e34;
+  border-style: dashed;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Estilos específicos para restricciones secuenciales */
+.bosque-semejanza .slot.disponible,
+.prado-diferencia .slot.disponible,
+.dinos-rio .slot.disponible {
+  border-color: #2196F3;
+  box-shadow: 0 0 8px rgba(33, 150, 243, 0.6);
+  animation: pulso-secuencial 2s infinite;
+}
+
+.bosque-semejanza .slot.no-disponible,
+.prado-diferencia .slot.no-disponible,
+.dinos-rio .slot.no-disponible {
+  border-color: #FF5722;
+  border-style: dashed;
+  opacity: 0.3;
+}
+
+/* Indicadores visuales para zonas con reglas especiales */
+.isla-solitaria .slot.disponible {
+  border-color: #9C27B0;
+  box-shadow: 0 0 10px rgba(156, 39, 176, 0.7);
+  animation: pulso-isla 2s infinite;
+}
+
+.rey-selva .slot.disponible {
+  border-color: #FF9800;
+  box-shadow: 0 0 10px rgba(255, 152, 0, 0.7);
+  animation: pulso-rey 2s infinite;
+}
+
+.pradera-amor .slot.disponible {
+  border-color: #E91E63;
+  box-shadow: 0 0 10px rgba(233, 30, 99, 0.7);
+  animation: pulso-amor 2s infinite;
+}
+
+.trio-frondoso .slot.disponible {
+  border-color: #4CAF50;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.7);
+  animation: pulso-trio 2s infinite;
+}
+
+
+
+/* Estilos para slots no disponibles por zona */
+.isla-solitaria .slot.no-disponible,
+.rey-selva .slot.no-disponible {
+  border-color: #9E9E9E;
+  border-style: dashed;
+  opacity: 0.2;
+}
+
+.pradera-amor .slot.no-disponible,
+.trio-frondoso .slot.no-disponible {
+  border-color: #FF5722;
+  border-style: dashed;
+  opacity: 0.3;
+}
+
+/* Feedback mejorado para mensajes específicos */
+.mensaje.bosque {
+  background-color: #2196F3;
+  border-left: 4px solid #1976D2;
+}
+
+.mensaje.prado {
+  background-color: #4CAF50;
+  border-left: 4px solid #388E3C;
+}
+
+.mensaje.isla {
+  background-color: #9C27B0;
+  border-left: 4px solid #7B1FA2;
+}
+
+.mensaje.rey {
+  background-color: #FF9800;
+  border-left: 4px solid #F57C00;
+}
+
+/* Preview de dinosaurio */
+.preview-dinosaurio {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+}
+
+/* Animaciones */
+@keyframes pulso-seleccion {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes parpadeo-disponible {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes vibracion-error {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-3px);
+  }
+
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+@keyframes deslizar-entrada {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes aparecer-modal {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes escalar-modal {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes pulso-confirmacion {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes pulso-error {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes pulso-secuencial {
+
+  0%,
+  100% {
+    border-color: #2196F3;
+    box-shadow: 0 0 8px rgba(33, 150, 243, 0.6);
+  }
+
+  50% {
+    border-color: #1976D2;
+    box-shadow: 0 0 12px rgba(33, 150, 243, 0.9);
+  }
+}
+
+@keyframes pulso-isla {
+
+  0%,
+  100% {
+    border-color: #9C27B0;
+    box-shadow: 0 0 10px rgba(156, 39, 176, 0.7);
+  }
+
+  50% {
+    border-color: #7B1FA2;
+    box-shadow: 0 0 15px rgba(156, 39, 176, 1);
+  }
+}
+
+@keyframes pulso-rey {
+
+  0%,
+  100% {
+    border-color: #FF9800;
+    box-shadow: 0 0 10px rgba(255, 152, 0, 0.7);
+  }
+
+  50% {
+    border-color: #F57C00;
+    box-shadow: 0 0 15px rgba(255, 152, 0, 1);
+  }
+}
+
+@keyframes pulso-amor {
+
+  0%,
+  100% {
+    border-color: #E91E63;
+    box-shadow: 0 0 10px rgba(233, 30, 99, 0.7);
+  }
+
+  50% {
+    border-color: #C2185B;
+    box-shadow: 0 0 15px rgba(233, 30, 99, 1);
+  }
+}
+
+@keyframes pulso-trio {
+
+  0%,
+  100% {
+    border-color: #4CAF50;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.7);
+  }
+
+  50% {
+    border-color: #388E3C;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 1);
+  }
+}
+
+
+
+/* Responsive para tablero */
+@media (max-width: 1024px) {
+  .tablero-juego {
+    width: 700px;
+    height: 525px;
+    gap: 8px;
+    padding: 15px;
+  }
+
+  .titulo-zona {
+    font-size: 0.7rem;
+  }
+
+  .slot {
+    width: 30px;
+    height: 30px;
+  }
+
+  .dinos-rio .slot {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tablero-juego {
+    width: 600px;
+    height: 450px;
+    gap: 6px;
+    padding: 10px;
+  }
+
+  .titulo-zona {
+    font-size: 0.6rem;
+    margin-bottom: 3px;
+  }
+
+  .slot {
+    width: 25px;
+    height: 25px;
+  }
+
+  .dinos-rio .slot {
+    width: 20px;
+    height: 20px;
+  }
+
+  .controles-juego {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .comparacion-jugadores {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .zona-juego {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .tablero-juego {
+    width: 100%;
+    max-width: 400px;
+    height: 300px;
+    gap: 4px;
+    padding: 8px;
+  }
+
+  .titulo-zona {
+    font-size: 0.5rem;
+    margin-bottom: 2px;
+  }
+
+  .slot {
+    width: 20px;
+    height: 20px;
+  }
+
+  .dinos-rio .slot {
+    width: 15px;
+    height: 15px;
+  }
+
+  .dinosaurio {
+    width: 80px;
+    height: 80px;
+  }
+
+  .zona-dinos {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* Accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Modo de alto contraste */
+@media (prefers-contrast: high) {
+  .zona-tablero {
+    border-width: 3px;
+    background-color: white;
+  }
+
+  .slot {
+    border-width: 3px;
+    background-color: #f0f0f0;
+  }
+
+  .slot.disponible {
+    background-color: #90EE90;
+    border-color: #006400;
+  }
+
+  .slot.seleccionado {
+    background-color: #FFD700;
+    border-color: #B8860B;
+  }
+}
+
+/* ===== 
+ESTILOS DEL SISTEMA DE DADOS ===== */
+
+/* Contenedor principal del dado */
+.dado-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 250px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Estado del dado */
+.dado-resultado {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cara-dado {
+  font-size: 2.5em;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--color-cara);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+/* Estados del jugador */
+.jugador-libre .cara-dado {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  animation: pulso-libre 2s infinite;
+}
+
+.jugador-restringido .cara-dado {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+  animation: pulso-restringido 2s infinite;
+}
+
+.dado-inactivo .cara-dado {
+  background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+  opacity: 0.7;
+}
+
+/* Información del dado */
+.info-dado h3 {
+  margin: 0 0 5px 0;
+  font-size: 1.1em;
+  color: #333;
+  font-weight: 600;
+}
+
+.info-dado p {
+  margin: 0 0 3px 0;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.privilegio {
+  color: #4CAF50 !important;
+  font-weight: bold;
+  font-size: 0.85em;
+}
+
+.descripcion {
+  color: #e74c3c !important;
+  font-weight: bold;
+  font-size: 0.85em;
+}
+
+/* Información de ronda */
+.ronda-info {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8em;
+  color: #666;
+}
+
+.ronda-numero {
+  font-weight: bold;
+  color: #333;
+}
+
+.jugador-turno {
+  font-style: italic;
+}
+
+/* Zonas permitidas */
+.zonas-permitidas {
+  margin-top: 8px;
+  padding: 5px 8px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  font-size: 0.8em;
+  color: #666;
+}
+
+/* Animaciones del dado */
+@keyframes pulso-libre {
+
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  }
+
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(76, 175, 80, 0.5);
+  }
+}
+
+@keyframes pulso-restringido {
+
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+  }
+
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+  }
+}
+
+/* ===== ESTILOS PARA SLOTS RESTRINGIDOS POR EL DADO ===== */
+
+/* Restricciones del dado */
+.slot.restringido-dado {
+  background-color: rgba(231, 76, 60, 0.3);
+  border: 2px dashed #e74c3c;
+  position: relative;
+}
+
+.slot.restringido-dado::before {
+  content: "🎲";
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* Restricciones del recinto */
+.slot.restringido-recinto {
+  background-color: rgba(241, 196, 15, 0.3);
+  border: 2px dashed #f1c40f;
+  position: relative;
+}
+
+.slot.restringido-recinto::before {
+  content: "🏛️";
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* Animaciones de feedback inválido específicas para el dado */
+.slot.invalido-dado {
+  animation: shake-dado 0.5s ease-in-out;
+  background-color: rgba(231, 76, 60, 0.5) !important;
+}
+
+.slot.invalido-recinto {
+  animation: shake-recinto 0.5s ease-in-out;
+  background-color: rgba(241, 196, 15, 0.5) !important;
+}
+
+@keyframes shake-dado {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-3px);
+  }
+
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+@keyframes shake-recinto {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  25% {
+    transform: translateY(-3px);
+  }
+
+  75% {
+    transform: translateY(3px);
+  }
+}
+
+/* ===== MEJORAS VISUALES ADICIONALES PARA EL DADO ===== */
+
+/* Efecto hover para el contenedor del dado */
+.dado-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Slots disponibles con restricción del dado */
+.slot.disponible.dado-activo {
+  border-color: #4CAF50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+  animation: pulso-dado-disponible 2s infinite;
+}
+
+@keyframes pulso-dado-disponible {
+
+  0%,
+  100% {
+    border-color: #4CAF50;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+  }
+
+  50% {
+    border-color: #45a049;
+    box-shadow: 0 0 12px rgba(76, 175, 80, 0.8);
+  }
+}
+
+/* Responsive para el dado en pantallas pequeñas */
+@media (max-width: 768px) {
+  .dado-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    min-width: auto;
+    max-width: calc(100vw - 20px);
+  }
+
+  .dado-resultado {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+
+  .cara-dado {
+    font-size: 2em;
+    width: 50px;
+    height: 50px;
+  }
+
+  .info-dado h3 {
+    font-size: 1em;
+  }
+
+  .info-dado p {
+    font-size: 0.8em;
+  }
+}
+
+/* Tema oscuro para el dado (opcional) */
+@media (prefers-color-scheme: dark) {
+  .dado-container {
+    background: rgba(45, 45, 45, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .info-dado h3 {
+    color: #fff;
+  }
+
+  .info-dado p {
+    color: #ccc;
+  }
+
+  .ronda-info {
+    border-top-color: rgba(255, 255, 255, 0.1);
+    color: #ccc;
+  }
+
+  .ronda-numero {
+    color: #fff;
+  }
+
+  .zonas-permitidas {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ccc;
+  }
+}
+
+/* Indicadores visuales para diferentes tipos de restricciones del dado */
+.slot.bosque-permitido {
+  border-color: #2d5a27;
+  box-shadow: 0 0 6px rgba(45, 90, 39, 0.6);
+}
+
+.slot.llanura-permitido {
+  border-color: #8b7355;
+  box-shadow: 0 0 6px rgba(139, 115, 85, 0.6);
+}
+
+.slot.banos-permitido {
+  border-color: #4a90e2;
+  box-shadow: 0 0 6px rgba(74, 144, 226, 0.6);
+}
+
+.slot.cafeteria-permitido {
+  border-color: #d4a574;
+  box-shadow: 0 0 6px rgba(212, 165, 116, 0.6);
+}
+
+.slot.vacio-permitido {
+  border-color: #95a5a6;
+  box-shadow: 0 0 6px rgba(149, 165, 166, 0.6);
+}
+
+.slot.trex-permitido {
+  border-color: #e74c3c;
+  box-shadow: 0 0 6px rgba(231, 76, 60, 0.6);
+}
