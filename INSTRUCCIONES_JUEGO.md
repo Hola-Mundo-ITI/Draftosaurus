@@ -1,3 +1,5 @@
+Basicamente manual de como jugar esto
+
 # 🦕 Draftosaurus - Sistema Point and Click
 
 ## 📋 Instrucciones de Uso
@@ -166,18 +168,3 @@ El juego calcula automáticamente los puntos según las reglas oficiales de Draf
 1. Lee los tooltips de cada zona
 2. Verifica que el dinosaurio cumple las reglas
 3. Algunos slots pueden estar restringidos por las reglas
-
-### 📱 Compatibilidad
-
-- **Navegadores:** Chrome, Firefox, Safari, Edge (versiones recientes)
-- **Dispositivos:** Desktop, Tablet, Móvil
-- **Resoluciones:** Desde 320px hasta 4K
-- **Sistemas:** Windows, macOS, Linux, iOS, Android
-
-### 🎉 ¡Disfruta el Juego!
-
-El sistema está completamente implementado y listo para usar. Todas las funciones están en español y siguen las reglas oficiales de Draftosaurus. ¡Que gane el mejor estratega de dinosaurios!
-
----
-
-**Desarrollado con ❤️ para la comunidad de Draftosaurus**
