@@ -1,0 +1,101 @@
+/* ======= Botones ======= */
+.btn {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: var(--borde-redondeado-pequeno);
+  border: 2px solid #000000;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn.oscuro {
+  background-color: #4f3718;
+  color: white;
+}
+
+.btn.oscuro:hover {
+  background-color: #555;
+}
+
+.btn.claro {
+  background-color: rgb(110, 90, 44);
+  color: #000;
+}
+
+.btn.claro:hover {
+  background-color: #f0f0f0;
+}
+
+.btn-secundario {
+  background-color: var(--color-menu-texto);
+  color: #fef6e1;
+  border: none;
+  padding: 8px 16px;
+  margin-top: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+}
+
+.btn-secundario:hover {
+  background-color: #6b4f28;
+}
+
+.boton-puntaje {
+  width: 120px;
+  height: 50px;
+  background-color: #6b4f28;
+  color: #fffce2;
+  border-radius: 12px;
+  font-size: 24px;
+  font-family: 'Papyrus', fantasy;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.boton-puntaje:hover {
+  background-color: #8b5e34;
+  transform: scale(1.05);
+}
+
+.button-group {
+  max-width: 220px;
+  margin: auto;
+}
+
+.boton-accion {
+  background-color: var(--color-verde);
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: var(--borde-redondeado-pequeno);
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.boton-accion:hover {
+  background-color: var(--color-verde-hover);
+}
+
+.boton-verde {
+  background-color: #28a745;
+}
+
+.boton-verde:hover {
+  background-color: #1e7e34;
+}

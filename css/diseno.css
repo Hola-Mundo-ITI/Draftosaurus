@@ -1,0 +1,49 @@
+/* ======= Layout y diseño ======= */
+.main-content {
+  padding-top: 100px;
+  padding-bottom: 40px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+#contenido {
+  max-width: 900px;
+  width: 100%;
+  padding: 100px 20px 60px;
+  text-align: center;
+  transition: transform 0.3s ease;
+  margin: 0 auto;
+}
+
+#contenido.desplazado {
+  transform: translateX(220px);
+}
+
+.contenido-puntaje {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 40px;
+  gap: 50px;
+}
+
+/* ======= Imagen de logo ======= */
+.logo-image {
+  max-width: 250px;
+  margin: 30px auto;
+  display: block;
+}
+
+/* ======= Textos ======= */
+.question {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.titulo-puntaje {
+  margin-top: 80px;
+  font-family: 'Papyrus', fantasy;
+}

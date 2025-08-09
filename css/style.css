@@ -1,0 +1,86 @@
+/* ======= Estilos generales compartidos ======= */
+
+/* Reset y base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  min-height: 100vh;
+  position: relative;
+  background-color: rgb(247, 231, 204);
+  color: #2e2a1c;
+}
+
+/* Colores principales */
+:root {
+  --color-fondo: rgb(247, 231, 204);
+  --color-texto: #2e2a1c;
+  --color-menu: #e8dcb1;
+  --color-menu-texto: #3b2d15;
+  --color-menu-hover: #7b4c29;
+  --color-boton-menu: #3e2f1c;
+  --color-footer: #3b351f;
+  --color-footer-texto: #fceabb;
+  --color-verde: #107e35;
+  --color-verde-hover: #0d6229;
+}
+
+/* Transiciones comunes */
+.transicion-suave {
+  transition: all 0.3s ease;
+}
+
+/* Layout común */
+.contenedor-principal {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 100px 20px 60px;
+  text-align: center;
+}
+
+/* Títulos comunes */
+h1, .titulo {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  color: var(--color-menu-texto);
+  margin-bottom: 30px;
+}
+
+/* Footer común */
+.footer-comun {
+  background-color: var(--color-footer);
+  color: var(--color-footer-texto);
+  text-align: center;
+  font-family: 'Papyrus', fantasy;
+  font-size: 1rem;
+  padding: 15px 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.15);
+  z-index: 99;
+}
+
+/* Sombras comunes */
+.sombra-suave {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.sombra-menu {
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Bordes redondeados comunes */
+.borde-redondeado {
+  border-radius: 10px;
+}
+
+.borde-redondeado-pequeno {
+  border-radius: 6px;
+}

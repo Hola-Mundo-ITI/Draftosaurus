@@ -1,0 +1,128 @@
+/* ======= Formularios ======= */
+.pantalla {
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.caja-formulario {
+  background-color: #ffffff;
+  border-radius: var(--borde-redondeado);
+  padding: 30px;
+  box-shadow: var(--sombra-suave);
+  width: 100%;
+  text-align: center;
+}
+
+.imagen-logo {
+  width: 90px;
+  margin-bottom: 20px;
+}
+
+.grupo-campo, .campo {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.grupo-campo label, .campo label {
+  display: block;
+  margin-bottom: 5px;
+  color: #444;
+  font-weight: bold;
+}
+
+.grupo-campo input, input[type="text"], input[type="email"], input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: var(--borde-redondeado-pequeno);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.grupo-campo input:focus, input[type="text"]:focus {
+  border-color: var(--color-verde);
+}
+
+.contenedor-botones {
+  margin-top: 20px;
+}
+
+.enlace-texto {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 1rem;
+  text-decoration: underline;
+  margin-top: 10px;
+  transition: color 0.3s;
+}
+
+.enlace-texto:hover {
+  color: #0056b3;
+}
+
+/* Formularios específicos */
+.form-grid {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.columna {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  min-width: 250px;
+}
+
+button[type="submit"] {
+  padding: 12px 30px;
+  background-color: var(--color-footer);
+  color: var(--color-footer-texto);
+  font-size: 16px;
+  border: none;
+  border-radius: var(--borde-redondeado-pequeno);
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+  background-color: #5c3a21;
+}
+
+input[type="range"] {
+  width: 150px;
+}
+
+select {
+  padding: 5px 10px;
+  font-size: 1rem;
+}
+
+.campo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 1.1rem;
+}
+
+.cerrar-sesion {
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.cerrar-sesion a {
+  text-decoration: underline;
+  color: #000;
+}
+
+.cerrar-sesion a:hover {
+  color: #555;
+}

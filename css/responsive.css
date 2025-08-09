@@ -1,0 +1,109 @@
+/* ======= Media queries - Responsive ======= */
+
+/* ======= Teléfonos (<= 480px) ======= */
+@media (max-width: 480px) {
+  .logo-image {
+    max-width: 180px;
+  }
+
+  .question {
+    font-size: 1rem;
+  }
+
+  .btn {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+
+  .caja-formulario {
+    padding: 24px;
+  }
+
+  .boton-accion,
+  .enlace-texto {
+    font-size: 0.95rem;
+  }
+
+  .grupo-campo input {
+    font-size: 0.95rem;
+  }
+
+  .dinosaurio {
+    width: 80px;
+    height: 80px;
+  }
+
+  .tablero-juego {
+    width: 90vw;
+    height: 90vw;
+  }
+
+  h1, .titulo {
+    font-size: 1.2rem;
+  }
+
+  .contenedor-principal, #contenido {
+    padding: 100px 15px 60px;
+  }
+}
+
+/* ======= Tablets (<= 768px) ======= */
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 80px;
+  }
+
+  .question {
+    font-size: 1.1rem;
+  }
+
+  .btn {
+    font-size: 1rem;
+    padding: 12px;
+  }
+
+  .zona-juego {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .encabezado-partida {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+
+  h1, .titulo {
+    font-size: 1.4rem;
+  }
+
+  .datos-juego {
+    justify-content: center;
+  }
+
+  .form-grid {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .ronda-actual {
+    padding-left: 0;
+  }
+}
+
+/* ======= Pantallas medianas (<= 600px) ======= */
+@media (max-width: 600px) {
+  .campo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #contenido.desplazado {
+    transform: none;
+  }
+
+  .contenido-puntaje {
+    flex-direction: column;
+    align-items: center;
+  }
+}
