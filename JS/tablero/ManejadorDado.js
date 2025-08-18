@@ -96,26 +96,7 @@ class ManejadorDado {
         color: '#95a5a6'
       },
       
-      trex: {
-        nombre: '¡Cuidado con el T-Rex!',
-        icono: '🦖',
-        descripcion: 'Los dinosaurios deben colocarse en un recinto que no contenga ya un T-Rex',
-        validar: (zonaId, dinosauriosEnZona, nuevoDino) => {
-          // Si el nuevo dinosaurio es T-Rex, verificar que no haya otro T-Rex
-          if (nuevoDino && nuevoDino.tipo === 'trex') {
-            return !dinosauriosEnZona.some(d => d.tipo === 'trex');
-          }
-          // Para otros dinosaurios, verificar que no haya T-Rex en la zona
-          return !dinosauriosEnZona.some(d => d.tipo === 'trex');
-        },
-        zonasPermitidas: (estadoJuego) => {
-          if (!estadoJuego || !estadoJuego.tablero) return [];
-          return Object.keys(estadoJuego.tablero).filter(zona => 
-            !estadoJuego.tablero[zona].some(d => d.tipo === 'trex')
-          );
-        },
-        color: '#e74c3c'
-      }
+
     };
   }
 
@@ -165,7 +146,7 @@ class ManejadorDado {
    * Lanza el dado aleatoriamente
    */
   lanzarDadoAleatorio() {
-    const caras = ['bosque', 'llanura', 'banos', 'cafeteria', 'vacio', 'trex'];
+    const caras = ['bosque', 'llanura', 'banos', 'cafeteria', 'vacio'];
     return caras[Math.floor(Math.random() * caras.length)];
   }
 

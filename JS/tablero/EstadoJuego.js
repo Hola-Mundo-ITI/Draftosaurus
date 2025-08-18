@@ -17,7 +17,7 @@ class EstadoJuego {
       turnoActual: 1,
       rondaActual: 1,
       jugadorActual: 1,
-      totalJugadores: 2,
+      totalJugadores: 3,
       tablero: {
         'bosque-semejanza': [],
         'trio-frondoso': [],
@@ -29,7 +29,8 @@ class EstadoJuego {
       },
       puntuacion: {
         jugador1: 0,
-        jugador2: 0
+        jugador2: 0,
+        jugador3: 0
       },
       dinosauriosDisponibles: this.generarDinosauriosDisponibles(),
       configuracion: {
@@ -67,10 +68,16 @@ class EstadoJuego {
     this.guardarEstadoEnHistorial();
     
     this.estado.turnoActual++;
-    this.estado.jugadorActual = this.estado.jugadorActual === 1 ? 2 : 1;
     
-    // Verificar si se completa una ronda
-    if (this.estado.turnoActual > this.estado.totalJugadores) {
+    // Ciclar entre jugadores 1, 2, 3
+    this.estado.jugadorActual++;
+    if (this.estado.jugadorActual > this.estado.totalJugadores) {
+      this.estado.jugadorActual = 1;
+    }
+    
+    // Verificar si se completa una ronda (todos los jugadores han jugado)
+    // Una ronda se completa cuando el turno es múltiplo del número de jugadores
+    if (this.estado.turnoActual % this.estado.totalJugadores === 0 && this.estado.turnoActual > 0) {
       this.avanzarRonda();
     }
     
@@ -78,6 +85,13 @@ class EstadoJuego {
     this.guardarEstado();
     
     console.log(`Turno ${this.estado.turnoActual}, Jugador ${this.estado.jugadorActual}`);
+    
+    // NUEVO: Activar bot si es su turno
+    if (window.sistemaBots && window.sistemaBots.esBot(this.estado.jugadorActual)) {
+      setTimeout(() => {
+        window.sistemaBots.ejecutarTurnoBot(this.estado.jugadorActual);
+      }, 500);
+    }
   }
 
   /**
@@ -89,8 +103,8 @@ class EstadoJuego {
     this.estado.turnoActual = 1;
     this.estado.jugadorActual = 1;
     
-    // Regenerar dinosaurios disponibles para la nueva ronda
-    this.estado.dinosauriosDisponibles = this.generarDinosauriosDisponibles();
+    // NO regenerar dinosaurios - mantener el pool global que se va agotando
+    // Los dinosaurios se marcan como no disponibles cuando se colocan
     
     // NUEVO: Lanzar dado para la nueva ronda
     if (window.manejadorDado) {
@@ -99,7 +113,7 @@ class EstadoJuego {
     
     this.actualizarInterfazRonda();
     
-    console.log(`¡Nueva ronda! Ronda ${this.estado.rondaActual}`);
+    console.log(`Nueva ronda ${this.estado.rondaActual} - Dinosaurios disponibles: ${this.estado.dinosauriosDisponibles.filter(d => d.disponible).length}`);
   }
 
   /**
@@ -177,17 +191,28 @@ class EstadoJuego {
    * Verifica si el juego ha terminado
    */
   verificarFinJuego() {
-    // El juego termina cuando se han jugado todas las rondas
-    const rondasMaximas = 12; // Típico en Draftosaurus
+    // Verificar si no hay más dinosaurios disponibles
+    const dinosauriosDisponibles = this.estado.dinosauriosDisponibles.filter(d => d.disponible);
     
-    if (this.estado.rondaActual > rondasMaximas) {
-      this.finalizarJuego();
-      return true;
+    // El juego termina cuando NO hay dinosaurios disponibles Y es el final de una ronda completa
+    if (dinosauriosDisponibles.length === 0) {
+      // Solo terminar si todos los jugadores de la ronda actual han jugado
+      const jugadoresQueHanJugadoEnRonda = (this.estado.turnoActual - 1) % this.estado.totalJugadores;
+      
+      if (jugadoresQueHanJugadoEnRonda === 0) {
+        console.log('Fin del juego: No hay más dinosaurios disponibles y ronda completa');
+        this.finalizarJuego();
+        return true;
+      } else {
+        console.log(`Esperando que terminen los turnos restantes de la ronda. Faltan ${this.estado.totalJugadores - jugadoresQueHanJugadoEnRonda} jugadores`);
+        return false;
+      }
     }
 
-    // También verificar si no hay más dinosaurios disponibles
-    const dinosauriosDisponibles = this.estado.dinosauriosDisponibles.filter(d => d.disponible);
-    if (dinosauriosDisponibles.length === 0) {
+    // También terminar si se han jugado demasiadas rondas (seguridad)
+    const rondasMaximas = 10;
+    if (this.estado.rondaActual > rondasMaximas) {
+      console.log('Fin del juego: Máximo de rondas alcanzado');
       this.finalizarJuego();
       return true;
     }

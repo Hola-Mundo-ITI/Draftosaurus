@@ -207,7 +207,25 @@ class TableroPointClick {
     
     // NUEVO: Obtener ID del jugador actual
     const jugadorId = this.obtenerJugadorActual();
-    const estadoJuego = window.estadoJuego ? estadoJuego.obtenerEstado() : null;
+    
+    // CORREGIDO: Verificar que estadoJuego esté disponible antes de usarlo
+    const estadoJuego = window.estadoJuego ? window.estadoJuego.obtenerEstado() : null;
+    
+    // Verificación de seguridad adicional
+    if (!estadoJuego) {
+      console.warn('Estado del juego no disponible, reintentando inicialización...');
+      this.mostrarMensaje('Juego inicializándose, por favor espera...', 'info');
+      
+      // Reintentar después de un breve delay
+      setTimeout(() => {
+        if (window.estadoJuego) {
+          this.intentarColocarDinosaurio(slot);
+        } else {
+          this.mostrarMensaje('Error: No se pudo inicializar el juego. Recarga la página.', 'error');
+        }
+      }, 500);
+      return;
+    }
 
     // ACTUALIZADO: Pasar información completa al validador
     const validacion = window.validarMovimiento ? 

@@ -1584,3 +1584,130 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   border-color: #e74c3c;
   box-shadow: 0 0 6px rgba(231, 76, 60, 0.6);
 }
+/* 
+======= ESTILOS PARA SISTEMA DE BOTS ======= */
+
+/* Indicadores de jugador con bots */
+.numero-jugador.bot-jugando {
+  background-color: #4CAF50;
+  color: white;
+  animation: bot-thinking 1.5s infinite;
+  border-radius: 5px;
+  padding: 2px 6px;
+}
+
+@keyframes bot-thinking {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Modal de puntuación con bots */
+.modal-puntuacion .puntuacion-jugador h4 {
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.modal-puntuacion .puntuacion-jugador:nth-child(1) h4 {
+  background-color: #2196F3;
+  color: white;
+}
+
+.modal-puntuacion .puntuacion-jugador:nth-child(2) h4 {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.modal-puntuacion .puntuacion-jugador:nth-child(3) h4 {
+  background-color: #FF9800;
+  color: white;
+}
+
+/* Mensajes específicos para bots */
+.mensaje.bot-info {
+  background-color: #E8F5E8;
+  border-left: 4px solid #4CAF50;
+  color: #2E7D32;
+}
+
+/* Indicador de cantidad de jugadores con bots */
+.cantidad-jugadores {
+  font-size: 0.9rem;
+  background-color: rgba(76, 175, 80, 0.1);
+  border: 1px solid #4CAF50;
+  color: #2E7D32;
+}
+
+/* Animación para slots cuando bot está jugando */
+.slot.bot-considerando {
+  animation: bot-considering 0.8s infinite;
+}
+
+@keyframes bot-considering {
+  0%, 100% { 
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.6);
+  }
+}
+
+/* Estilos para controles de bots */
+.controles-bots {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.controles-bots h4 {
+  margin: 0 0 10px 0;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.controles-bots button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  margin: 2px;
+}
+
+.controles-bots button:hover {
+  background: #45a049;
+}
+
+.controles-bots button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Indicador de turno de bot */
+.turno-bot-indicator {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(76, 175, 80, 0.95);
+  color: white;
+  padding: 20px 30px;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  z-index: 2000;
+  animation: fade-in-out 2s ease-in-out;
+}
+
+@keyframes fade-in-out {
+  0%, 100% { opacity: 0; }
+  20%, 80% { opacity: 1; }
+}

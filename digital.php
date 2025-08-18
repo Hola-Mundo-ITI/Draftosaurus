@@ -7,12 +7,16 @@ $specificJS = [
   "utils/tooltips.js",
   "utils/calibradorTablero.js",
   "utils/controladorTamano.js",
+  "tablero/RestriccionesPasivas.js",
+  "tablero/RestriccionesActivas.js",
+  "tablero/ValidadorRestricciones.js",
   "tablero/ValidadorZona.js",
   "tablero/CalculadoraPuntuacion.js", 
   "tablero/EstadoJuego.js",
   "tablero/ManejadorSeleccion.js",
   "tablero/TableroPointClick.js",
   "tablero/ManejadorDado.js",
+  "tablero/SistemaBots.js",
   "utils/validadorDado.js",
   "digitalPage.js"
 ];
@@ -22,6 +26,7 @@ $menuId = "menuLateral";
 $menuClass = "navegacion-lateral";
 $menuListClass = "lista-menu";
 
+include 'includes/font.php';
 include 'includes/head.php';
 ?>
 
@@ -36,7 +41,7 @@ include 'includes/head.php';
         <img id="imagen-dado" src="Recursos/img/dado.png" alt="Dado Virtual mostrando resultado" />
         <div class="texto-dado">Lanzar Dado</div>
       </div>
-      <div class="cantidad-jugadores" aria-live="polite">👥 <span class="valor">2</span></div>
+      <div class="cantidad-jugadores" aria-live="polite">🤖 <span class="valor">Partida Automática</span> (Tú vs 2 Bots)</div>
     </div>
   </header>
   
