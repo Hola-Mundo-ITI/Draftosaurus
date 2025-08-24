@@ -6,57 +6,138 @@
 // Variables globales del juego
 let tableroJuego;
 let manejadorSeleccion;
-let validadorRestricciones;
 let estadoJuego;
 let calculadoraPuntuacion;
-let sistemaBots;
+let sistemaBots; // Mantener para compatibilidad, pero su lógica será en backend
 
-document.addEventListener("DOMContentLoaded", () => {
-  const boton = document.getElementById('abrirMenu');
-  const menu = document.getElementById('menuLateral');
+/**
+ * Asegura que los elementos críticos del DOM existen antes de inicializar
+ */
+function asegurarElementosDOM() {
+  const elementosNecesarios = [
+    'body',
+    '.contenedor-tablero'
+  ];
 
-  // Abrir/cerrar menú lateral
-  boton.addEventListener('click', () => {
-    menu.classList.toggle('abierto');
+  let todosPresentes = true;
+  elementosNecesarios.forEach(selector => {
+    const el = document.querySelector(selector);
+    if (!el) {
+      console.error(`Elemento crítico no encontrado: ${selector}`);
+      todosPresentes = false;
+    }
   });
 
-  // Cerrar menú al hacer clic en cualquier enlace
-  menu.querySelectorAll('a').forEach(enlace => {
-    enlace.addEventListener('click', () => {
-      menu.classList.remove('abierto');
-    });
-  });
+  return todosPresentes;
+}
 
-  // Inicializar el sistema de juego
+/**
+ * Configura el menú lateral de forma segura (valida existencia)
+ */
+function configurarMenuLateral() {
+  try {
+    const boton = document.getElementById('abrirMenu');
+    const menu = document.getElementById('menuLateral');
+    if (!boton || !menu) {
+      // No interrumpir si faltan elementos; mostrar advertencia para debug
+      console.warn('configurarMenuLateral: elemento abrirMenu o menuLateral no encontrado');
+      return;
+    }
+
+    // Evitar duplicar listeners
+    if (!boton.dataset.menuConfigured) {
+      boton.addEventListener('click', () => {
+        menu.classList.toggle('abierto');
+      });
+      boton.dataset.menuConfigured = 'true';
+    }
+
+    // Cerrar menú al hacer clic en cualquier enlace (si existen)
+    const enlaces = menu.querySelectorAll('a');
+    if (enlaces && enlaces.length) {
+      enlaces.forEach(enlace => {
+        if (!enlace.dataset.menuLinkConfigured) {
+          enlace.addEventListener('click', () => {
+            menu.classList.remove('abierto');
+          });
+          enlace.dataset.menuLinkConfigured = 'true';
+        }
+      });
+    }
+
+  } catch (err) {
+    console.error('Error configurando menú lateral:', err);
+  }
+}
+
+/**
+ * Función para asegurar que el DOM esté completamente cargado y luego inicializar
+ */
+function cuandoDOMListo() {
+  // Configurar menú lateral de forma segura
+  configurarMenuLateral();
+
+  // Inicializar el sistema de juego de forma robusta
   inicializarJuego();
 
-  // Configurar controles adicionales
+  // Configurar controles adicionales (la función verifica existencia internamente)
   configurarControlesJuego();
 
   // Configurar tooltips después de que todo esté cargado
   setTimeout(() => {
     if (window.sistemaTooltips) {
-      sistemaTooltips.configurarTodosLosTooltips();
-      sistemaTooltips.mostrarAyudaTemporal('¡Bienvenido a Draftosaurus!\\n\\n**Instrucciones:**\\n1. Haz clic en un dinosaurio para seleccionarlo\\n2. Haz clic en un slot válido para colocarlo\\n3. Cada zona tiene reglas específicas\\n\\n*Pasa el mouse sobre las zonas para ver más información*\\n\\n**Herramientas:**\\n• Ctrl+Shift+C: Calibrar posiciones\\n• Ctrl+Shift+Y: Control de tamaño\\n• Ctrl+Alt+Plus/Minus: Cambiar tamaño rápido', 6000);
+      try {
+        sistemaTooltips.configurarTodosLosTooltips && sistemaTooltips.configurarTodosLosTooltips();
+        sistemaTooltips.mostrarAyudaTemporal && sistemaTooltips.mostrarAyudaTemporal('¡Bienvenido a Draftosaurus!\\n\\n**Instrucciones:**\\n1. Haz clic en un dinosaurio para seleccionarlo\\n2. Haz clic en un slot válido para colocarlo\\n3. Cada zona tiene reglas específicas\\n\\n*Pasa el mouse sobre las zonas para ver más información*\\n\\n**Herramientas:**\\n• Ctrl+Shift+C: Calibrar posiciones\\n• Ctrl+Shift+Y: Control de tamaño\\n• Ctrl+Alt+Plus/Minus: Cambiar tamaño rápido', 6000);
+      } catch (e) {
+        console.warn('Error al configurar tooltips:', e);
+      }
     }
   }, 1000);
-});
+}
+
+// Esperar a que el DOM esté completamente cargado de forma segura
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      cuandoDOMListo();
+    } catch (e) {
+      console.error('Error en DOMContentLoaded handler:', e);
+    }
+  });
+} else {
+  try {
+    cuandoDOMListo();
+  } catch (e) {
+    console.error('Error al ejecutar cuandoDOMListo:', e);
+  }
+}
 
 /**
  * Inicializa todos los componentes del juego
- * ACTUALIZADO: Incluye sistema de dados
+ * ACTUALIZADO: Incluye sistema de dados y reintentos si faltan elementos DOM
  */
 function inicializarJuego() {
   try {
     console.log('🚀 Iniciando inicialización del juego...');
 
+    // Asegurarse de que los elementos del DOM estén presentes antes de inicializar
+    if (!asegurarElementosDOM()) {
+      console.warn('Inicialización: elementos críticos del DOM faltan. Reintentando en 500ms...');
+      setTimeout(() => {
+        if (!asegurarElementosDOM()) {
+          console.error('Elementos críticos del DOM no encontrados tras reintento. Abandonando inicialización.');
+          mostrarErrorInicializacion();
+          return;
+        }
+
+        // Si pasamos la verificación en reintento, continuar con inicialización
+        inicializarJuego();
+      }, 500);
+      return;
+    }
+
     // Crear instancias de las clases principales EN ORDEN
-    console.log('📊 Inicializando ValidadorRestricciones...');
-    validadorRestricciones = new ValidadorRestricciones();
-
-    console.log('🧮 Inicializando CalculadoraPuntuacion...');
-    calculadoraPuntuacion = new CalculadoraPuntuacion();
-
     console.log('🎮 Inicializando EstadoJuego...');
     estadoJuego = new EstadoJuego();
 
@@ -64,19 +145,26 @@ function inicializarJuego() {
     window.estadoJuego = estadoJuego;
     console.log('✅ EstadoJuego disponible globalmente');
 
+    // Inicializar manejador de selección primero para evitar condiciones de carrera
+    console.log('🎨 Inicializando ManejadorSeleccion...');
+    manejadorSeleccion = new ManejadorSeleccion();
+    // Exponer globalmente para que los controladores de evento lo encuentren
+    window.manejadorSeleccion = manejadorSeleccion;
+
     console.log('🎯 Inicializando TableroPointClick...');
     tableroJuego = new TableroPointClick();
 
-    console.log('🎨 Inicializando ManejadorSeleccion...');
-    manejadorSeleccion = new ManejadorSeleccion(tableroJuego);
+    console.log('🔗 Inyectando tablero en ManejadorSeleccion...');
+    if (typeof manejadorSeleccion.setTablero === 'function') {
+      manejadorSeleccion.setTablero(tableroJuego);
+    } else {
+      console.warn('setTablero no disponible en ManejadorSeleccion; inyectando directamente');
+      manejadorSeleccion.tablero = tableroJuego;
+    }
 
     // NUEVO: Inicializar sistema de dado
     window.manejadorDado = new ManejadorDado();
     window.validadorDado = new ValidadorDado(window.manejadorDado);
-
-    // NUEVO: Inicializar sistema de bots
-    sistemaBots = new SistemaBots();
-    window.sistemaBots = sistemaBots;
 
     // Configurar eventos adicionales
     manejadorSeleccion.configurarEventosPreview();
@@ -90,6 +178,11 @@ function inicializarJuego() {
     console.log('🎮 Sistema de juego inicializado correctamente');
     mostrarMensajeBienvenida();
 
+    // Ejecutar inicialización de slots tras la inicialización principal
+    setTimeout(() => {
+      window.slotsInitializer.inicializarSlotsDinamicos();
+    }, 200); // pequeño delay para permitir que elementos creados por JS terminen
+
   } catch (error) {
     console.error('❌ Error al inicializar el juego:', error);
     mostrarErrorInicializacion();
@@ -100,37 +193,50 @@ function inicializarJuego() {
  * Configura controles adicionales del juego
  */
 function configurarControlesJuego() {
-  // Agregar botones de control
-  const contenedorTablero = document.querySelector('.contenedor-tablero');
-  const controlesJuego = document.createElement('div');
-  controlesJuego.className = 'controles-juego';
-  controlesJuego.innerHTML = `
-    <div class="grupo-controles">
-      <button id="btn-deshacer" class="boton-control" title="Deshacer último movimiento">
-        ↶ Deshacer
-      </button>
-      <button id="btn-reiniciar" class="boton-control" title="Reiniciar tablero">
-        🔄 Reiniciar
-      </button>
-      <button id="btn-calcular-puntos" class="boton-control" title="Calcular puntuación actual">
-        📊 Puntos
-      </button>
-    </div>
-    <div class="info-turno">
-      <span class="etiqueta-turno">Turno del Jugador:</span>
-      <span id="jugador-actual" class="numero-jugador">1</span>
-    </div>
-  `;
+  try {
+    const contenedorTablero = document.querySelector('.contenedor-tablero');
+    if (!contenedorTablero) {
+      console.warn('contenedor-tablero no encontrado, omitiendo controles de juego');
+      return;
+    }
 
-  contenedorTablero.appendChild(controlesJuego);
+    const controlesJuego = document.createElement('div');
+    controlesJuego.className = 'controles-juego';
+    controlesJuego.innerHTML = `
+      <div class="grupo-controles">
+        <button id="btn-deshacer" class="boton-control" title="Deshacer último movimiento">
+          ↶ Deshacer
+        </button>
+        <button id="btn-reiniciar" class="boton-control" title="Reiniciar tablero">
+          🔄 Reiniciar
+        </button>
+        <button id="btn-calcular-puntos" class="boton-control" title="Calcular puntuación actual">
+          📊 Puntos
+        </button>
+      </div>
+      <div class="info-turno">
+        <span class="etiqueta-turno">Turno del Jugador:</span>
+        <span id="jugador-actual" class="numero-jugador">1</span>
+      </div>
+    `;
 
-  // Configurar eventos de los botones
-  document.getElementById('btn-deshacer').addEventListener('click', deshacerMovimiento);
-  document.getElementById('btn-reiniciar').addEventListener('click', confirmarReinicio);
-  document.getElementById('btn-calcular-puntos').addEventListener('click', mostrarPuntuacionActual);
+    contenedorTablero.appendChild(controlesJuego);
 
-  // Configurar atajos de teclado
-  configurarAtajosTeclado();
+    // Configurar eventos de los botones sólo si existen
+    const btnDeshacer = document.getElementById('btn-deshacer');
+    const btnReiniciar = document.getElementById('btn-reiniciar');
+    const btnCalcular = document.getElementById('btn-calcular-puntos');
+
+    if (btnDeshacer) btnDeshacer.addEventListener('click', deshacerMovimiento);
+    if (btnReiniciar) btnReiniciar.addEventListener('click', confirmarReinicio);
+    if (btnCalcular) btnCalcular.addEventListener('click', mostrarPuntuacionActual);
+
+    // Configurar atajos de teclado
+    configurarAtajosTeclado();
+
+  } catch (err) {
+    console.error('Error configurando controles de juego:', err);
+  }
 }
 
 /**
@@ -191,11 +297,49 @@ function confirmarReinicio() {
 /**
  * Muestra la puntuación actual
  */
-function mostrarPuntuacionActual() {
+async function mostrarPuntuacionActual() {
   const estado = estadoJuego.obtenerEstado();
-  const puntuacion1 = calculadoraPuntuacion.generarReportePuntuacion(estado.tablero, 1);
-  const puntuacion2 = calculadoraPuntuacion.generarReportePuntuacion(estado.tablero, 2);
-  const puntuacion3 = calculadoraPuntuacion.generarReportePuntuacion(estado.tablero, 3);
+  const allPlayerBoards = { // Crear un objeto con todos los tableros de los jugadores
+    1: estado.tablero,
+    2: estado.tablero,
+    3: estado.tablero,
+  }; // Esto debería ser un mapeo real de tablero por jugador si el estado lo permite
+
+  let puntuacion1 = { puntuacionTotal: 0, detallesBase: {} };
+  let puntuacion2 = { puntuacionTotal: 0, detallesBase: {} };
+  let puntuacion3 = { puntuacionTotal: 0, detallesBase: {} };
+
+  try {
+    const fetchScore = async (playerId) => {
+      const response = await fetch('backend/calcularPuntuacion.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullBoard: estado.tablero, // Enviar el tablero completo
+          playerId: playerId,
+          allPlayerBoards: allPlayerBoards // Enviar todos los tableros para Rey de la Selva
+        }),
+      });
+      const result = await response.json();
+      if (result.success || result.exito) {
+        return { puntuacionTotal: (result.scoreReport && result.scoreReport.totalScore) || 0, detallesBase: (result.scoreReport && result.scoreReport.baseDetails) || {} };
+      } else {
+        console.error(`Error al obtener puntuación para jugador ${playerId}:`, result.message || result.mensaje);
+        return { puntuacionTotal: 0, detallesBase: {} };
+      }
+    };
+
+    [puntuacion1, puntuacion2, puntuacion3] = await Promise.all([
+      fetchScore(1),
+      fetchScore(2),
+      fetchScore(3)
+    ]);
+
+  } catch (error) {
+    console.error('Error al calcular puntuaciones con el backend:', error);
+    tableroJuego.mostrarMensaje('Error al cargar puntuaciones.', 'error');
+    return;
+  }
 
   mostrarModalPuntuacion(puntuacion1, puntuacion2, puntuacion3);
 }
@@ -323,7 +467,7 @@ function mostrarMensajeBienvenida() {
     if (window.draftosaurusDebug) {
       window.draftosaurusDebug.activarDebug();
       console.log('🎲 Sistema de dados inicializado. Usa window.draftosaurusDebug para debugging.');
-      console.log('🤖 Sistema de bots inicializado:', sistemaBots.obtenerInfoBots());
+      console.log('🤖 Sistema de bots refactorizado al backend.');
     }
   }, 1000);
 }
@@ -334,12 +478,6 @@ function mostrarMensajeBienvenida() {
 function iniciarPartidaConBotsAutomaticamente() {
   try {
     console.log('🤖 Iniciando partida automática con bots...');
-
-    // Verificar que el sistema de bots esté inicializado
-    if (!window.sistemaBots) {
-      console.error('❌ Sistema de bots no inicializado');
-      return;
-    }
 
     // Verificar que el estado del juego esté listo
     if (!estadoJuego) {
@@ -355,14 +493,10 @@ function iniciarPartidaConBotsAutomaticamente() {
     // Actualizar la interfaz para mostrar el estado inicial
     actualizarInterfazJugador();
 
-    // Mostrar información de los bots
-    const infoBots = sistemaBots.obtenerInfoBots();
-    console.log('🤖 Información de bots:', infoBots);
-
     // Si por alguna razón el turno inicial no es del jugador 1, activar el bot correspondiente
-    if (estado.jugadorActual !== 1 && sistemaBots.esBot(estado.jugadorActual)) {
+    if (estado.jugadorActual !== 1) { // Asumimos que los jugadores 2 y 3 son bots
       setTimeout(() => {
-        sistemaBots.ejecutarTurnoBot(estado.jugadorActual);
+        ejecutarTurnoBotRemoto(estado.jugadorActual);
       }, 2000); // Dar tiempo para que se cargue todo
     }
 
@@ -422,9 +556,9 @@ function avanzarTurno() {
   }
 
   // Si es turno de un bot, ejecutarlo automaticamente
-  if (sistemaBots.esBot(estado.jugadorActual)) {
+  if (estado.jugadorActual !== 1) { // Asumimos que los jugadores 2 y 3 son bots
     setTimeout(() => {
-      sistemaBots.ejecutarTurnoBot(estado.jugadorActual);
+      ejecutarTurnoBotRemoto(estado.jugadorActual);
     }, 2000); // Esperar 2 segundos antes del turno del bot
   }
 
@@ -463,7 +597,7 @@ function mostrarMensajeTurnoActual(estado) {
  * Función para validar movimiento (llamada desde TableroPointClick)
  * REFACTORIZADO: Usa el nuevo sistema de restricciones unificado
  */
-function validarMovimiento(zonaId, dinosaurio, slot, jugadorId, estadoJuegoParam) {
+async function validarMovimiento(zonaId, dinosaurio, slot, jugadorId, estadoJuegoParam) {
   // Verificación robusta del estado del juego
   let estado = estadoJuegoParam;
 
@@ -485,8 +619,36 @@ function validarMovimiento(zonaId, dinosaurio, slot, jugadorId, estadoJuegoParam
 
   const dinosauriosEnZona = estado.tablero[zonaId] || [];
 
-  // Usar el nuevo sistema de restricciones refactorizado
-  return validadorRestricciones.validarColocacion(zonaId, dinosauriosEnZona, dinosaurio, slot, jugadorId, estado);
+  // Asegurar que el estado que enviamos tenga las propiedades esperadas por el backend
+  const estadoParaEnviar = {
+    ...estado,
+    tablero: estado.tablero || {},
+    dado: estado.dado ?? { activo: false, caraActual: null, jugadorQueLanzo: null, rondaActual: estado.rondaActual }
+  };
+
+  // REFACTORIZADO: Usar el nuevo endpoint PHP para la validación
+  try {
+    const response = await fetch('backend/validarMovimiento.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'validatePlacement',
+        zoneId: zonaId,
+        dinosaursInZone: dinosauriosEnZona,
+        dinosaur: dinosaurio,
+        slot: slot,
+        playerId: jugadorId,
+        gameState: estadoParaEnviar
+      })
+    });
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error('Error validando movimiento con backend:', err);
+    return { valido: false, razon: 'Error de comunicación con el servidor' };
+  }
 }
 
 // Hacer funciones disponibles globalmente
@@ -588,33 +750,58 @@ function lanzarDadoManual() {
   const estadoActual = window.estadoJuego ? estadoJuego.obtenerEstado() : { rondaActual: 1 };
 
   setTimeout(() => {
-    // Lanzar el dado
-    const estadoDado = window.manejadorDado.lanzarDadoParaRonda(estadoActual.rondaActual, 3);
+    try {
+      // Lanzar el dado
+      const estadoDado = window.manejadorDado.lanzarDadoParaRonda(estadoActual.rondaActual, 3);
 
-    // Actualizar interfaces
-    mostrarEstadoDado(estadoDado, 1);
-    actualizarDadoVirtual(estadoDado);
+      // Guardar estado del dado en el estado global y persistir
+      if (window.estadoJuego && typeof window.estadoJuego.obtenerEstado === 'function') {
+        try {
+          // Asegurar estructura mínima del dado
+          const dadoNormalizado = {
+            activo: !!(estadoDado && estadoDado.activo),
+            caraActual: estadoDado ? estadoDado.caraActual ?? estadoDado.currentFace ?? null : null,
+            jugadorQueLanzo: estadoDado ? estadoDado.jugadorQueLanzo ?? estadoDado.playerWhoRolled ?? estadoActual.jugadorActual : estadoActual.jugadorActual,
+            rondaActual: estadoDado ? estadoDado.rondaActual ?? estadoActual.rondaActual : estadoActual.rondaActual
+          };
 
-    // Remover clase de animación y agregar resultado
-    dadoVirtual.classList.remove('lanzando');
-    dadoVirtual.classList.add('resultado');
+          window.estadoJuego.estado.dado = dadoNormalizado;
+          window.estadoJuego.guardarEstado();
+          console.log('[digitalPage] Estado del dado guardado en estadoJuego:', dadoNormalizado);
+        } catch (errGuardar) {
+          console.warn('[digitalPage] No se pudo guardar estado del dado en estadoJuego:', errGuardar);
+        }
+      }
 
-    // Actualizar resaltado si hay selección activa
-    if (window.manejadorSeleccion && manejadorSeleccion.haySeleccion()) {
-      manejadorSeleccion.actualizarPorCambioDado();
+      // Actualizar interfaces
+      mostrarEstadoDado(estadoDado, 1);
+      actualizarDadoVirtual(estadoDado);
+
+      // Remover clase de animación y agregar resultado
+      dadoVirtual.classList.remove('lanzando');
+      dadoVirtual.classList.add('resultado');
+
+      // Actualizar resaltado si hay selección activa
+      if (window.manejadorSeleccion && manejadorSeleccion.haySeleccion()) {
+        manejadorSeleccion.actualizarPorCambioDado();
+      }
+
+      // Mostrar mensaje informativo
+      const regla = window.manejadorDado.reglasDado[estadoDado.caraActual] || window.manejadorDado.reglasDado[estadoDado.currentFace];
+      const esJugadorQueLanza = (estadoDado.jugadorQueLanzo ?? estadoDado.playerWhoRolled) === 1 || (window.estadoJuego && window.estadoJuego.estado.jugadorActual === 1 && (window.estadoJuego.estado.dado && window.estadoJuego.estado.dado.jugadorQueLanzo === 1));
+
+      if (esJugadorQueLanza) {
+        tableroJuego.mostrarMensaje(`🎲 ¡Lanzaste ${regla ? regla.nombre : 'el dado'}! Puedes colocar donde quieras`, 'exito');
+      } else {
+        tableroJuego.mostrarMensaje(`🎲 ${regla ? regla.nombre : 'Restricción'}: ${regla ? regla.descripcion : ''}`, 'info');
+      }
+
+      console.log('🎲 Dado lanzado manualmente:', estadoDado);
+
+    } catch (err) {
+      console.error('Error lanzando dado manualmente:', err);
+      dadoVirtual.classList.remove('lanzando');
     }
-
-    // Mostrar mensaje informativo
-    const regla = window.manejadorDado.reglasDado[estadoDado.caraActual];
-    const esJugadorQueLanza = estadoDado.jugadorQueLanzo === 1;
-
-    if (esJugadorQueLanza) {
-      tableroJuego.mostrarMensaje(`🎲 ¡Lanzaste ${regla.nombre}! Puedes colocar donde quieras`, 'exito');
-    } else {
-      tableroJuego.mostrarMensaje(`🎲 ${regla.nombre}: ${regla.descripcion}`, 'info');
-    }
-
-    console.log('🎲 Dado lanzado manualmente:', estadoDado);
 
   }, 1000); // Duración de la animación
 }
@@ -810,11 +997,149 @@ function avanzarRonda() {
   console.log(`🎲 Avanzado a ronda ${nuevaRonda}`);
 }
 
+/**
+ * Función para obtener los dinosaurios disponibles del DOM
+ */
+function obtenerDinosauriosDisponiblesDOM() {
+  const dinosaurs = [];
+  document.querySelectorAll('.dinosaurio').forEach((element, index) => {
+    if (element.style.display !== 'none') {
+      const img = element.querySelector('img');
+      const src = img ? img.src : '';
+      let type = 'desconocido';
+      if (window.mapeoDinosaurios && typeof window.mapeoDinosaurios.obtenerTipoDesdeSrc === 'function') {
+        type = window.mapeoDinosaurios.obtenerTipoDesdeSrc(src);
+      } else {
+        // Fallback simple basado en nombre de archivo si no hay mapeo
+        if (src.includes('dino1')) type = 'triceratops';
+        else if (src.includes('dino2')) type = 'stegosaurus';
+        else if (src.includes('dino3')) type = 'brontosaurus';
+        else if (src.includes('dino4')) type = 'trex';
+        else if (src.includes('dino5')) type = 'velociraptor';
+        else if (src.includes('dino6')) type = 'pteranodon';
+      }
+
+      dinosaurs.push({
+        id: `dino_${index + 1}`, // Unique ID
+        type: type,
+        image: src
+      });
+    }
+  });
+  return dinosaurs;
+}
+
+/**
+ * NUEVO: Función para ejecutar el turno de un bot remoto
+ */
+async function ejecutarTurnoBotRemoto(jugadorId) {
+  const tiempoEsperaBot = 2000; // 2 segundos para simular "pensamiento"
+
+  const estadoActual = estadoJuego.obtenerEstado();
+  const availableDinosaurs = obtenerDinosauriosDisponiblesDOM();
+
+  // Mostrar mensaje de que el bot está pensando
+  tableroJuego.mostrarMensaje(`🤖 Bot ${jugadorId === 2 ? 'Alpha' : 'Beta'} está pensando...`, 'info');
+
+  try {
+    const response = await fetch('backend/obtenerMovimientoBot.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        playerId: jugadorId,
+        gameState: estadoActual,
+        availableDinosaurs: availableDinosaurs
+      }),
+    });
+
+    const result = await response.json();
+
+    // Compatibilidad con formatos de respuesta distintos (inglés/español)
+    const botMove = result.move ?? result.movimiento ?? result.movimiento ?? result.movimiento ?? null;
+    const successFlag = (result.success === true) || (result.exito === true) || (typeof result.success === 'undefined' && typeof result.exito === 'undefined');
+
+    if (botMove) {
+      const move = botMove;
+      const dinosaur = move.dinosaur ?? move.dinosauro ?? move.dino ?? null;
+      const zoneId = move.zoneId ?? move.zone ?? move.zone_id ?? move.zona ?? null;
+      const slot = move.slot ?? move.slotId ?? move.casillero ?? null;
+
+      if (!dinosaur || !zoneId || slot == null) {
+        console.warn('Respuesta del bot incompleta:', result);
+        tableroJuego.mostrarMensaje(`🤖 Bot ${jugadorId === 2 ? 'Alpha' : 'Beta'} no pudo jugar. Respuesta incompleta del servidor.`, 'advertencia');
+        avanzarTurno();
+        return;
+      }
+
+      // Simular la animación de selección y colocación en el frontend
+      const dinosaurioElemento = document.querySelector(`.dinosaurio img[src="${dinosaur.image}"]`)?.closest('.dinosaurio');
+      if (dinosaurioElemento) {
+        dinosaurioElemento.classList.add('seleccionado');
+      }
+      
+      const slotElement = document.querySelector(`[data-zona="${zoneId}"] [data-slot="${slot}"]`);
+
+      if (slotElement) {
+        setTimeout(async () => {
+          const imgDino = document.createElement('img');
+          imgDino.src = dinosaur.image;
+          imgDino.alt = `Dinosaurio ${dinosaur.type}`;
+          imgDino.style.width = '50px';
+          imgDino.style.height = '50px';
+          imgDino.style.objectFit = 'contain';
+          imgDino.style.position = 'absolute';
+          imgDino.style.top = '50%';
+          imgDino.style.left = '50%';
+          imgDino.style.transform = 'translate(-50%, -50%)';
+          imgDino.style.zIndex = '10';
+          imgDino.style.pointerEvents = 'none';
+
+          slotElement.appendChild(imgDino);
+          slotElement.dataset.ocupado = 'true';
+          
+          if (dinosaurioElemento) {
+            dinosaurioElemento.style.display = 'none';
+            dinosaurioElemento.classList.remove('seleccionado');
+          }
+          
+          const dinosaurioParaEstado = {
+            id: dinosaur.id,
+            type: dinosaur.type,
+            slot: slot,
+            image: dinosaur.image,
+            playerPlaced: jugadorId
+          };
+          estadoJuego.colocarDinosaurio(zoneId, dinosaurioParaEstado, slot);
+          
+          tableroJuego.mostrarMensaje(`🤖 Bot ${jugadorId === 2 ? 'Alpha' : 'Beta'} colocó ${dinosaur.type} en ${zoneId}`, 'exito');
+          avanzarTurno();
+        }, tiempoEsperaBot);
+      } else {
+        console.error(`🤖 Bot ${jugadorId === 2 ? 'Alpha' : 'Beta'} no pudo encontrar el elemento slot en el DOM.`);
+        tableroJuego.mostrarMensaje(`🤖 Bot ${jugadorId === 2 ? 'Alpha' : 'Beta'} no pudo jugar. Pasa turno.`, 'advertencia');
+        avanzarTurno();
+      }
+
+    } else {
+      const mensaje = result.message ?? result.mensaje ?? 'El bot no pudo encontrar un movimiento válido.';
+      console.warn(`🤖 Bot ${jugadorId === 2 ? 'Alpha' : 'Beta'} no pudo obtener un movimiento válido del backend: ${mensaje}`);
+      tableroJuego.mostrarMensaje(`🤖 Bot ${jugadorId === 2 ? 'Alpha' : 'Beta'} no pudo jugar. Pasa turno.`, 'advertencia');
+      avanzarTurno();
+    }
+
+  } catch (error) {
+    console.error(`❌ Error al ejecutar turno del bot ${jugadorId === 2 ? 'Alpha' : 'Beta'} con el backend:`, error);
+    tableroJuego.mostrarMensaje(`❌ Error del bot ${jugadorId === 2 ? 'Alpha' : 'Beta'}. Pasa turno.`, 'error');
+    avanzarTurno();
+  }
+}
+
 // Hacer funciones disponibles globalmente para debugging
 window.draftosaurusDebug = {
   tablero: () => tableroJuego,
   estado: () => estadoJuego,
-  validador: () => validadorRestricciones,
   calculadora: () => calculadoraPuntuacion,
   dado: () => window.manejadorDado,
   validadorDado: () => window.validadorDado,
@@ -833,660 +1158,316 @@ window.draftosaurusDebug = {
     window.debugValidacion = false;
     console.log('🐛 Debug de validación desactivado');
   },
-  probarValidacion: (zonaId, tipoDino) => {
-    const jugadorId = 1;
-    const estadoJuegoActual = estadoJuego.obtenerEstado();
-    const dinosauriosEnZona = estadoJuegoActual.tablero[zonaId] || [];
-    const dinosaurio = { tipo: tipoDino, id: `test_${tipoDino}` };
-
-    console.log(`Probando validacion: ${tipoDino} en ${zonaId}`);
-    console.log('Estado del juego:', estadoJuegoActual);
-    console.log('Dinosaurios en zona:', dinosauriosEnZona);
-
-    // Probar validacion con el nuevo sistema refactorizado
-    const validacionCompleta = validadorRestricciones.validarColocacion(
-      zonaId,
-      dinosauriosEnZona,
-      dinosaurio,
-      null,
-      jugadorId,
-      estadoJuegoActual
-    );
-    console.log('Validacion completa (refactorizada):', validacionCompleta);
-
-    // Obtener informacion adicional sobre restricciones
-    const infoRestricciones = validadorRestricciones.obtenerInfoRestricciones(jugadorId, estadoJuegoActual);
-    console.log('Info restricciones:', infoRestricciones);
-
-    return validacionCompleta;
-  },
-  // NUEVO: Función de prueba rápida para verificar que todo funcione
-  probarSistemaCompleto: () => {
-    console.log('🧪 Iniciando prueba completa del sistema...');
-
-    // 1. Verificar que todas las clases esten inicializadas
-    const componentes = [
-      { nombre: 'validadorRestricciones', objeto: validadorRestricciones },
-      { nombre: 'validadorZona', objeto: validadorZona },
-      { nombre: 'estadoJuego', objeto: estadoJuego },
-      { nombre: 'manejadorDado', objeto: window.manejadorDado },
-      { nombre: 'validadorDado', objeto: window.validadorDado },
-      { nombre: 'sistemaBots', objeto: window.sistemaBots }
-    ];
-
-    componentes.forEach(comp => {
-      if (comp.objeto) {
-        console.log(`✅ ${comp.nombre} inicializado correctamente`);
-      } else {
-        console.error(`❌ ${comp.nombre} NO inicializado`);
-      }
-    });
-
-    // 2. Probar validación básica en zona vacía
-    console.log('\n🦕 Probando validación básica en Bosque de la Semejanza vacío...');
-    const tiposDino = ['triceratops', 'stegosaurus', 'brontosaurus', 'trex', 'velociraptor', 'pteranodon'];
-
-    tiposDino.forEach(tipo => {
-      const resultado = window.draftosaurusDebug.probarValidacion('bosque-semejanza', tipo);
-      console.log(`${resultado.valido ? '✅' : '❌'} ${tipo}: ${resultado.razon}`);
-    });
-
-    // 3. Verificar estado del dado
-    console.log('\n🎲 Estado actual del dado:');
-    if (window.manejadorDado) {
-      const estadoDado = window.manejadorDado.obtenerEstado();
-      if (estadoDado && estadoDado.activo) {
-        console.log(`✅ Dado activo: ${estadoDado.caraActual} (${window.manejadorDado.reglasDado[estadoDado.caraActual].nombre})`);
-        console.log(`👤 Jugador que lanzó: ${estadoDado.jugadorQueLanzo}`);
-      } else {
-        console.log('❌ Dado no activo');
-      }
-    }
-
-    // 4. Verificar sistema de bots
-    console.log('\n🤖 Estado del sistema de bots:');
-    if (window.sistemaBots) {
-      const infoBots = window.sistemaBots.obtenerInfoBots();
-      console.log(`✅ Bots activos: ${infoBots.activos}`);
-      console.log(`⏱️ Tiempo de espera: ${infoBots.tiempoEspera}ms`);
-      Object.entries(infoBots.bots).forEach(([id, bot]) => {
-        console.log(`🤖 Jugador ${id}: ${bot.nombre} (${bot.activo ? 'Activo' : 'Inactivo'})`);
-      });
-    } else {
-      console.log('❌ Sistema de bots no inicializado');
-    }
-
-    console.log('\n🎉 Prueba completa finalizada. Revisa los resultados arriba.');
-  },
-
-  // NUEVO: Funciones específicas para debug de restricciones de zona
-  restricciones: {
-    probarZona: (zonaId, tipoDino) => {
-      console.log(`🧪 Probando restricciones en ${zonaId} con ${tipoDino}`);
-
-      const estadoActual = estadoJuego ? estadoJuego.obtenerEstado() : null;
-      if (!estadoActual) {
-        console.error('Estado del juego no disponible');
-        return null;
-      }
-
-      const dinosauriosEnZona = estadoActual.tablero[zonaId] || [];
-      const dinosaurio = { tipo: tipoDino, id: `debug_${Date.now()}` };
-
-      console.log(`📊 Estado actual de ${zonaId}:`, dinosauriosEnZona);
-
-      // Probar validación completa
-      const validacion = validadorRestricciones.validarColocacion(
-        zonaId,
-        dinosauriosEnZona,
-        dinosaurio,
-        null,
-        1,
-        estadoActual
-      );
-
-      console.log(`✅ Resultado de validación:`, validacion);
-
-      // Obtener slots válidos
-      const slotsValidos = validadorRestricciones.obtenerSlotsValidos(
-        zonaId,
-        dinosauriosEnZona,
-        dinosaurio,
-        1,
-        estadoActual
-      );
-
-      console.log(`🎯 Slots válidos:`, slotsValidos);
-
-      return {
-        validacion,
-        slotsValidos,
-        estadoZona: dinosauriosEnZona
-      };
-    },
-
-    probarTodosLosRecintos: () => {
-      console.log('🧪 Probando todas las restricciones de recintos...');
-
-      const zonas = ['bosque-semejanza', 'prado-diferencia', 'trio-frondoso', 'rey-selva'];
-      const tipos = ['triceratops', 'stegosaurus', 'brontosaurus', 'trex'];
-
-      zonas.forEach(zona => {
-        console.log(`\n🏞️ === ZONA: ${zona} ===`);
-        tipos.forEach(tipo => {
-          const resultado = window.draftosaurusDebug.restricciones.probarZona(zona, tipo);
-          if (resultado) {
-            console.log(`${tipo}: ${resultado.validacion.valido ? '✅' : '❌'} ${resultado.validacion.razon}`);
-          }
-        });
-      });
-    },
-
-    verificarSecuencial: (zonaId) => {
-      console.log(`🔍 Verificando restricciones secuenciales en ${zonaId}`);
-
-      const estadoActual = estadoJuego ? estadoJuego.obtenerEstado() : null;
-      if (!estadoActual) return null;
-
-      const dinosauriosEnZona = estadoActual.tablero[zonaId] || [];
-      const dinosaurio = { tipo: 'triceratops', id: 'test_secuencial' };
-
-      // Probar cada slot del 1 al 6
-      for (let slot = 1; slot <= 6; slot++) {
-        const slotElement = document.createElement('div');
-        slotElement.dataset.slot = slot;
-
-        const validacion = validadorRestricciones.restriccionesPasivas.validarColocacion(
-          zonaId,
-          dinosauriosEnZona,
-          dinosaurio,
-          slotElement
-        );
-
-        console.log(`Slot ${slot}: ${validacion.valido ? '✅' : '❌'} ${validacion.razon}`);
-      }
-    }
-  },
-
-  // NUEVO: Funciones específicas para debug de bots
-  bots: {
-    info: () => window.sistemaBots ? window.sistemaBots.obtenerInfoBots() : null,
-    forzarTurno: (jugadorId) => {
-      if (window.sistemaBots && window.sistemaBots.esBot(jugadorId)) {
-        window.sistemaBots.ejecutarTurnoBot(jugadorId);
-      } else {
-        console.log('Jugador no es un bot o sistema no inicializado');
-      }
-    },
-    activar: (jugadorId) => {
-      if (window.sistemaBots) {
-        window.sistemaBots.activarBot(jugadorId, true);
-        console.log(`🤖 Bot ${jugadorId} activado`);
-      }
-    },
-    desactivar: (jugadorId) => {
-      if (window.sistemaBots) {
-        window.sistemaBots.activarBot(jugadorId, false);
-        console.log(`🤖 Bot ${jugadorId} desactivado`);
-      }
-    }
-  }
-}; w.draftosaurusDebug.probarValidacion('bosque-semejanza', tipo);
-console.log(`${resultado.valido ? '✅' : '❌'} ${tipo}: ${resultado.razon}`);
-    });
-
-// 3. Verificar estado del dado
-console.log('\n🎲 Estado actual del dado:');
-if (window.manejadorDado) {
-  const estadoDado = window.manejadorDado.obtenerEstado();
-  if (estadoDado && estadoDado.activo) {
-    console.log(`✅ Dado activo: ${estadoDado.caraActual} (${window.manejadorDado.reglasDado[estadoDado.caraActual].nombre})`);
-    console.log(`👤 Jugador que lanzó: ${estadoDado.jugadorQueLanzo}`);
-  } else {
-    console.log('❌ Dado no activo');
-  }
-}
-
-// 4. Verificar sistema de bots
-console.log('\n🤖 Estado del sistema de bots:');
-if (window.sistemaBots) {
-  const infoBots = window.sistemaBots.obtenerInfoBots();
-  console.log(`✅ Bots activos: ${infoBots.activos}`);
-  console.log(`⏱️ Tiempo de espera: ${infoBots.tiempoEspera}ms`);
-  Object.entries(infoBots.bots).forEach(([id, bot]) => {
-    console.log(`🤖 Jugador ${id}: ${bot.nombre} (${bot.activo ? 'Activo' : 'Inactivo'})`);
-  });
-} else {
-  console.log('❌ Sistema de bots no inicializado');
-}
-
-console.log('\n🎉 Prueba completa finalizada. Revisa los resultados arriba.');
-  },
-
-// NUEVO: Funciones específicas para debug de restricciones de zona
-restricciones: {
-  probarZona: (zonaId, tipoDino) => {
-    console.log(`🧪 Probando restricciones en ${zonaId} con ${tipoDino}`);
-
-    const estadoActual = estadoJuego ? estadoJuego.obtenerEstado() : null;
-    if (!estadoActual) {
-      console.error('Estado del juego no disponible');
-      return null;
-    }
-
-    const dinosauriosEnZona = estadoActual.tablero[zonaId] || [];
-    const dinosaurio = { tipo: tipoDino, id: `debug_${Date.now()}` };
-
-    console.log(`📊 Estado actual de ${zonaId}:`, dinosauriosEnZona);
-
-    // Probar validación completa
-    const validacion = validadorRestricciones.validarColocacion(
-      zonaId,
-      dinosauriosEnZona,
-      dinosaurio,
-      null,
-      1,
-      estadoActual
-    );
-
-    console.log(`✅ Resultado de validación:`, validacion);
-
-    // Obtener slots válidos
-    const slotsValidos = validadorRestricciones.obtenerSlotsValidos(
-      zonaId,
-      dinosauriosEnZona,
-      dinosaurio,
-      1,
-      estadoActual
-    );
-
-    console.log(`🎯 Slots válidos:`, slotsValidos);
-
-    return {
-      validacion,
-      slotsValidos,
-      estadoZona: dinosauriosEnZona
-    };
-  },
-
-    probarTodosLosRecintos: () => {
-      console.log('🧪 Probando todas las restricciones de recintos...');
-
-      const zonas = ['bosque-semejanza', 'prado-diferencia', 'trio-frondoso', 'rey-selva'];
-      const tipos = ['triceratops', 'stegosaurus', 'brontosaurus', 'trex'];
-
-      zonas.forEach(zona => {
-        console.log(`\n🏞️ === ZONA: ${zona} ===`);
-        tipos.forEach(tipo => {
-          const resultado = window.draftosaurusDebug.restricciones.probarZona(zona, tipo);
-          if (resultado) {
-            console.log(`${tipo}: ${resultado.validacion.valido ? '✅' : '❌'} ${resultado.validacion.razon}`);
-          }
-        });
-      });
-    },
-
-      verificarSecuencial: (zonaId) => {
-        console.log(`🔍 Verificando restricciones secuenciales en ${zonaId}`);
-
-        const estadoActual = estadoJuego ? estadoJuego.obtenerEstado() : null;
-        if (!estadoActual) return null;
-
-        const dinosauriosEnZona = estadoActual.tablero[zonaId] || [];
-        const dinosaurio = { tipo: 'triceratops', id: 'test_secuencial' };
-
-        // Probar cada slot del 1 al 6
-        for (let slot = 1; slot <= 6; slot++) {
-          const slotElement = document.createElement('div');
-          slotElement.dataset.slot = slot;
-
-          const validacion = validadorRestricciones.restriccionesPasivas.validarColocacion(
-            zonaId,
-            dinosauriosEnZona,
-            dinosaurio,
-            slotElement
-          );
-
-          console.log(`Slot ${slot}: ${validacion.valido ? '✅' : '❌'} ${validacion.razon}`);
-        }
-      }
-},
-
-// NUEVO: Funciones específicas para debug de bots
-bots: {
-  info: () => window.sistemaBots ? window.sistemaBots.obtenerInfoBots() : null,
-    forzarTurno: (jugadorId) => {
-      if (window.sistemaBots && window.sistemaBots.esBot(jugadorId)) {
-        window.sistemaBots.ejecutarTurnoBot(jugadorId);
-      } else {
-        console.log('Jugador no es un bot o sistema no inicializado');
-      }
-    },
-      activar: (jugadorId) => {
-        if (window.sistemaBots) {
-          window.sistemaBots.activarBot(jugadorId, true);
-          console.log(`🤖 Bot ${jugadorId} activado`);
-        }
-      },
-        desactivar: (jugadorId) => {
-          if (window.sistemaBots) {
-            window.sistemaBots.activarBot(jugadorId, false);
-            console.log(`🤖 Bot ${jugadorId} desactivado`);
-          }
-        }
-}
-}; w.draftosaurusDebug.probarValidacion('bosque-semejanza', tipo);
-console.log(`${resultado.valido ? '✅' : '❌'} ${tipo}: ${resultado.razon}`);
-    });
-
-// 3. Verificar estado del dado
-console.log('\n🎲 Estado actual del dado:');
-const estadoDado = window.manejadorDado.obtenerEstado();
-if (estadoDado && estadoDado.activo) {
-  console.log(`✅ Dado activo: ${estadoDado.caraActual} (${window.manejadorDado.reglasDado[estadoDado.caraActual].nombre})`);
-  console.log(`👤 Jugador que lanzó: ${estadoDado.jugadorQueLanzo}`);
-} else {
-  console.log('❌ Dado no activo');
-}
-
-// 4. Verificar sistema de bots
-console.log('\n🤖 Estado del sistema de bots:');
-if (window.sistemaBots) {
-  const infoBots = window.sistemaBots.obtenerInfoBots();
-  console.log(`✅ Bots activos: ${infoBots.activos}`);
-  console.log(`⏱️ Tiempo de espera: ${infoBots.tiempoEspera}ms`);
-  Object.entries(infoBots.bots).forEach(([id, bot]) => {
-    console.log(`🤖 Jugador ${id}: ${bot.nombre} (${bot.activo ? 'Activo' : 'Inactivo'})`);
-  });
-} else {
-  console.log('❌ Sistema de bots no inicializado');
-}
-
-console.log('\n🎉 Prueba completa finalizada. Revisa los resultados arriba.');
-  },
-
-// NUEVO: Funciones específicas para debug de restricciones de zona
-restricciones: {
-  probarZona: (zonaId, tipoDino) => {
-    console.log(`🧪 Probando restricciones en ${zonaId} con ${tipoDino}`);
-
-    const estadoActual = estadoJuego ? estadoJuego.obtenerEstado() : null;
-    if (!estadoActual) {
-      console.error('Estado del juego no disponible');
-      return null;
-    }
-
-    const dinosauriosEnZona = estadoActual.tablero[zonaId] || [];
-    const dinosaurio = { tipo: tipoDino, id: `debug_${Date.now()}` };
-
-    console.log(`📊 Estado actual de ${zonaId}:`, dinosauriosEnZona);
-
-    // Probar validación completa
-    const validacion = validadorRestricciones.validarColocacion(
-      zonaId,
-      dinosauriosEnZona,
-      dinosaurio,
-      null,
-      1,
-      estadoActual
-    );
-
-    console.log(`✅ Resultado de validación:`, validacion);
-
-    // Obtener slots válidos
-    const slotsValidos = validadorRestricciones.obtenerSlotsValidos(
-      zonaId,
-      dinosauriosEnZona,
-      dinosaurio,
-      1,
-      estadoActual
-    );
-
-    console.log(`🎯 Slots válidos:`, slotsValidos);
-
-    return {
-      validacion,
-      slotsValidos,
-      estadoZona: dinosauriosEnZona
-    };
-  },
-
-    probarTodosLosRecintos: () => {
-      console.log('🧪 Probando todas las restricciones de recintos...');
-
-      const zonas = ['bosque-semejanza', 'prado-diferencia', 'trio-frondoso', 'rey-selva'];
-      const tipos = ['triceratops', 'stegosaurus', 'brontosaurus', 'trex'];
-
-      zonas.forEach(zona => {
-        console.log(`\n🏞️ === ZONA: ${zona} ===`);
-        tipos.forEach(tipo => {
-          const resultado = window.draftosaurusDebug.restricciones.probarZona(zona, tipo);
-          console.log(`${tipo}: ${resultado.validacion.valido ? '✅' : '❌'} ${resultado.validacion.razon}`);
-        });
-      });
-    },
-
-      verificarSecuencial: (zonaId) => {
-        console.log(`🔍 Verificando restricciones secuenciales en ${zonaId}`);
-
-        const estadoActual = estadoJuego ? estadoJuego.obtenerEstado() : null;
-        if (!estadoActual) return null;
-
-        const dinosauriosEnZona = estadoActual.tablero[zonaId] || [];
-        const dinosaurio = { tipo: 'triceratops', id: 'test_secuencial' };
-
-        // Probar cada slot del 1 al 6
-        for (let slot = 1; slot <= 6; slot++) {
-          const slotElement = document.createElement('div');
-          slotElement.dataset.slot = slot;
-
-          const validacion = validadorRestricciones.restriccionesPasivas.validarColocacion(
-            zonaId,
-            dinosauriosEnZona,
-            dinosaurio,
-            slotElement
-          );
-
-          console.log(`Slot ${slot}: ${validacion.valido ? '✅' : '❌'} ${validacion.razon}`);
-        }
-      }
-},
-
-// NUEVO: Funciones específicas para debug de bots
-bots: {
-  info: () => window.sistemaBots ? window.sistemaBots.obtenerInfoBots() : null,
-    forzarTurno: (jugadorId) => {
-      if (window.sistemaBots && window.sistemaBots.esBot(jugadorId)) {
-        window.sistemaBots.ejecutarTurnoBot(jugadorId);
-      } else {
-        console.log('Jugador no es un bot o sistema no inicializado');
-      }
-    },
-      activar: (jugadorId) => {
-        if (window.sistemaBots) {
-          window.sistemaBots.activarBot(jugadorId, true);
-          console.log(`🤖 Bot ${jugadorId} activado`);
-        }
-      },
-        desactivar: (jugadorId) => {
-          if (window.sistemaBots) {
-            window.sistemaBots.activarBot(jugadorId, false);
-            console.log(`🤖 Bot ${jugadorId} desactivado`);
-          }
-        }
-}
+  // Removidas las funciones de depuración relacionadas con validación y bots ya que la lógica está en el backend.
 };
-probarZona: (zonaId, tipoDino) => {
-  console.log(`🧪 Probando restricciones en ${zonaId} con ${tipoDino}`);
 
-  const estadoActual = estadoJuego ? estadoJuego.obtenerEstado() : null;
-  if (!estadoActual) {
-    console.error('Estado del juego no disponible');
-    return null;
+// NUEVO: Inicializador robusto de casilleros (slots)
+class SlotsInitializer {
+  constructor(options = {}) {
+    this.maxReintentos = options.maxReintentos || 4;
+    this.delayBase = options.delayBase || 500; // ms
+    this.zonasDefault = options.zonasDefault || {
+      'bosque-semejanza': 6,
+      'prado-diferencia': 6,
+      'trio-frondoso': 3,
+      'pradera-amor': 6,
+      'isla-solitaria': 1,
+      'rey-selva': 1,
+      'dinos-rio': 7
+    };
+    this.reintentos = 0;
+    this.observador = null;
+    this.debugMode = false;
+    this.delegationAttached = false;
   }
 
-  const dinosauriosEnZona = estadoActual.tablero[zonaId] || [];
-  const dinosaurio = { tipo: tipoDino, id: `debug_${Date.now()}` };
+  inicializarSlotsDinamicos() {
+    this.log('Iniciando inicialización robusta de slots...');
+    this.mostrarEstado('Iniciando inicialización de casilleros...', 'info');
 
-  console.log(`📊 Estado actual de ${zonaId}:`, dinosauriosEnZona);
+    // Primer intento inmediato
+    this.intentarInicializar();
 
-  // Probar validación completa
-  const validacion = validadorRestricciones.validarColocacion(
-    zonaId,
-    dinosauriosEnZona,
-    dinosaurio,
-    null,
-    1,
-    estadoActual
-  );
+    // Configurar un MutationObserver para detectar cambios dinámicos del DOM
+    this.setupMutationObserver();
+  }
 
-  console.log(`✅ Resultado de validación:`, validacion);
+  intentarInicializar() {
+    const faltantes = this.verificarContenedoresSlots();
 
-  // Obtener slots válidos
-  const slotsValidos = validadorRestricciones.obtenerSlotsValidos(
-    zonaId,
-    dinosauriosEnZona,
-    dinosaurio,
-    1,
-    estadoActual
-  );
-
-  console.log(`🎯 Slots válidos:`, slotsValidos);
-
-  return {
-    validacion,
-    slotsValidos,
-    estadoZona: dinosauriosEnZona
-  };
-},
-
-  probarTodosLosRecintos: () => {
-    console.log('🧪 Probando todas las restricciones de recintos...');
-
-    const zonas = ['bosque-semejanza', 'prado-diferencia', 'trio-frondoso', 'rey-selva'];
-    const tipos = ['triceratops', 'stegosaurus', 'brontosaurus', 'trex'];
-
-    zonas.forEach(zona => {
-      console.log(`\n🏞️ === ZONA: ${zona} ===`);
-      tipos.forEach(tipo => {
-        const resultado = window.draftosaurusDebug.restricciones.probarZona(zona, tipo);
-        console.log(`${tipo}: ${resultado.validacion.valido ? '✅' : '❌'} ${resultado.validacion.razon}`);
-      });
-    });
-  },
-
-    verificarSecuencial: (zonaId) => {
-      console.log(`🔍 Verificando restricciones secuenciales en ${zonaId}`);
-
-      const estadoActual = estadoJuego ? estadoJuego.obtenerEstado() : null;
-      if (!estadoActual) return null;
-
-      const dinosauriosEnZona = estadoActual.tablero[zonaId] || [];
-      const dinosaurio = { tipo: 'triceratops', id: 'test_secuencial' };
-
-      // Probar cada slot del 1 al 6
-      for (let slot = 1; slot <= 6; slot++) {
-        const slotElement = document.createElement('div');
-        slotElement.dataset.slot = slot;
-
-        const validacion = validadorRestricciones.restriccionesPasivas.validarColocacion(
-          zonaId,
-          dinosauriosEnZona,
-          dinosaurio,
-          slotElement
-        );
-
-        console.log(`Slot ${slot}: ${validacion.valido ? '✅' : '❌'} ${validacion.razon}`);
+    if (faltantes.length === 0) {
+      this.log('Todos los contenedores de slots presentes. Generando slots...');
+      this.generarTodosLosSlots();
+      this.mostrarEstado('Casilleros generados correctamente', 'exito');
+      if (window.tableroJuego && typeof window.tableroJuego.resaltarSlotsDisponibles === 'function') {
+        // Actualizar resaltado si existe selección
+        window.tableroJuego.resaltarSlotsDisponibles && window.tableroJuego.resaltarSlotsDisponibles();
       }
+      // Detener observador ya que se completó la inicialización
+      this.disconnectObserver();
+      return true;
     }
-},
 
-// NUEVO: Funciones específicas para debug de bots
-bots: {
-  info: () => window.sistemaBots ? window.sistemaBots.obtenerInfoBots() : null,
-    forzarTurno: (jugadorId) => {
-      if (window.sistemaBots && window.sistemaBots.esBot(jugadorId)) {
-        window.sistemaBots.ejecutarTurnoBot(jugadorId);
-      } else {
-        console.warn(`Jugador ${jugadorId} no es un bot`);
+    // Si faltan contenedores, reintentar con delay progresivo
+    this.reintentos++;
+    if (this.reintentos > this.maxReintentos) {
+      const msg = 'No se pudieron encontrar todos los contenedores de slots tras varios intentos.';
+      this.log(msg, 'error');
+      this.mostrarEstado(msg + ' Ejecuta diagnóstico o intenta reiniciar manualmente.', 'error');
+      return false;
+    }
+
+    const delay = this.delayBase * Math.pow(2, this.reintentos - 1);
+    this.log(`Contenedores faltantes: ${faltantes.join(', ')} - Reintento ${this.reintentos}/${this.maxReintentos} en ${delay}ms`);
+    this.mostrarEstado(`Buscando contenedores... intento ${this.reintentos}/${this.maxReintentos}`, 'advertencia');
+
+    setTimeout(() => {
+      this.intentarInicializar();
+    }, delay);
+
+    return false;
+  }
+
+  setupMutationObserver() {
+    if (this.observador) return;
+
+    this.observador = new MutationObserver((mutations) => {
+      // Reintentar inicialización si el DOM cambió
+      this.log('MutationObserver detectó cambios en el DOM. Intentando inicializar slots...');
+      this.intentarInicializar();
+    });
+
+    this.observador.observe(document.body, { childList: true, subtree: true });
+  }
+
+  disconnectObserver() {
+    if (this.observador) {
+      try { this.observador.disconnect(); } catch (e) { /* ignore */ }
+      this.observador = null;
+    }
+  }
+
+  verificarContenedoresSlots() {
+    const zonasEncontradas = [];
+    const zonasFaltantes = [];
+
+    const elementosZona = document.querySelectorAll('.zona-tablero');
+    elementosZona.forEach(z => {
+      const id = z.dataset.zona;
+      if (id) zonasEncontradas.push(id);
+    });
+
+    // Revisar todas las zonas que esperamos (usar keys del DOM si están); preferir zonasDefault
+    const zonasARevisar = Object.keys(this.zonasDefault);
+
+    zonasARevisar.forEach(zonaId => {
+      const contenedor = document.querySelector(`[data-zona="${zonaId}"] .slots-zona`);
+      if (!contenedor) {
+        zonasFaltantes.push(zonaId);
       }
-    },
-      configurarTiempo: (ms) => {
-        if (window.sistemaBots) {
-          window.sistemaBots.configurarTiempoEspera(ms);
+    });
+
+    if (zonasFaltantes.length > 0) {
+      console.warn('SlotsInitializer: Contenedores faltantes detectados:', zonasFaltantes);
+    }
+
+    return zonasFaltantes;
+  }
+
+  generarTodosLosSlots() {
+    const zonas = Object.keys(this.zonasDefault);
+
+    zonas.forEach(zonaId => {
+      try {
+        const contenedor = document.querySelector(`[data-zona="${zonaId}"] .slots-zona`);
+        if (!contenedor) {
+          this.log(`Generación: contenedor no encontrado para ${zonaId}`, 'error');
+          return;
         }
-      },
-        toggle: (jugadorId, activo) => {
-          if (window.sistemaBots) {
-            window.sistemaBots.toggleBot(jugadorId, activo);
-          }
-        },
-          simularPartida: () => {
-            console.log('🤖 Iniciando simulación de partida con bots...');
-            // Forzar que sea turno de un bot para probar
-            if (window.estadoJuego) {
-              const estado = window.estadoJuego.obtenerEstado();
-              if (estado.jugadorActual === 1) {
-                // Avanzar al turno del bot
-                window.avanzarTurno();
+
+        // Limpiar y generar usando fragmento para performance
+        contenedor.innerHTML = '';
+        const fragment = document.createDocumentFragment();
+
+        const slotsCount = this.obtenerSlotsConfigurados(zonaId);
+        for (let i = 1; i <= slotsCount; i++) {
+          const slot = document.createElement('div');
+          slot.className = 'slot';
+          slot.dataset.slot = i;
+          slot.dataset.zona = zonaId;
+          slot.dataset.ocupado = 'false';
+          slot.setAttribute('role', 'gridcell');
+          slot.setAttribute('aria-label', `Slot ${i} de ${zonaId}`);
+          slot.textContent = i;
+
+          fragment.appendChild(slot);
+        }
+
+        contenedor.appendChild(fragment);
+
+        // NUEVO: sincronizar con estadoJuego para marcar slots ocupados al cargar
+        try {
+          const estado = (window.estadoJuego && typeof window.estadoJuego.obtenerEstado === 'function') ? window.estadoJuego.obtenerEstado() : null;
+
+          if (estado && estado.tablero && Array.isArray(estado.tablero[zonaId])) {
+            estado.tablero[zonaId].forEach(dino => {
+              // Asegurar que slot exista y marcarlo ocupado
+              const slotElem = contenedor.querySelector(`[data-slot="${dino.slot}"]`);
+              if (slotElem) {
+                slotElem.dataset.ocupado = 'true';
+
+                // Restaurar imagen del dinosaurio en el slot si no existe ya
+                if (!slotElem.querySelector('img') && dino.imagen) {
+                  const img = document.createElement('img');
+                  img.src = dino.imagen;
+                  img.alt = `Dinosaurio ${dino.tipo}`;
+                  img.style.width = '100px';
+                  img.style.height = '100px';
+                  img.style.objectFit = 'contain';
+                  img.style.position = 'absolute';
+                  img.style.top = '50%';
+                  img.style.left = '50%';
+                  img.style.transform = 'translate(-50%, -50%)';
+                  img.style.zIndex = '10';
+                  img.style.pointerEvents = 'none';
+
+                  slotElem.appendChild(img);
+                }
               }
-            }
+            });
           }
-},
+        } catch (errEstado) {
+          console.warn('SlotsInitializer: no se pudo sincronizar con estadoJuego al cargar:', errEstado);
+        }
 
-// NUEVO: Función específica para diagnosticar problema de casilleros
-diagnosticarCasilleros: () => {
-  console.log('🔍 Diagnosticando problema de casilleros...');
+        this.log(`Generados ${slotsCount} slots para ${zonaId}`);
 
-  const estado = estadoJuego.obtenerEstado();
-  console.log('Estado actual del juego:', estado);
+      } catch (error) {
+        console.error('Error generando slots para', zonaId, error);
+      }
+    });
 
-  // Probar validación en diferentes zonas
-  const zonas = ['bosque-semejanza', 'prado-diferencia', 'trio-frondoso', 'pradera-amor'];
-  const dinosaurio = { tipo: 'triceratops', id: 'test_triceratops' };
+    // Después de crear los slots, configurar listeners por delegación si no lo están
+    this.attachDelegatedListeners();
+  }
 
-  zonas.forEach(zonaId => {
-    console.log(`\n🧪 Probando zona: ${zonaId}`);
+  obtenerSlotsConfigurados(zonaId) {
+    // Intentar sincronizar con estadoJuego si está definido
+    try {
+      if (window.estadoJuego && typeof window.estadoJuego.obtenerEstado === 'function') {
+        const estado = window.estadoJuego.obtenerEstado();
+        if (estado && estado.tablero && typeof estado.tablero[zonaId] !== 'undefined') {
+          // Capacidad: si la zona ya existe en DOM con slots, usar default; si en estado hay array vacío, usar default
+          // No podemos conocer capacidad explícita en todas partes, así que preferir mapa por defecto
+          return this.zonasDefault[zonaId] || 6;
+        }
+      }
+    } catch (e) {
+      // Ignorar y usar default
+    }
 
-    const dinosauriosEnZona = estado.tablero[zonaId] || [];
-    console.log(`Dinosaurios en zona: ${dinosauriosEnZona.length}`);
+    return this.zonasDefault[zonaId] || 6;
+  }
 
-    // Probar validación completa
-    const validacion = validadorRestricciones.validarColocacion(
-      zonaId,
-      dinosauriosEnZona,
-      dinosaurio,
-      null,
-      1,
-      estado
-    );
+  attachDelegatedListeners() {
+    if (this.delegationAttached) return;
 
-    console.log(`Resultado validación: ${validacion.valido ? '✅' : '❌'} - ${validacion.razon}`);
+    // Delegación: escuchar clicks en contenedor principal de tablero
+    const tableroContenedor = document.querySelector('.tablero-container') || document.body;
+    tableroContenedor.addEventListener('click', (e) => {
+      const slot = e.target.closest('.slot');
+      if (!slot) return;
 
-    // Obtener slots válidos
-    const slotsValidos = validadorRestricciones.obtenerSlotsValidos(
-      zonaId,
-      dinosauriosEnZona,
-      dinosaurio,
-      1,
-      estado
-    );
+      // Manejar click en slot creado dinámicamente
+      if (slot.dataset.ocupado === 'true') {
+        this.mostrarEstado('Este slot ya está ocupado', 'error');
+        return;
+      }
 
-    console.log(`Slots válidos: ${slotsValidos.length > 0 ? slotsValidos.join(', ') : 'Ninguno'}`);
-  });
+      // Si existe TableroPointClick, usar su método para intentar colocar
+      if (window.tableroJuego && typeof window.tableroJuego.intentarColocarDinosaurio === 'function') {
+        try {
+          window.tableroJuego.intentarColocarDinosaurio(slot);
+        } catch (err) {
+          console.error('Error al delegar intento de colocación al tablero:', err);
+        }
+      } else if (window.tableroManager && typeof window.tableroManager.intentarColocarDinosaurio === 'function') {
+        // Compatibilidad con demo local
+        window.tableroManager.intentarColocarDinosaurio(slot);
+      }
+    });
 
-  // Verificar estado del dado
-  console.log('\n🎲 Estado del dado:');
-  if (window.manejadorDado) {
-    const estadoDado = window.manejadorDado.obtenerEstado();
-    console.log('Estado del dado:', estadoDado);
+    this.delegationAttached = true;
+    this.log('Listeners delegados para slots configurados');
+  }
 
-    if (estadoDado && estadoDado.activo) {
-      const infoRestricciones = validadorRestricciones.obtenerInfoRestricciones(1, estado);
-      console.log('Info restricciones activas:', infoRestricciones);
+  diagnosticarProblemaSlots() {
+    const debug = {
+      fecha: new Date().toISOString(),
+      zonasDefault: this.zonasDefault,
+      reintentos: this.reintentos,
+      contenedoresPresentes: [],
+      contenedoresFaltantes: []
+    };
+
+    Object.keys(this.zonasDefault).forEach(zonaId => {
+      const contenedor = document.querySelector(`[data-zona="${zonaId}"] .slots-zona`);
+      if (!contenedor) debug.contenedoresFaltantes.push(zonaId);
+      else debug.contenedoresPresentes.push({ zonaId, slotsActuales: contenedor.children.length });
+    });
+
+    console.group('Diagnóstico de slots');
+    console.log(debug);
+
+    // Si existe consola de debug en la UI, mostrarla
+    const consolaDebug = document.getElementById('debug-console');
+    if (consolaDebug) {
+      consolaDebug.textContent = JSON.stringify(debug, null, 2);
+    }
+
+    console.groupEnd();
+    return debug;
+  }
+
+  mostrarEstado(mensaje, tipo = 'info') {
+    const estadoElement = document.getElementById('estado');
+    if (estadoElement) {
+      estadoElement.textContent = mensaje;
+      estadoElement.className = tipo;
+    } else {
+      // Fallback: log en consola
+      if (tipo === 'error') console.error(mensaje);
+      else if (tipo === 'advertencia') console.warn(mensaje);
+      else console.log(mensaje);
     }
   }
 
-  console.log('\n🎯 Diagnóstico completado. Revisa los resultados arriba.');
+  log(mensaje, tipo = 'info') {
+    if (!this.debugMode) return;
+    const debugConsole = document.getElementById('debug-console');
+    const timestamp = new Date().toLocaleTimeString();
+    const entry = document.createElement('div');
+    entry.textContent = `[${timestamp}] ${mensaje}`;
+    entry.className = tipo;
+    if (debugConsole) {
+      debugConsole.appendChild(entry);
+      debugConsole.scrollTop = debugConsole.scrollHeight;
+    } else {
+      console.log(mensaje);
+    }
+  }
+
+  activarDebug() {
+    this.debugMode = true;
+    this.log('Debug activado');
+  }
+
+  reintentarInicializacionManual() {
+    this.reintentos = 0;
+    this.mostrarEstado('Reintentando inicialización de casilleros manualmente...', 'info');
+    this.intentarInicializar();
+  }
 }
-};
+
+// Crear instancia global y exponer utilidades
+window.slotsInitializer = window.slotsInitializer || new SlotsInitializer();

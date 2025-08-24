@@ -1,0 +1,407 @@
+[exception] ValidadorTablero::obtenerSlotsValidos(): Argument #3 ($dinosaurio) must be of type object, array given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php on line 98
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(98): ValidadorTablero->obtenerSlotsValidos('bosque-semejanz...', Array, Array, 1, Array)
+#1 {main}
+[exception] ValidadorTablero::obtenerSlotsValidos(): Argument #3 ($dinosaurio) must be of type object, array given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php on line 98
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(98): ValidadorTablero->obtenerSlotsValidos('trio-frondoso', Array, Array, 1, Array)
+#1 {main}
+[exception] ValidadorTablero::obtenerSlotsValidos(): Argument #3 ($dinosaurio) must be of type object, array given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php on line 98
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(98): ValidadorTablero->obtenerSlotsValidos('trio-frondoso', Array, Array, 1, Array)
+#1 {main}
+[exception] ValidadorTablero::obtenerSlotsValidos(): Argument #3 ($dinosaurio) must be of type object, array given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php on line 98
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(98): ValidadorTablero->obtenerSlotsValidos('prado-diferenci...', Array, Array, 1, Array)
+#1 {main}
+[exception] ValidadorTablero::obtenerSlotsValidos(): Argument #3 ($dinosaurio) must be of type object, array given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php on line 98
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(98): ValidadorTablero->obtenerSlotsValidos('prado-diferenci...', Array, Array, 1, Array)
+#1 {main}
+[exception] ValidadorTablero::obtenerSlotsValidos(): Argument #3 ($dinosaurio) must be of type object, array given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php on line 98
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(98): ValidadorTablero->obtenerSlotsValidos('pradera-amor', Array, Array, 1, Array)
+#1 {main}
+[exception] ValidadorTablero::obtenerSlotsValidos(): Argument #3 ($dinosaurio) must be of type object, array given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php on line 98
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(98): ValidadorTablero->obtenerSlotsValidos('pradera-amor', Array, Array, 1, Array)
+#1 {main}
+[exception] ValidadorTablero::obtenerSlotsValidos(): Argument #3 ($dinosaurio) must be of type object, array given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php on line 98
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(98): ValidadorTablero->obtenerSlotsValidos('isla-solitaria', Array, Array, 1, Array)
+#1 {main}
+[exception] ValidadorTablero::obtenerSlotsValidos(): Argument #3 ($dinosaurio) must be of type object, array given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php on line 98
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(98): ValidadorTablero->obtenerSlotsValidos('isla-solitaria', Array, Array, 1, Array)
+#1 {main}
+[exception] ValidadorTablero::obtenerSlotsValidos(): Argument #3 ($dinosaurio) must be of type object, array given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php on line 98
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(98): ValidadorTablero->obtenerSlotsValidos('rey-selva', Array, Array, 1, Array)
+#1 {main}
+[exception] ValidadorTablero::obtenerSlotsValidos(): Argument #3 ($dinosaurio) must be of type object, array given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php on line 98
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(98): ValidadorTablero->obtenerSlotsValidos('rey-selva', Array, Array, 1, Array)
+#1 {main}
+[exception] ValidadorTablero::obtenerSlotsValidos(): Argument #3 ($dinosaurio) must be of type object, array given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php on line 98
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(98): ValidadorTablero->obtenerSlotsValidos('dinos-rio', Array, Array, 1, Array)
+#1 {main}
+[exception] ValidadorTablero::obtenerSlotsValidos(): Argument #3 ($dinosaurio) must be of type object, array given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php on line 98
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(98): ValidadorTablero->obtenerSlotsValidos('dinos-rio', Array, Array, 1, Array)
+#1 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('bosque-semejanz...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('bosque-semejanz...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('trio-frondoso', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('trio-frondoso', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('trio-frondoso', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('trio-frondoso', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('prado-diferenci...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('prado-diferenci...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('prado-diferenci...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('prado-diferenci...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('pradera-amor', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('pradera-amor', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('pradera-amor', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('pradera-amor', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('isla-solitaria', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('isla-solitaria', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('isla-solitaria', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('isla-solitaria', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('rey-selva', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('rey-selva', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('dinos-rio', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('dinos-rio', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('rey-selva', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('rey-selva', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('dinos-rio', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('dinos-rio', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('bosque-semejanz...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('bosque-semejanz...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('bosque-semejanz...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('bosque-semejanz...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('trio-frondoso', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('trio-frondoso', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('trio-frondoso', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('trio-frondoso', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('prado-diferenci...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('prado-diferenci...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('prado-diferenci...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('prado-diferenci...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('pradera-amor', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('pradera-amor', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('isla-solitaria', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('isla-solitaria', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('rey-selva', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('rey-selva', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('pradera-amor', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('pradera-amor', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('dinos-rio', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('dinos-rio', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('isla-solitaria', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('isla-solitaria', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('rey-selva', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('rey-selva', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('dinos-rio', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('dinos-rio', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('bosque-semejanz...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('bosque-semejanz...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('trio-frondoso', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('trio-frondoso', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('prado-diferenci...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('prado-diferenci...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('prado-diferenci...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('prado-diferenci...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('pradera-amor', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('pradera-amor', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('pradera-amor', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('pradera-amor', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('isla-solitaria', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('isla-solitaria', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('isla-solitaria', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('isla-solitaria', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('rey-selva', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('rey-selva', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('dinos-rio', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('dinos-rio', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('rey-selva', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('rey-selva', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('dinos-rio', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('dinos-rio', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('bosque-semejanz...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('bosque-semejanz...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('trio-frondoso', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('trio-frondoso', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('trio-frondoso', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('trio-frondoso', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('prado-diferenci...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('prado-diferenci...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('prado-diferenci...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('prado-diferenci...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('pradera-amor', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('pradera-amor', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('pradera-amor', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('pradera-amor', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('isla-solitaria', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('isla-solitaria', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('isla-solitaria', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('isla-solitaria', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('rey-selva', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('rey-selva', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('rey-selva', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('rey-selva', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('dinos-rio', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('dinos-rio', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('dinos-rio', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('dinos-rio', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('bosque-semejanz...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('bosque-semejanz...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('bosque-semejanz...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('bosque-semejanz...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('trio-frondoso', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('trio-frondoso', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('prado-diferenci...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('prado-diferenci...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('trio-frondoso', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('trio-frondoso', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('pradera-amor', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('pradera-amor', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('prado-diferenci...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('prado-diferenci...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('isla-solitaria', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('isla-solitaria', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('pradera-amor', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('pradera-amor', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('rey-selva', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('rey-selva', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('dinos-rio', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('dinos-rio', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('isla-solitaria', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('isla-solitaria', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('rey-selva', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('rey-selva', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('dinos-rio', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('dinos-rio', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('bosque-semejanz...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('bosque-semejanz...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('bosque-semejanz...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('bosque-semejanz...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('trio-frondoso', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('trio-frondoso', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('trio-frondoso', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('trio-frondoso', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('prado-diferenci...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('prado-diferenci...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('prado-diferenci...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('prado-diferenci...', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('pradera-amor', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('pradera-amor', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('pradera-amor', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('pradera-amor', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('isla-solitaria', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('isla-solitaria', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('isla-solitaria', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('isla-solitaria', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('rey-selva', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('rey-selva', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('rey-selva', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('rey-selva', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('dinos-rio', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('dinos-rio', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 104
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(104): ValidadorTablero->validarRestriccionesActivas('dinos-rio', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(118): ValidadorTablero->obtenerSlotsValidos('dinos-rio', Array, Object(stdClass), 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 24
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(24): ValidadorTablero->validarRestriccionesActivas('bosque-semejanz...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(87): ValidadorTablero->validarColocacion('bosque-semejanz...', Array, Object(stdClass), 1, 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 24
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(24): ValidadorTablero->validarRestriccionesActivas('rey-selva', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(87): ValidadorTablero->validarColocacion('rey-selva', Array, Object(stdClass), 1, 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 24
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(24): ValidadorTablero->validarRestriccionesActivas('prado-diferenci...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(87): ValidadorTablero->validarColocacion('prado-diferenci...', Array, Object(stdClass), 1, 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 24
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(24): ValidadorTablero->validarRestriccionesActivas('trio-frondoso', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(87): ValidadorTablero->validarColocacion('trio-frondoso', Array, Object(stdClass), 1, 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 24
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(24): ValidadorTablero->validarRestriccionesActivas('trio-frondoso', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(87): ValidadorTablero->validarColocacion('trio-frondoso', Array, Object(stdClass), 2, 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 24
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(24): ValidadorTablero->validarRestriccionesActivas('trio-frondoso', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(87): ValidadorTablero->validarColocacion('trio-frondoso', Array, Object(stdClass), 3, 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 24
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(24): ValidadorTablero->validarRestriccionesActivas('pradera-amor', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(87): ValidadorTablero->validarColocacion('pradera-amor', Array, Object(stdClass), 1, 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 24
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(24): ValidadorTablero->validarRestriccionesActivas('pradera-amor', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(87): ValidadorTablero->validarColocacion('pradera-amor', Array, Object(stdClass), 2, 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 24
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(24): ValidadorTablero->validarRestriccionesActivas('pradera-amor', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(87): ValidadorTablero->validarColocacion('pradera-amor', Array, Object(stdClass), 3, 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 24
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(24): ValidadorTablero->validarRestriccionesActivas('dinos-rio', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(87): ValidadorTablero->validarColocacion('dinos-rio', Array, Object(stdClass), 1, 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 24
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(24): ValidadorTablero->validarRestriccionesActivas('dinos-rio', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(87): ValidadorTablero->validarColocacion('dinos-rio', Array, Object(stdClass), 1, 1, Object(stdClass))
+#2 {main}
+[exception] ValidadorTablero::validarRestriccionesActivas(): Argument #2 ($estadoTablero) must be of type array, null given, called in C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php on line 24
+#0 C:\xampp\htdocs\proyecto\Draftosaurus\backend\ValidadorTablero.php(24): ValidadorTablero->validarRestriccionesActivas('bosque-semejanz...', NULL, 1, Object(stdClass))
+#1 C:\xampp\htdocs\proyecto\Draftosaurus\backend\validarMovimiento.php(87): ValidadorTablero->validarColocacion('bosque-semejanz...', Array, Object(stdClass), 1, 1, Object(stdClass))
+#2 {main}

@@ -3,15 +3,11 @@ $pageTitle = "Partida Virtual - Draftosaurus";
 $pageDescription = "Partida Virtual de Draftosaurus - Juega online con dinosaurios";
 $specificCSS = "digitalPage.css";
 $specificJS = [
+  "utils/mapeoDinosaurios.js",
   "utils/animaciones.js",
   "utils/tooltips.js",
   "utils/calibradorTablero.js",
   "utils/controladorTamano.js",
-  "tablero/RestriccionesPasivas.js",
-  "tablero/RestriccionesActivas.js",
-  "tablero/ValidadorRestricciones.js",
-  "tablero/ValidadorZona.js",
-  "tablero/CalculadoraPuntuacion.js", 
   "tablero/EstadoJuego.js",
   "tablero/ManejadorSeleccion.js",
   "tablero/TableroPointClick.js",
@@ -21,12 +17,6 @@ $specificJS = [
   "digitalPage.js"
 ];
 
-// Variables específicas para la navegación
-$menuId = "menuLateral";
-$menuClass = "navegacion-lateral";
-$menuListClass = "lista-menu";
-
-include 'includes/font.php';
 include 'includes/head.php';
 ?>
 
@@ -45,7 +35,7 @@ include 'includes/head.php';
     </div>
   </header>
   
-  <main class="zona-juego" role="main">
+  <main id="mainContent" class="zona-juego" role="main">
     <section class="zona-dinos izquierda" aria-label="Dinosaurios disponibles - lado izquierdo">
       <h2 class="visually-hidden">Dinosaurios disponibles para colocar</h2>
       <div class="dinosaurio" draggable="true" role="button" tabindex="0" aria-label="Fósil de dinosaurio 1">

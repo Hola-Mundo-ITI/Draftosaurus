@@ -4,11 +4,6 @@ $pageDescription = "Puntajes y resultados de Draftosaurus - Ve quién ganó la p
 $specificCSS = "puntajePage.css";
 $specificJS = "puntajePage.js";
 
-// Variables específicas para la navegación
-$menuId = "menuLateral";
-$menuClass = "navegacion-lateral";
-$menuListClass = "lista-menu";
-
 include 'includes/head.php';
 ?>
 
@@ -19,7 +14,7 @@ include 'includes/head.php';
     <h1 class="titulo-puntaje">Puntuaciones</h1>
   </header>
   
-  <main class="contenido-puntaje" role="main">
+  <main id="mainContent" class="contenido-puntaje" role="main">
     <section class="ganador-partida" aria-labelledby="ganador-titulo">
       <h2 id="ganador-titulo">Ganador de esta Partida:</h2>
       <div class="caja-ganador" role="region" aria-live="polite">

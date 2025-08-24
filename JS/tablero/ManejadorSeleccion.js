@@ -3,10 +3,24 @@
  * Proporciona feedback visual y gestiona los estados de selección
  */
 class ManejadorSeleccion {
-  constructor(tablero) {
-    this.tablero = tablero;
+  constructor(/* tablero removed for late injection */) {
+    // La dependencia al tablero se inyecta posteriormente con setTablero
+    this.tablero = null;
     this.elementoSeleccionado = null;
     this.tipoSeleccion = null; // 'dinosaurio' o 'slot'
+  }
+
+  // Permite inyectar la dependencia del tablero después de su creación
+  setTablero(tablero) {
+    this.tablero = tablero;
+    // Si hace falta reconfigurar eventos que dependen del tablero, hacerlo aquí
+    try {
+      if (typeof this.configurarEventosPreview === 'function') {
+        this.configurarEventosPreview();
+      }
+    } catch (e) {
+      console.warn('ManejadorSeleccion: error al reconfigurar eventos tras setTablero', e);
+    }
   }
 
   /**
@@ -30,7 +44,7 @@ class ManejadorSeleccion {
     // Actualizar cursor
     document.body.style.cursor = 'crosshair';
     
-    console.log('Dinosaurio seleccionado para colocación');
+    if (window.debugValidacion) console.log('ManejadorSeleccion: dinosaurio seleccionado', elementoDino);
   }
 
   /**
@@ -73,81 +87,166 @@ class ManejadorSeleccion {
 
   /**
    * Resalta los slots donde se puede colocar el dinosaurio
-   * ACTUALIZADO: Considera restricciones del dado
+   * ACTUALIZADO: Considera restricciones del dado y añade fallbacks si el tablero no está inyectado
    */
-  resaltarSlotsDisponibles(elementoDino) {
-    const tipoDino = this.tablero.obtenerTipoDinosaurio(elementoDino);
+  async resaltarSlotsDisponibles(elementoDino) {
+    // Determinar tipo de dinosaurio de forma robusta
+    let tipoDino = null;
+    try {
+      if (this.tablero && typeof this.tablero.obtenerTipoDinosaurio === 'function') {
+        tipoDino = this.tablero.obtenerTipoDinosaurio(elementoDino);
+      } else if (window.tableroJuego && typeof window.tableroJuego.obtenerTipoDinosaurio === 'function') {
+        tipoDino = window.tableroJuego.obtenerTipoDinosaurio(elementoDino);
+      } else if (window.mapeoDinosaurios && typeof window.mapeoDinosaurios.obtenerTipoDesdeSrc === 'function') {
+        const img = elementoDino.querySelector && elementoDino.querySelector('img');
+        const src = img ? img.src : null;
+        tipoDino = src ? window.mapeoDinosaurios.obtenerTipoDesdeSrc(src) : null;
+      }
+    } catch (e) {
+      console.warn('ManejadorSeleccion: error determinando tipoDino, usando fallback simple', e);
+    }
+
+    if (!tipoDino) {
+      // Fallback simple basado en nombre de archivo si no hay mapeo
+      const img = elementoDino.querySelector && elementoDino.querySelector('img');
+      const src = img ? img.src : '';
+      if (src.includes('dino1')) tipoDino = 'triceratops';
+      else if (src.includes('dino2')) tipoDino = 'stegosaurus';
+      else if (src.includes('dino3')) tipoDino = 'brontosaurus';
+      else if (src.includes('dino4')) tipoDino = 'trex';
+      else if (src.includes('dino5')) tipoDino = 'velociraptor';
+      else if (src.includes('dino6')) tipoDino = 'pteranodon';
+      else tipoDino = 'desconocido';
+    }
+
     const jugadorId = this.obtenerJugadorActual();
-    const estadoJuego = window.estadoJuego ? estadoJuego.obtenerEstado() : null;
-    
+    const estadoJuego = window.estadoJuego ? window.estadoJuego.obtenerEstado() : null;
+
+    // Limpiar clases anteriores en todos los slots
     document.querySelectorAll('.slot').forEach(slot => {
-      // Limpiar clases anteriores
       slot.classList.remove('disponible', 'no-disponible', 'restringido-dado', 'restringido-recinto');
-      
-      if (slot.dataset.ocupado === 'false') {
-        const zona = slot.closest('.zona-tablero');
-        const zonaId = zona.dataset.zona;
-        
-        const dinosauriosEnZona = estadoJuego ? 
-          estadoJuego.tablero[zonaId] : [];
-        
-        // NUEVA LÓGICA: Validar con ambas restricciones
-        // Crear objeto dinosaurio completo para validación
-        const dinosaurioParaValidacion = {
-          tipo: tipoDino,
-          id: `temp_${tipoDino}_${zonaId}`, // ID temporal consistente
-          imagen: this.obtenerImagenPorTipo(tipoDino)
-        };
-        
-        let validacion = { valido: true };
-        
-        try {
-          if (window.validadorZona) {
-            validacion = validadorZona.validarColocacion(
-              zonaId, 
-              dinosauriosEnZona, 
-              dinosaurioParaValidacion, 
-              slot,
-              jugadorId,
-              estadoJuego
-            );
+      this.removerEfectoDisponible(slot); // Asegurarse de remover el efecto de animación
+      slot.removeAttribute('title');
+    });
+
+    if (!estadoJuego || !tipoDino) {
+      console.warn('ManejadorSeleccion: Estado del juego o tipo de dinosaurio no disponible para resaltar slots.');
+      return;
+    }
+
+    const dinosaurioParaValidacion = {
+      tipo: tipoDino,
+      id: `temp_${tipoDino}_${Date.now()}`,
+      imagen: this.obtenerImagenPorTipo(tipoDino)
+    };
+
+    let validSlotsBackend = [];
+    try {
+      const allZones = document.querySelectorAll('.zona-tablero');
+
+      // Preferir validador remoto centralizado si está disponible
+      if (window.validadorDado && typeof window.validadorDado.getValidSlots === 'function') {
+        for (const zona of allZones) {
+          const zonaId = zona.dataset.zona;
+          const dinosaursInCurrentZone = estadoJuego.tablero[zonaId] || [];
+
+          try {
+            const result = await window.validadorDado.getValidSlots(zonaId, dinosaursInCurrentZone, dinosaurioParaValidacion, jugadorId, estadoJuego);
+
+            if (result && result.valid && Array.isArray(result.validSlots)) {
+              result.validSlots.forEach(slotNum => {
+                const slotElement = document.querySelector(`[data-zona="${zonaId}"] [data-slot="${slotNum}"]`);
+                if (slotElement && slotElement.dataset.ocupado === 'false') {
+                  validSlotsBackend.push(slotElement);
+                }
+              });
+            } else {
+              // Si la respuesta no es la esperada, loggear para depuración
+              console.warn('ManejadorSeleccion: respuesta inesperada de validadorDado para', zonaId, result);
+            }
+
+          } catch (innerErr) {
+            console.error('ManejadorSeleccion: error al solicitar slots al validador remoto para zona', zonaId, innerErr);
           }
-        } catch (error) {
-          console.error(`Error validando ${zonaId} para ${tipoDino}:`, error);
-          validacion = { 
-            valido: false, 
-            razon: 'Error en validación', 
-            tipo: 'error' 
-          };
         }
-        
-        // Debug: Log de validación para troubleshooting (solo si está activado)
-        if (window.debugValidacion) {
-          console.log(`🔍 Validación ${zonaId} - ${tipoDino}:`, {
-            valido: validacion.valido,
-            razon: validacion.razon,
-            tipo: validacion.tipo || 'sin-tipo',
-            jugadorId,
-            dinosauriosEnZona: dinosauriosEnZona.length,
-            estadoDado: window.manejadorDado ? window.manejadorDado.obtenerEstado() : null
-          });
+
+      } else {
+        // Fallback: pedir al backend con fetch pero manejo robusto de contenido
+        for (const zona of allZones) {
+          const zonaId = zona.dataset.zona;
+          const dinosaursInCurrentZone = estadoJuego.tablero[zonaId] || [];
+
+          try {
+            const response = await fetch('backend/validarMovimiento.php', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                action: 'getValidSlots',
+                zoneId: zonaId,
+                dinosaursInZone: dinosaursInCurrentZone,
+                dinosaur: dinosaurioParaValidacion,
+                playerId: jugadorId,
+                gameState: estadoJuego
+              })
+            });
+
+            const ct = response.headers.get('content-type') || '';
+            if (!response.ok) {
+              const txt = await response.text();
+              console.error('ManejadorSeleccion: backend error', response.status, txt.slice(0,500));
+              continue;
+            }
+
+            if (ct.includes('application/json')) {
+              let result;
+              try {
+                result = await response.json();
+              } catch (parseErr) {
+                const txt = await response.text();
+                console.error('ManejadorSeleccion: JSON parse error from backend for getValidSlots:', parseErr, txt.slice(0,500));
+                continue;
+              }
+
+              if (result && result.valid && Array.isArray(result.validSlots)) {
+                result.validSlots.forEach(slotNum => {
+                  const slotElement = document.querySelector(`[data-zona="${zonaId}"] [data-slot="${slotNum}"]`);
+                  if (slotElement && slotElement.dataset.ocupado === 'false') {
+                    validSlotsBackend.push(slotElement);
+                  }
+                });
+              }
+            } else {
+              const txt = await response.text();
+              console.error('ManejadorSeleccion: respuesta no-JSON del backend al pedir slots:', txt.slice(0,500));
+              continue;
+            }
+
+          } catch (fetchErr) {
+            console.error('ManejadorSeleccion: error fetching getValidSlots', fetchErr);
+          }
         }
-        
-        if (validacion.valido) {
+      }
+
+    } catch (error) {
+      console.error('Error obteniendo slots válidos del backend:', error);
+      // Fallback a heurística local: marcar slots no-ocupados como disponibles
+      validSlotsBackend = [];
+      document.querySelectorAll('.slot').forEach(s => {
+        if (s.dataset.ocupado === 'false') validSlotsBackend.push(s);
+      });
+      // Informar al usuario
+      try { this.tablero && this.tablero.mostrarMensaje('Error al obtener slots válidos. Usando heurística local.', 'advertencia'); } catch(e){}
+    }
+
+    document.querySelectorAll('.slot').forEach(slot => {
+      if (slot.dataset.ocupado === 'false') {
+        if (validSlotsBackend.includes(slot)) {
           slot.classList.add('disponible');
           this.agregarEfectoDisponible(slot);
           slot.setAttribute('title', 'Colocación válida');
         } else {
           slot.classList.add('no-disponible');
-          
-          // Diferentes estilos según el tipo de restricción
-          if (validacion.tipo === 'dado') {
-            slot.classList.add('restringido-dado');
-          } else if (validacion.tipo === 'recinto') {
-            slot.classList.add('restringido-recinto');
-          }
-          
-          slot.setAttribute('title', validacion.razon);
+          slot.setAttribute('title', 'No permitido');
         }
       }
     });
@@ -190,6 +289,12 @@ class ManejadorSeleccion {
     elemento.style.animation = 'parpadeo-disponible 2s infinite';
   }
 
+  /**
+   * Remueve efecto visual para slots disponibles
+   */
+  removerEfectoDisponible(elemento) {
+    elemento.style.animation = '';
+  }
   /**
    * Proporciona feedback visual para movimiento válido
    */
@@ -381,7 +486,12 @@ class ManejadorSeleccion {
    * Método auxiliar para obtener jugador actual
    */
   obtenerJugadorActual() {
-    return 1; // Por ahora jugador 1, en futuro obtener del estado
+    // Asume que window.estadoJuego está disponible y tiene un método obtenerEstado
+    if (window.estadoJuego && typeof window.estadoJuego.obtenerEstado === 'function') {
+      const estado = window.estadoJuego.obtenerEstado();
+      return estado.jugadorActual || 1;
+    }
+    return 1; // Por defecto jugador 1
   }
 
   /**

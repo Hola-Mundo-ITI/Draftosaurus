@@ -4,12 +4,6 @@ $pageDescription = "Registro del Tablero Físico - Lleva el seguimiento de tu pa
 $specificCSS = "fisicoPage.css";
 $specificJS = "fisicoPage.js";
 
-// Variables específicas para la navegación
-$menuButtonId = "btnMenu";
-$menuButtonClass = "menu-icon";
-$menuId = "menuLateral";
-$menuClass = "menu-lateral";
-$menuListClass = "";
 
 include 'includes/head.php';
 ?>
@@ -17,7 +11,7 @@ include 'includes/head.php';
 <body>
   <?php include 'includes/navigation.php'; ?>
   
-  <main id="contenido" role="main">
+  <main id="mainContent" role="main">
     <section class="tracking-section">
       <h1>Registra lo que pasa en tu tablero:</h1>
       <form aria-label="Formulario de seguimiento del tablero">

@@ -4,20 +4,13 @@ $pageDescription = "Configuración de Draftosaurus - Ajusta volumen, idioma y pr
 $specificCSS = "configuracionPage.css";
 $specificJS = "configuracionPage.js";
 
-// Variables específicas para la navegación
-$menuButtonId = "menu-toggle";
-$menuButtonClass = "menu-icon";
-$menuId = "menu";
-$menuClass = "menu-lateral";
-$menuListClass = "";
-
 include 'includes/head.php';
 ?>
 
 <body>
   <?php include 'includes/navigation.php'; ?>
   
-  <main id="contenido" role="main">
+  <main id="mainContent" class="contenido-configuracion" role="main">
     <section class="configuracion-section">
       <h1>Configuración</h1>
       <form aria-label="Formulario de configuración">

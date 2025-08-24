@@ -17,6 +17,8 @@ $resourcesPath = 'Recursos/img/';
     <link rel="stylesheet" href="CSS/<?php echo $specificCSS; ?>" />
   <?php endif; ?>
   <link rel="stylesheet" href="CSS/responsive.css" />
+  <!-- Se incluye el CSS centralizado para la navegación (nuevo sistema unificado) -->
+  <link rel="stylesheet" href="CSS/navigation.css" />
   <style>
     body {
       background-image: url('<?php echo $resourcesPath; ?>fondoPantalla.png');

@@ -43,6 +43,13 @@ class EstadoJuego {
         movimientosRealizados: 0,
         tiempoJuego: 0,
         inicioPartida: new Date()
+      },
+      // Estado del dado para sincronizar con backend
+      dado: {
+        activo: false,
+        caraActual: null,
+        jugadorQueLanzo: null,
+        rondaActual: null
       }
     };
   }
@@ -106,9 +113,19 @@ class EstadoJuego {
     // NO regenerar dinosaurios - mantener el pool global que se va agotando
     // Los dinosaurios se marcan como no disponibles cuando se colocan
     
-    // NUEVO: Lanzar dado para la nueva ronda
+    // NUEVO: Lanzar dado para la nueva ronda y guardar estado en el estadoJuego
     if (window.manejadorDado) {
-      window.manejadorDado.lanzarDadoParaRonda(this.estado.rondaActual, this.estado.totalJugadores);
+      try {
+        const estadoDado = window.manejadorDado.lanzarDadoParaRonda(this.estado.rondaActual, this.estado.totalJugadores);
+        if (estadoDado) {
+          this.estado.dado = estadoDado;
+          // Asegurar persistencia inmediata del cambio
+          this.guardarEstado();
+          console.log('[EstadoJuego] Estado del dado actualizado al avanzarRonda:', estadoDado);
+        }
+      } catch (e) {
+        console.warn('[EstadoJuego] No se pudo lanzar o guardar el estado del dado en avanzarRonda:', e);
+      }
     }
     
     this.actualizarInterfazRonda();

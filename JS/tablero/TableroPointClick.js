@@ -85,23 +85,51 @@ class TableroPointClick {
 
   /**
    * Configura todos los eventos de clic
+   * ACTUALIZADO: Usa delegación de eventos y protecciones contra elementos nulos
    */
   configurarEventos() {
-    // Eventos para dinosaurios
-    document.querySelectorAll('.dinosaurio').forEach(dino => {
-      dino.addEventListener('click', (e) => this.seleccionarDinosaurio(e.target.closest('.dinosaurio')));
-    });
+    // Evitar registrar listeners múltiples veces
+    if (this.eventosConfigurados) return;
 
-    // Eventos para slots del tablero
-    document.querySelectorAll('.slot').forEach(slot => {
-      slot.addEventListener('click', (e) => this.intentarColocarDinosaurio(e.target));
-    });
+    try {
+      // Delegación de eventos para clicks: maneja dinosaurios y slots (incluye elementos dinámicos)
+      document.addEventListener('click', (e) => {
+        try {
+          const dinosaurio = e.target.closest && e.target.closest('.dinosaurio');
+          if (dinosaurio) {
+            this.seleccionarDinosaurio(dinosaurio);
+            return;
+          }
 
-    // Eventos para zonas (para mostrar información)
-    document.querySelectorAll('.zona-tablero').forEach(zona => {
-      zona.addEventListener('mouseenter', (e) => this.mostrarInfoZona(e.target));
-      zona.addEventListener('mouseleave', (e) => this.ocultarInfoZona(e.target));
-    });
+          const slot = e.target.closest && e.target.closest('.slot');
+          if (slot) {
+            this.intentarColocarDinosaurio(slot);
+            return;
+          }
+        } catch (err) {
+          console.error('Error en handler delegado de click:', err);
+        }
+      });
+
+      // Eventos para zonas (mouseenter/mouseleave) con validación
+      const zonas = document.querySelectorAll('.zona-tablero');
+      if (zonas && zonas.length) {
+        zonas.forEach(zona => {
+          try {
+            zona.addEventListener('mouseenter', (e) => this.mostrarInfoZona(e.currentTarget || e.target));
+            zona.addEventListener('mouseleave', (e) => this.ocultarInfoZona(e.currentTarget || e.target));
+          } catch (e) {
+            console.warn('No se pudieron asignar eventos a zona:', e);
+          }
+        });
+      } else {
+        console.warn('configurarEventos: no se encontraron elementos .zona-tablero');
+      }
+
+      this.eventosConfigurados = true;
+    } catch (err) {
+      console.error('Error configurando eventos del tablero:', err);
+    }
   }
 
   /**
@@ -110,8 +138,12 @@ class TableroPointClick {
   seleccionarDinosaurio(elementoDino) {
     // Usar ManejadorSeleccion si está disponible
     if (window.manejadorSeleccion) {
-      manejadorSeleccion.limpiarSeleccionAnterior();
-      manejadorSeleccion.seleccionarDinosaurio(elementoDino);
+      try {
+        manejadorSeleccion.limpiarSeleccionAnterior();
+        manejadorSeleccion.seleccionarDinosaurio(elementoDino);
+      } catch (e) {
+        console.warn('Error invoking manejadorSeleccion methods', e);
+      }
     } else {
       // Fallback al sistema antiguo
       document.querySelectorAll('.dinosaurio').forEach(d => d.classList.remove('seleccionado'));
@@ -119,69 +151,129 @@ class TableroPointClick {
       elementoDino.classList.add('seleccionado');
     }
 
+    // Determinar tipo usando mapeoDinosaurios si está disponible
+    let tipoDetectado = null;
+    let imagenSrc = null;
+    try {
+      const img = elementoDino.querySelector && elementoDino.querySelector('img');
+      imagenSrc = img ? img.src : null;
+
+      if (window.mapeoDinosaurios && typeof window.mapeoDinosaurios.obtenerTipoDesdeSrc === 'function' && imagenSrc) {
+        tipoDetectado = window.mapeoDinosaurios.obtenerTipoDesdeSrc(imagenSrc);
+      } else {
+        tipoDetectado = this.obtenerTipoDinosaurio(elementoDino);
+      }
+    } catch (e) {
+      console.warn('Error determinando tipo de dinosaurio, usando fallback', e);
+      tipoDetectado = this.obtenerTipoDinosaurio(elementoDino);
+    }
+
     // Actualizar estado interno
     this.dinosaurioSeleccionado = {
       elemento: elementoDino,
-      tipo: this.obtenerTipoDinosaurio(elementoDino),
-      imagen: elementoDino.querySelector('img').src
+      tipo: tipoDetectado,
+      imagen: imagenSrc || (elementoDino.querySelector('img') ? elementoDino.querySelector('img').src : '')
     };
 
     // Resaltar slots disponibles
     this.resaltarSlotsDisponibles();
-    
-    console.log('Dinosaurio seleccionado:', this.dinosaurioSeleccionado.tipo);
+
+    if (window.debugValidacion) console.log('Dinosaurio seleccionado:', this.dinosaurioSeleccionado.tipo);
   }
 
   /**
    * Obtiene el tipo de dinosaurio basado en la imagen
    */
   obtenerTipoDinosaurio(elementoDino) {
-    const img = elementoDino.querySelector('img');
-    const src = img.src;
-    
-    // Extraer tipo del nombre del archivo
-    if (src.includes('dino1')) return 'triceratops';
-    if (src.includes('dino2')) return 'stegosaurus';
-    if (src.includes('dino3')) return 'brontosaurus';
-    if (src.includes('dino4')) return 'trex';
-    if (src.includes('dino5')) return 'velociraptor';
-    if (src.includes('dino6')) return 'pteranodon';
-    
+    // Preferir mapeo global si existe
+    try {
+      const img = elementoDino.querySelector('img');
+      const src = img ? img.src : '';
+      if (window.mapeoDinosaurios && typeof window.mapeoDinosaurios.obtenerTipoDesdeSrc === 'function' && src) {
+        return window.mapeoDinosaurios.obtenerTipoDesdeSrc(src);
+      }
+
+      // Fallback por nombre de archivo
+      if (src.includes('dino1')) return 'triceratops';
+      if (src.includes('dino2')) return 'stegosaurus';
+      if (src.includes('dino3')) return 'brontosaurus';
+      if (src.includes('dino4')) return 'trex';
+      if (src.includes('dino5')) return 'velociraptor';
+      if (src.includes('dino6')) return 'pteranodon';
+    } catch (e) {
+      console.warn('obtenerTipoDinosaurio fallback error', e);
+    }
+
     return 'desconocido';
   }
 
   /**
    * Resalta los slots donde se puede colocar el dinosaurio seleccionado
    */
-  resaltarSlotsDisponibles() {
+  async resaltarSlotsDisponibles() {
     if (!this.dinosaurioSeleccionado) return;
 
-    // Usar el ManejadorSeleccion si está disponible
-    if (window.manejadorSeleccion) {
-      manejadorSeleccion.resaltarSlotsDisponibles(this.dinosaurioSeleccionado.elemento);
-      return;
+    // Limpiar clases anteriores en todos los slots
+    document.querySelectorAll('.slot').forEach(s => {
+      s.classList.remove('disponible', 'no-disponible');
+      s.removeAttribute('title');
+    });
+
+    // Intentar obtener estado del juego
+    const estado = (window.estadoJuego && typeof window.estadoJuego.obtenerEstado === 'function') ? window.estadoJuego.obtenerEstado() : this.estadoJuego;
+    const jugadorId = (window.estadoJuego && typeof window.estadoJuego.obtenerEstado === 'function') ? estado.jugadorActual : 1;
+
+    // Si el validador remoto está disponible, pedir slots válidos por zona
+    if (window.validadorDado && typeof window.validadorDado.getValidSlots === 'function') {
+      try {
+        // Recorrer zonas presentes en el DOM
+        const zonasDOM = document.querySelectorAll('.zona-tablero');
+        for (const zonaElem of Array.from(zonasDOM)) {
+          const zonaId = zonaElem.dataset.zona;
+          const dinosauriosEnZona = (estado && estado.tablero && estado.tablero[zonaId]) ? estado.tablero[zonaId] : [];
+
+          const result = await window.validadorDado.getValidSlots(zonaId, dinosauriosEnZona, this.dinosaurioSeleccionado, jugadorId, estado);
+
+          // Normalizar respuesta
+          const validSlots = (result && (result.validSlots || result.slotsValidos)) ? (result.validSlots || result.slotsValidos) : [];
+
+          // Marcar slots en la zona
+          zonaElem.querySelectorAll('.slot').forEach(slot => {
+            const slotIndex = parseInt(slot.dataset.slot);
+            if (slot.dataset.ocupado === 'false') {
+              if (validSlots.includes(slotIndex)) {
+                slot.classList.add('disponible');
+                slot.setAttribute('title', 'Colocación válida');
+              } else {
+                slot.classList.add('no-disponible');
+                slot.setAttribute('title', result.razon || 'No permitido');
+              }
+            }
+          });
+        }
+
+        return;
+
+      } catch (err) {
+        console.error('Error obteniendo slots válidos del backend:', err);
+        // continuar a fallback
+      }
     }
 
-    // Fallback al sistema antiguo
+    // Fallback: simple heurística cliente (muy básica)
     document.querySelectorAll('.slot').forEach(slot => {
       const zona = slot.closest('.zona-tablero');
-      const zonaId = zona.dataset.zona;
-      
+      const zonaId = zona ? zona.dataset.zona : null;
+      if (!zonaId) return;
+
       if (slot.dataset.ocupado === 'false') {
-        // Usar el nuevo sistema de validación
-        const validacion = window.validadorZona ? 
-          validadorZona.validarColocacion(
-            zonaId, 
-            this.estadoJuego.tablero[zonaId], 
-            this.dinosaurioSeleccionado, 
-            slot
-          ) : { valido: this.puedeColocarEnZona(this.dinosaurioSeleccionado, zonaId) };
-        
-        if (validacion.valido) {
+        // heurística simple: permitir si no está lleno
+        const dinoEnZona = (this.estadoJuego && this.estadoJuego.tablero && this.estadoJuego.tablero[zonaId]) ? this.estadoJuego.tablero[zonaId] : [];
+        const capacidad = zonaElem ? (zonaElem.querySelectorAll('.slot').length || 6) : 6;
+        if (dinoEnZona.length < capacidad) {
           slot.classList.add('disponible');
         } else {
           slot.classList.add('no-disponible');
-          slot.setAttribute('title', validacion.razon);
         }
       }
     });
@@ -191,7 +283,7 @@ class TableroPointClick {
    * Intenta colocar el dinosaurio seleccionado en un slot
    * ACTUALIZADO: Integra información del jugador para validación del dado
    */
-  intentarColocarDinosaurio(slot) {
+  async intentarColocarDinosaurio(slot) {
     if (!this.dinosaurioSeleccionado) {
       this.mostrarMensaje('Primero selecciona un dinosaurio', 'advertencia');
       return;
@@ -229,7 +321,7 @@ class TableroPointClick {
 
     // ACTUALIZADO: Pasar información completa al validador
     const validacion = window.validarMovimiento ? 
-      window.validarMovimiento(zonaId, this.dinosaurioSeleccionado, slot, jugadorId, estadoJuego) :
+      await window.validarMovimiento(zonaId, this.dinosaurioSeleccionado, slot.dataset.slot ? parseInt(slot.dataset.slot) : null, jugadorId, estadoJuego) :
       this.validarColocacionLocal(zonaId, slot, jugadorId, estadoJuego);
 
     if (!validacion.valido) {
