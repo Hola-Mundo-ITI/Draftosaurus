@@ -1,16 +1,17 @@
-/**
- * Utilidades para animaciones y efectos visuales del juego
- * Proporciona funciones reutilizables para mejorar la experiencia visual
+/*
+ * animaciones.js:
+ * Bibliotecas y utilidades para animaciones UI reutilizables (transiciones,
+ * animaciones de entrada/salida y microinteracciones). Centraliza los
+ * helpers para evitar duplicación y facilitar ajustes de rendimiento.
  */
+
 class UtilidadesAnimacion {
   constructor() {
     this.duracionAnimacionPorDefecto = 300;
     this.easingPorDefecto = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
   }
 
-  /**
-   * Anima el movimiento de un elemento desde una posición a otra
-   */
+  
   animarMovimiento(elemento, posicionInicial, posicionFinal, duracion = this.duracionAnimacionPorDefecto) {
     return new Promise((resolve) => {
       elemento.style.position = 'fixed';
@@ -19,10 +20,8 @@ class UtilidadesAnimacion {
       elemento.style.transition = `all ${duracion}ms ${this.easingPorDefecto}`;
       elemento.style.zIndex = '1000';
 
-      // Forzar reflow
       elemento.offsetHeight;
 
-      // Animar hacia la posición final
       elemento.style.left = posicionFinal.x + 'px';
       elemento.style.top = posicionFinal.y + 'px';
 
@@ -37,13 +36,10 @@ class UtilidadesAnimacion {
     });
   }
 
-  /**
-   * Crea un efecto de pulso en un elemento
-   */
+  
   aplicarPulso(elemento, duracion = 1000, escala = 1.1) {
     elemento.style.animation = `pulso-personalizado ${duracion}ms infinite`;
-    
-    // Crear keyframes dinámicos si no existen
+
     if (!document.getElementById('pulso-personalizado-style')) {
       const style = document.createElement('style');
       style.id = 'pulso-personalizado-style';
@@ -57,16 +53,12 @@ class UtilidadesAnimacion {
     }
   }
 
-  /**
-   * Remueve el efecto de pulso
-   */
+  
   removerPulso(elemento) {
     elemento.style.animation = '';
   }
 
-  /**
-   * Crea un efecto de parpadeo
-   */
+  
   aplicarParpadeo(elemento, duracion = 2000) {
     elemento.style.animation = `parpadeo-personalizado ${duracion}ms infinite`;
     
@@ -83,9 +75,7 @@ class UtilidadesAnimacion {
     }
   }
 
-  /**
-   * Crea un efecto de vibración para errores
-   */
+  
   aplicarVibracion(elemento, duracion = 500) {
     elemento.style.animation = `vibracion-personalizada ${duracion}ms`;
     
@@ -107,16 +97,13 @@ class UtilidadesAnimacion {
     }, duracion);
   }
 
-  /**
-   * Crea un efecto de aparición suave
-   */
+  
   aparecerSuave(elemento, duracion = 300) {
     return new Promise((resolve) => {
       elemento.style.opacity = '0';
       elemento.style.transform = 'scale(0.8)';
       elemento.style.transition = `all ${duracion}ms ${this.easingPorDefecto}`;
-      
-      // Forzar reflow
+
       elemento.offsetHeight;
       
       elemento.style.opacity = '1';
@@ -129,9 +116,7 @@ class UtilidadesAnimacion {
     });
   }
 
-  /**
-   * Crea un efecto de desaparición suave
-   */
+  
   desaparecerSuave(elemento, duracion = 300) {
     return new Promise((resolve) => {
       elemento.style.transition = `all ${duracion}ms ${this.easingPorDefecto}`;
@@ -146,9 +131,7 @@ class UtilidadesAnimacion {
     });
   }
 
-  /**
-   * Crea un efecto de resaltado temporal
-   */
+  
   resaltarTemporalmente(elemento, color = '#FFD700', duracion = 1000) {
     const colorOriginal = elemento.style.backgroundColor;
     const borderOriginal = elemento.style.border;
@@ -167,9 +150,7 @@ class UtilidadesAnimacion {
     }, duracion);
   }
 
-  /**
-   * Anima un contador numérico
-   */
+  
   animarContador(elemento, valorInicial, valorFinal, duracion = 1000) {
     return new Promise((resolve) => {
       const diferencia = valorFinal - valorInicial;
@@ -191,9 +172,7 @@ class UtilidadesAnimacion {
     });
   }
 
-  /**
-   * Crea partículas de celebración
-   */
+  
   crearParticulas(elemento, cantidad = 10, color = '#FFD700') {
     const rect = elemento.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -215,8 +194,7 @@ class UtilidadesAnimacion {
       `;
       
       document.body.appendChild(particula);
-      
-      // Animar partícula
+
       const angulo = (Math.PI * 2 * i) / cantidad;
       const velocidad = 100 + Math.random() * 100;
       const finalX = centerX + Math.cos(angulo) * velocidad;
@@ -232,9 +210,7 @@ class UtilidadesAnimacion {
     }
   }
 
-  /**
-   * Aplica un efecto de ondas concéntricas
-   */
+  
   crearOndasConcentricas(elemento, color = 'rgba(255, 215, 0, 0.3)') {
     const rect = elemento.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -258,8 +234,7 @@ class UtilidadesAnimacion {
         `;
         
         document.body.appendChild(onda);
-        
-        // Animar expansión
+
         setTimeout(() => {
           onda.style.width = '200px';
           onda.style.height = '200px';
@@ -273,9 +248,7 @@ class UtilidadesAnimacion {
     }
   }
 
-  /**
-   * Crea un efecto de texto flotante
-   */
+  
   mostrarTextoFlotante(elemento, texto, color = '#4CAF50', duracion = 2000) {
     const rect = elemento.getBoundingClientRect();
     const textoFlotante = document.createElement('div');
@@ -295,8 +268,7 @@ class UtilidadesAnimacion {
     `;
     
     document.body.appendChild(textoFlotante);
-    
-    // Animar hacia arriba y desvanecer
+
     setTimeout(() => {
       textoFlotante.style.transform = 'translateX(-50%) translateY(-50px)';
       textoFlotante.style.opacity = '0';
@@ -307,9 +279,7 @@ class UtilidadesAnimacion {
     }, duracion);
   }
 
-  /**
-   * Aplica un efecto de brillo
-   */
+  
   aplicarBrillo(elemento, duracion = 2000) {
     elemento.style.position = 'relative';
     elemento.style.overflow = 'hidden';
@@ -338,9 +308,7 @@ class UtilidadesAnimacion {
     }, duracion);
   }
 
-  /**
-   * Limpia todas las animaciones de un elemento
-   */
+  
   limpiarAnimaciones(elemento) {
     elemento.style.animation = '';
     elemento.style.transition = '';
@@ -348,16 +316,12 @@ class UtilidadesAnimacion {
     elemento.style.opacity = '';
   }
 
-  /**
-   * Verifica si las animaciones están habilitadas
-   */
+  
   animacionesHabilitadas() {
     return !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
-  /**
-   * Ejecuta una animación solo si están habilitadas
-   */
+  
   ejecutarSiHabilitada(callback) {
     if (this.animacionesHabilitadas()) {
       callback();
@@ -365,5 +329,4 @@ class UtilidadesAnimacion {
   }
 }
 
-// Crear instancia global
 window.utilidadesAnimacion = new UtilidadesAnimacion();

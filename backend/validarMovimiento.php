@@ -1,16 +1,21 @@
 <?php
-// ValidarMovimiento.php - salida JSON robusta y manejo de errores
-// Evitar que errores/avisos contaminen la salida JSON
+
+/*
+ * Script validarMovimiento.php:
+ * Expone un endpoint HTTP que valida movimientos solicitados desde el cliente.
+ * - Recibe JSON con la acción solicitada y los datos necesarios.
+ * - Usa ValidadorTablero para comprobar colocaciones y generar mensajes.
+ * Devuelve JSON con el resultado de la validación.
+ */
+
+
 ini_set('display_errors', '0');
 error_reporting(E_ALL);
 
-// Forzar JSON
 header('Content-Type: application/json; charset=utf-8');
 
-// Buffer para capturar cualquier salida no intencional (HTML, warnings, etc.)
 ob_start();
 
-// Ruta de log de errores (en el mismo directorio backend)
 $logFile = __DIR__ . '/validarMovimiento_errors.log';
 
 $respuesta = [
@@ -21,7 +26,7 @@ $respuesta = [
 try {
     require_once 'ValidadorTablero.php';
 } catch (Throwable $e) {
-    // Capturar y devolver error controlado
+
     $out = ob_get_clean();
     if ($out) error_log("[require_error] Output before JSON:\n" . $out . "\n", 3, $logFile);
     http_response_code(500);
@@ -30,6 +35,11 @@ try {
     exit;
 }
 
+/*
+ * Bloque principal de manejo de la petición:
+ * - Valida método HTTP y parsea el payload JSON.
+ * - En función de la acción solicita al Validador las comprobaciones necesarias.
+ */
 try {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         $out = ob_get_clean();
@@ -60,11 +70,10 @@ try {
     $playerId = array_key_exists('playerId', $datos) ? $datos['playerId'] : null;
     $gameState = $datos['gameState'] ?? null;
 
-    // Asegurar que los objetos que espera ValidadorTablero sean objetos (no arrays asociativos)
     $dinosaurObj = null;
     if ($dinosaur !== null) {
         if (is_array($dinosaur)) {
-            // convertir array asociativo a objeto stdClass recursivamente
+
             $dinosaurObj = json_decode(json_encode($dinosaur));
         } else {
             $dinosaurObj = $dinosaur;
@@ -114,9 +123,9 @@ try {
 
         case 'getValidSlots':
             if ($zoneId !== null && $dinosaur !== null && $playerId !== null && $gameState !== null) {
-                // Asegurar que $dinosaurObj sea un objeto antes de llamar al validador
+
                 if (is_array($dinosaurObj)) {
-                    // Si viene como array, convertir a objeto stdClass
+
                     $dinosaurObj = (object)$dinosaurObj;
                     error_log('[validarMovimiento] getValidSlots: dinosaur convertido de array a objeto', 3, $logFile);
                 }
@@ -155,7 +164,7 @@ try {
     }
 
 } catch (Throwable $e) {
-    // Capturar cualquier excepción inesperada
+
     $buf = ob_get_clean();
     if ($buf) error_log("[exception] Output before JSON:\n" . $buf . "\n", 3, $logFile);
     error_log("[exception] " . $e->getMessage() . "\n" . $e->getTraceAsString() . "\n", 3, $logFile);
@@ -164,12 +173,10 @@ try {
     exit;
 }
 
-// Si quedó salida accidental en buffer (p. ej. HTML de warnings), loguearla y limpiar
 $leftover = ob_get_clean();
 if ($leftover) {
     error_log("[leftover_output] " . substr($leftover, 0, 2000) . "\n", 3, $logFile);
 }
 
-// Responder siempre con JSON limpio
 echo json_encode($respuesta);
 ?>

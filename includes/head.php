@@ -1,5 +1,4 @@
-<?php
-// Configuración común para todas las páginas
+<?php
 $baseUrl = '';
 $resourcesPath = 'Recursos/img/';
 ?>
@@ -28,7 +27,7 @@ $resourcesPath = 'Recursos/img/';
       background-attachment: fixed;
     }
     
-    /* Overlay para mejorar legibilidad del texto */
+    
     body::before {
       content: '';
       position: fixed;

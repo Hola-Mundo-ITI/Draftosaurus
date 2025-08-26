@@ -1,7 +1,11 @@
-/**
- * Controlador para cambiar el tamaño de los casilleros interactivamente
- * Permite ajustar el tamaño de todos los slots del tablero en tiempo real
+/*
+ * controladorTamano.js:
+ * Módulo encargado de ajustar tamaños y escalas en la interfaz para
+ * distintos dispositivos y resoluciones. Proporciona utilidades para
+ * recalcular dimensiones de tablero, slots y elementos UI al redimensionar
+ * la ventana o cambiar orientación.
  */
+
 class ControladorTamano {
   constructor() {
     this.tamanoActual = 19; // Tamaño por defecto en píxeles
@@ -12,11 +16,9 @@ class ControladorTamano {
     this.configurarEventos();
   }
 
-  /**
-   * Configura los eventos globales para el controlador
-   */
+  
   configurarEventos() {
-    // Atajo de teclado para activar el panel (Ctrl+Shift+Y)
+
     document.addEventListener('keydown', (e) => {
       if (e.ctrlKey && e.shiftKey && e.key === 'Y') {
         e.preventDefault();
@@ -24,7 +26,6 @@ class ControladorTamano {
       }
     });
 
-    // Atajos para cambiar tamaño rápidamente
     document.addEventListener('keydown', (e) => {
       if (e.ctrlKey && e.altKey) {
         if (e.key === '+' || e.key === '=') {
@@ -41,9 +42,7 @@ class ControladorTamano {
     });
   }
 
-  /**
-   * Activa o desactiva el panel de control
-   */
+  
   togglePanel() {
     if (this.panelActivo) {
       this.cerrarPanel();
@@ -52,9 +51,7 @@ class ControladorTamano {
     }
   }
 
-  /**
-   * Abre el panel de control de tamaño
-   */
+  
   abrirPanel() {
     this.panelActivo = true;
     
@@ -91,8 +88,7 @@ class ControladorTamano {
         <button id="btn-cerrar-tamano" class="btn-cerrar">❌ Cerrar</button>
       </div>
     `;
-    
-    // Estilos del panel
+
     panel.style.cssText = `
       position: fixed;
       top: 20px;
@@ -108,43 +104,34 @@ class ControladorTamano {
     `;
     
     document.body.appendChild(panel);
-    
-    // Configurar eventos del panel
+
     this.configurarEventosPanel();
     
     console.log('🔧 Panel de control de tamaño activado');
   }
 
-  /**
-   * Configura los eventos del panel de control
-   */
+  
   configurarEventosPanel() {
     const slider = document.getElementById('slider-tamano');
     const valorTamano = document.getElementById('valor-tamano');
-    
-    // Slider principal
+
     slider.addEventListener('input', (e) => {
       this.cambiarTamano(parseInt(e.target.value));
       valorTamano.textContent = e.target.value + 'px';
     });
-    
-    // Botones rápidos
+
     document.getElementById('btn-tamano-pequeno').onclick = () => this.cambiarTamano(15);
     document.getElementById('btn-tamano-mediano').onclick = () => this.cambiarTamano(19);
     document.getElementById('btn-tamano-grande').onclick = () => this.cambiarTamano(25);
-    
-    // Controles de precisión
+
     document.getElementById('btn-disminuir').onclick = () => this.disminuirTamano();
     document.getElementById('btn-aumentar').onclick = () => this.aumentarTamano();
     document.getElementById('btn-resetear').onclick = () => this.resetearTamano();
-    
-    // Cerrar panel
+
     document.getElementById('btn-cerrar-tamano').onclick = () => this.cerrarPanel();
   }
 
-  /**
-   * Cierra el panel de control
-   */
+  
   cerrarPanel() {
     const panel = document.getElementById('panel-tamano');
     if (panel) {
@@ -154,67 +141,53 @@ class ControladorTamano {
     console.log('✅ Panel de control de tamaño cerrado');
   }
 
-  /**
-   * Cambia el tamaño de todos los casilleros
-   */
+  
   cambiarTamano(nuevoTamano) {
-    // Validar rango
+
     nuevoTamano = Math.max(this.tamanoMinimo, Math.min(this.tamanoMaximo, nuevoTamano));
     this.tamanoActual = nuevoTamano;
-    
-    // Aplicar a todos los slots
+
     const slots = document.querySelectorAll('.slot');
     slots.forEach(slot => {
       slot.style.width = nuevoTamano + 'px';
       slot.style.height = nuevoTamano + 'px';
     });
-    
-    // Aplicar tamaños especiales para el río (un poco más pequeños)
+
     const slotsRio = document.querySelectorAll('.dinos-rio .slot');
     const tamanoRio = Math.max(15, nuevoTamano - 2);
     slotsRio.forEach(slot => {
       slot.style.width = tamanoRio + 'px';
       slot.style.height = tamanoRio + 'px';
     });
-    
-    // Actualizar el slider si el panel está abierto
+
     const slider = document.getElementById('slider-tamano');
     const valorTamano = document.getElementById('valor-tamano');
     if (slider && valorTamano) {
       slider.value = nuevoTamano;
       valorTamano.textContent = nuevoTamano + 'px';
     }
-    
-    // Guardar en localStorage
+
     localStorage.setItem('draftosaurus_tamano_slots', nuevoTamano.toString());
     
     console.log(`📏 Tamaño de casilleros cambiado a ${nuevoTamano}px`);
   }
 
-  /**
-   * Aumenta el tamaño en 1px
-   */
+  
   aumentarTamano() {
     this.cambiarTamano(this.tamanoActual + 1);
   }
 
-  /**
-   * Disminuye el tamaño en 1px
-   */
+  
   disminuirTamano() {
     this.cambiarTamano(this.tamanoActual - 1);
   }
 
-  /**
-   * Resetea al tamaño por defecto
-   */
+  
   resetearTamano() {
     this.cambiarTamano(19);
   }
 
-  /**
-   * Carga el tamaño guardado desde localStorage
-   */
+  
   cargarTamanoGuardado() {
     const tamanoGuardado = localStorage.getItem('draftosaurus_tamano_slots');
     if (tamanoGuardado) {
@@ -226,9 +199,7 @@ class ControladorTamano {
     }
   }
 
-  /**
-   * Aplica estilos CSS dinámicos para el panel
-   */
+  
   aplicarEstilosPanel() {
     if (!document.getElementById('estilos-panel-tamano')) {
       const estilos = document.createElement('style');
@@ -320,25 +291,19 @@ class ControladorTamano {
     }
   }
 
-  /**
-   * Inicializa el controlador
-   */
+  
   inicializar() {
     this.aplicarEstilosPanel();
     this.cargarTamanoGuardado();
     console.log('🎛️ Controlador de tamaño inicializado');
   }
 
-  /**
-   * Obtiene el tamaño actual
-   */
+  
   obtenerTamanoActual() {
     return this.tamanoActual;
   }
 
-  /**
-   * Aplica un tamaño específico a una zona
-   */
+  
   aplicarTamanoZona(zonaId, tamano) {
     const zona = document.querySelector(`[data-zona="${zonaId}"]`);
     if (zona) {
@@ -350,18 +315,14 @@ class ControladorTamano {
     }
   }
 
-  /**
-   * Sincroniza todos los casilleros al mismo tamaño
-   */
+  
   sincronizarTamanos() {
     this.cambiarTamano(this.tamanoActual);
   }
 }
 
-// Crear instancia global
 window.controladorTamano = new ControladorTamano();
 
-// Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     if (window.controladorTamano) {

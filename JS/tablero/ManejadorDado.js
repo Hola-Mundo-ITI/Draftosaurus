@@ -1,7 +1,4 @@
-/**
- * Clase para manejar el sistema de dados de Draftosaurus
- * Controla las restricciones adicionales por ronda que se aplican a los jugadores
- */
+
 class ManejadorDado {
   constructor() {
     this.estadoActual = null;
@@ -15,9 +12,7 @@ class ManejadorDado {
     console.log('🎲 ManejadorDado inicializado correctamente');
   }
 
-  /**
-   * Define las áreas del tablero para las restricciones del dado
-   */
+  
   definirAreasTablero() {
     return {
       bosque: ['trio-frondoso', 'bosque-semejanza', 'rey-selva'],
@@ -27,11 +22,8 @@ class ManejadorDado {
     };
   }
 
-  /**
-   * Determina qué zonas están a cada lado del río
-   */
-  determinarLadosDelRio() {
-    // Distribución basada en el layout típico de Draftosaurus
+  
+  determinarLadosDelRio() {
     this.areasTablero.izquierdaDelRio = ['trio-frondoso', 'bosque-semejanza', 'prado-diferencia'];
     this.areasTablero.derechaDeLRio = ['rey-selva', 'isla-solitaria', 'pradera-amor', 'dinos-rio'];
     
@@ -41,9 +33,7 @@ class ManejadorDado {
     });
   }
 
-  /**
-   * Define las reglas de cada cara del dado
-   */
+  
   definirReglasDado() {
     return {
       bosque: {
@@ -100,9 +90,7 @@ class ManejadorDado {
     };
   }
 
-  /**
-   * Lanza el dado al inicio de una ronda
-   */
+  
   lanzarDadoParaRonda(numeroRonda, numeroJugadores = 2) {
     const jugadorQueLanza = this.determinarJugadorQueLanza(numeroRonda, numeroJugadores);
     const caraDelDado = this.lanzarDadoAleatorio();
@@ -114,9 +102,7 @@ class ManejadorDado {
       descripcionRestriccion: this.reglasDado[caraDelDado].descripcion,
       activo: true,
       fechaLanzamiento: new Date()
-    };
-    
-    // Agregar al historial
+    };
     this.historialDados.push({
       ronda: numeroRonda,
       cara: caraDelDado,
@@ -135,34 +121,25 @@ class ManejadorDado {
     return this.estadoActual;
   }
 
-  /**
-   * Determina qué jugador lanza el dado (rota cada ronda)
-   */
+  
   determinarJugadorQueLanza(numeroRonda, numeroJugadores) {
     return ((numeroRonda - 1) % numeroJugadores) + 1;
   }
 
-  /**
-   * Lanza el dado aleatoriamente
-   */
+  
   lanzarDadoAleatorio() {
     const caras = ['bosque', 'llanura', 'banos', 'cafeteria', 'vacio'];
     return caras[Math.floor(Math.random() * caras.length)];
   }
 
-  /**
-   * Verifica si un jugador está exento de la restricción
-   */
+  
   jugadorEstaExento(jugadorId) {
     return this.estadoActual && this.estadoActual.jugadorQueLanzo === jugadorId;
   }
 
-  /**
-   * Obtiene las zonas permitidas para la restricción actual
-   */
+  
   obtenerZonasPermitidas(estadoJuego = null) {
-    if (!this.estadoActual || !this.estadoActual.activo) {
-      // Sin restricción activa, todas las zonas están permitidas
+    if (!this.estadoActual || !this.estadoActual.activo) {
       return estadoJuego ? Object.keys(estadoJuego.tablero || {}) : 
              ['bosque-semejanza', 'trio-frondoso', 'prado-diferencia', 'pradera-amor', 'isla-solitaria', 'rey-selva', 'dinos-rio'];
     }
@@ -175,9 +152,7 @@ class ManejadorDado {
     return [];
   }
 
-  /**
-   * Finaliza la ronda actual
-   */
+  
   finalizarRonda() {
     if (this.estadoActual) {
       this.estadoActual.activo = false;
@@ -185,16 +160,12 @@ class ManejadorDado {
     }
   }
 
-  /**
-   * Obtiene el estado actual del dado
-   */
+  
   obtenerEstado() {
     return this.estadoActual;
   }
 
-  /**
-   * Obtiene información detallada sobre la restricción actual
-   */
+  
   obtenerInfoRestriccionActual() {
     if (!this.estadoActual || !this.estadoActual.activo) {
       return null;
@@ -213,16 +184,12 @@ class ManejadorDado {
     };
   }
 
-  /**
-   * Obtiene el historial de dados lanzados
-   */
+  
   obtenerHistorial() {
     return [...this.historialDados];
   }
 
-  /**
-   * Reinicia el estado del dado
-   */
+  
   reiniciar() {
     this.estadoActual = null;
     this.rondaActual = 1;
@@ -230,11 +197,8 @@ class ManejadorDado {
     console.log('🎲 ManejadorDado reiniciado');
   }
 
-  /**
-   * Notifica cambios de estado a otros componentes
-   */
-  notificarCambioEstado() {
-    // Disparar evento personalizado para que otros componentes puedan reaccionar
+  
+  notificarCambioEstado() {
     if (typeof window !== 'undefined') {
       const evento = new CustomEvent('dadoCambiado', {
         detail: {
@@ -246,17 +210,12 @@ class ManejadorDado {
     }
   }
 
-  /**
-   * Configura eventos del dado
-   */
-  configurarEventos() {
-    // Escuchar eventos de nueva ronda
+  
+  configurarEventos() {
     window.addEventListener('nuevaRonda', (evento) => {
       const { numeroRonda, numeroJugadores } = evento.detail;
       this.lanzarDadoParaRonda(numeroRonda, numeroJugadores);
-    });
-
-    // Escuchar eventos de fin de ronda
+    });
     window.addEventListener('finRonda', () => {
       this.finalizarRonda();
     });
@@ -264,9 +223,7 @@ class ManejadorDado {
     console.log('🎲 Eventos del dado configurados');
   }
 
-  /**
-   * Obtiene estadísticas del uso del dado
-   */
+  
   obtenerEstadisticas() {
     const conteoCaras = {};
     this.historialDados.forEach(entrada => {

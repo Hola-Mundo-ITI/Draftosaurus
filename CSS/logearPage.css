@@ -1,6 +1,6 @@
-/* ======= ESTILOS ESPECÍFICOS PARA LA PÁGINA DE LOGIN ======= */
 
-/* Layout centrado para login */
+
+
 body {
   display: flex;
   align-items: center;
@@ -9,7 +9,7 @@ body {
   padding: 20px;
 }
 
-/* Pantalla de login/registro */
+
 .pantalla {
   max-width: 400px;
   width: 100%;
@@ -18,7 +18,7 @@ body {
   align-items: center;
 }
 
-/* Caja del formulario de login */
+
 .caja-formulario {
   background-color: #ffffff;
   border-radius: 10px;
@@ -28,18 +28,18 @@ body {
   text-align: center;
 }
 
-/* Logo específico del login */
+
 .imagen-logo {
   width: 90px;
   margin-bottom: 20px;
 }
 
-/* Contenedor de botones del login */
+
 .contenedor-botones {
   margin-top: 20px;
 }
 
-/* Grupos de campos del formulario */
+
 .grupo-campo {
   margin-bottom: 16px;
   text-align: left;
@@ -65,7 +65,7 @@ body {
   outline: none;
 }
 
-/* Botón de acción específico del login */
+
 .boton-accion {
   background-color: #107e35;
   color: #fff;
@@ -84,7 +84,7 @@ body {
   background-color: #0d6229;
 }
 
-/* Variante verde del botón */
+
 .boton-verde {
   background-color: #28a745;
 }
@@ -93,7 +93,7 @@ body {
   background-color: #1e7e34;
 }
 
-/* Enlaces de texto para cambiar entre login/registro */
+
 .enlace-texto {
   background: none;
   border: none;

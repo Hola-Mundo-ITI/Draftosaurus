@@ -1,8 +1,8 @@
-/* ======= DISEÑO RESPONSIVO ======= */
 
-/* ======= ESTILOS PARA TABLETS (max-width: 768px) ======= */
+
+
 @media (max-width: 768px) {
-  /* Ajustes de diseño */
+  
   .main-content,
   #contenido {
     padding: 100px 15px 60px;
@@ -12,7 +12,7 @@
     transform: none;
   }
 
-  /* Typography */
+  
   .question {
     font-size: 1.1rem;
   }
@@ -21,7 +21,7 @@
     font-size: 1.4rem;
   }
 
-  /* Buttons */
+  
   .btn {
     font-size: 1rem;
     padding: 12px;
@@ -32,7 +32,7 @@
     padding: 10px;
   }
 
-  /* Forms */
+  
   .form-grid {
     flex-direction: column;
     gap: 30px;
@@ -43,7 +43,7 @@
     align-items: flex-start;
   }
 
-  /* Game specific */
+  
   .zona-juego {
     flex-direction: column;
     gap: 30px;
@@ -68,7 +68,7 @@
     justify-content: center;
   }
 
-  /* Score screen */
+  
   .contenido-puntaje {
     flex-direction: column;
     align-items: center;
@@ -76,9 +76,9 @@
   }
 }
 
-/* ======= ESTILOS PARA MÓVILES (max-width: 600px) ======= */
+
 @media (max-width: 600px) {
-  /* Forms */
+  
   .campo {
     flex-direction: column;
     align-items: flex-start;
@@ -88,21 +88,21 @@
     transform: none;
   }
 
-  /* Score screen */
+  
   .contenido-puntaje {
     flex-direction: column;
     align-items: center;
   }
 }
 
-/* ======= ESTILOS PARA MÓVILES PEQUEÑOS (max-width: 480px) ======= */
+
 @media (max-width: 480px) {
-  /* Diseño */
+  
   body {
     padding: 20px 15px 60px;
   }
 
-  /* Typography */
+  
   .question {
     font-size: 1rem;
   }
@@ -111,12 +111,12 @@
     font-size: 1.2rem;
   }
 
-  /* Imágenes */
+  
   .logo-image {
     max-width: 180px;
   }
 
-  /* Buttons */
+  
   .btn {
     font-size: 0.95rem;
     padding: 10px;
@@ -127,7 +127,7 @@
     font-size: 0.95rem;
   }
 
-  /* Forms */
+  
   .caja-formulario {
     padding: 24px;
   }
@@ -136,7 +136,7 @@
     font-size: 0.95rem;
   }
 
-  /* Game specific */
+  
   .dinosaurio {
     width: 80px;
     height: 80px;
@@ -160,7 +160,7 @@
     font-size: 20px;
   }
 
-  /* Ajustes del menú */
+  
   .boton-menu,
   .menu-icon {
     font-size: 1.6rem;
@@ -178,9 +178,9 @@
   }
 }
 
-/* ======= ESTILOS PARA MÓVILES EXTRA PEQUEÑOS (max-width: 360px) ======= */
+
 @media (max-width: 360px) {
-  /* Reducir aún más los tamaños para pantallas muy pequeñas */
+  
   .main-content,
   #contenido {
     padding: 80px 10px 60px;
@@ -214,7 +214,7 @@
   }
 }
 
-/* ======= AJUSTES PARA ORIENTACIÓN HORIZONTAL ======= */
+
 @media (max-height: 500px) and (orientation: landscape) {
   .main-content,
   #contenido {
@@ -236,7 +236,7 @@
   }
 }
 
-/* ======= PANTALLAS DE ALTA RESOLUCIÓN ======= */
+
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .dinosaurio img,
   .dado-virtual img {
@@ -245,7 +245,7 @@
   }
 }
 
-/* ======= ESTILOS PARA IMPRESIÓN ======= */
+
 @media print {
   .boton-menu,
   .menu-icon,

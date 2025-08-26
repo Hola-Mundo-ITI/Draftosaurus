@@ -1,4 +1,11 @@
 <?php
+/*
+ * Script obtenerMovimientoBot.php:
+ * Endpoint que calcula y devuelve un movimiento sugerido para un bot.
+ * - Recibe POST con playerId, gameState y availableDinosaurs.
+ * - Usa SistemaBots para decidir un movimiento válido y normaliza la respuesta.
+ * Devuelve JSON con 'exito' y el movimiento normalizado en 'movimiento' (o null).
+ */
 header('Content-Type: application/json');
 
 require_once 'SistemaBots.php';
@@ -23,22 +30,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $dinosauriosDisponibles = $datos->availableDinosaurs ?? []; // Array de objetos de dinosaurios disponibles
 
         if ($jugadorId !== null && $estadoJuego) {
-            // Inyectar los dinosaurios disponibles en el estado de juego para que SistemaBots los use
+
             $estadoJuego->availableDinosaurs = $dinosauriosDisponibles;
 
             $movimientoBot = $sistemaBots->decidirMovimientoBot($jugadorId, $estadoJuego);
 
             if ($movimientoBot) {
+
+                $dino = $movimientoBot['dinosaur'];
+
+                $dinosaurObj = (object)[
+                    'id' => $dino->id ?? ($dino->ID ?? null),
+                    'type' => $dino->type ?? $dino->tipo ?? null,
+                    'image' => $dino->image ?? $dino->imagen ?? null
+                ];
+
+                $normalizedMove = [
+                    'dinosaur' => $dinosaurObj,
+                    'zoneId' => $movimientoBot['zoneId'] ?? $movimientoBot['zona'] ?? null,
+                    'slot' => $movimientoBot['slot'] ?? $movimientoBot['slotId'] ?? $movimientoBot['casillero'] ?? null
+                ];
+
                 $respuesta = [
                     'exito' => true,
                     'mensaje' => 'Movimiento del bot calculado exitosamente.',
-                    'movimiento' => $movimientoBot
+                    'movimiento' => $normalizedMove,
+
+                    'success' => true,
+                    'message' => 'Bot move calculated successfully.',
+                    'move' => $normalizedMove
                 ];
+
+                error_log("[obtenerMovimientoBot] Bot {$jugadorId} mov: " . json_encode($normalizedMove));
             } else {
                 $respuesta['mensaje'] = 'El bot no pudo encontrar un movimiento válido.';
+                $respuesta['message'] = 'Bot could not find a valid move.';
             }
         } else {
             $respuesta['mensaje'] = 'Faltan datos esenciales para el turno del bot.';
+            $respuesta['message'] = 'Missing required data for bot turn.';
         }
     }
 }

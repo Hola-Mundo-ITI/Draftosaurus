@@ -1,10 +1,13 @@
-/**
- * Sistema centralizado de mapeo de dinosaurios
- * Convierte entre IDs de imagen (dino1, dino2, etc.) y nombres de tipos
+/*
+ * mapeoDinosaurios.js:
+ * Provee mapeos y utilidades para relacionar identificadores de dinosaurios
+ * con imágenes, nombres y metadatos. Centraliza las referencias a recursos
+ * para evitar duplicaciones en la interfaz.
  */
+
 class MapeoDinosaurios {
   constructor() {
-    // Mapeo principal: ID de imagen → tipo de dinosaurio
+
     this.imagenATipo = {
       'dino1': 'triceratops',
       'dino2': 'stegosaurus', 
@@ -13,14 +16,12 @@ class MapeoDinosaurios {
       'dino5': 'velociraptor',
       'dino6': 'pteranodon'
     };
-    
-    // Mapeo inverso: tipo de dinosaurio → ID de imagen
+
     this.tipoAImagen = {};
     Object.entries(this.imagenATipo).forEach(([imagen, tipo]) => {
       this.tipoAImagen[tipo] = imagen;
     });
-    
-    // Mapeo completo con información adicional
+
     this.dinosaurios = {
       'dino1': {
         id: 'dino1',
@@ -67,11 +68,9 @@ class MapeoDinosaurios {
     };
   }
   
-  /**
-   * Obtiene el tipo de dinosaurio desde el src de una imagen
-   */
+  
   obtenerTipoDesdeSrc(src) {
-    // Buscar qué dino corresponde al src
+
     for (const [dinoId, tipo] of Object.entries(this.imagenATipo)) {
       if (src.includes(dinoId)) {
         return tipo;
@@ -80,67 +79,49 @@ class MapeoDinosaurios {
     return 'desconocido';
   }
   
-  /**
-   * Obtiene el ID de imagen desde un tipo de dinosaurio
-   */
+  
   obtenerImagenDesdeTipo(tipo) {
     return this.tipoAImagen[tipo] || 'dino1';
   }
   
-  /**
-   * Obtiene la ruta completa de la imagen desde un tipo
-   */
+  
   obtenerRutaImagenDesdeTipo(tipo) {
     const dinoId = this.obtenerImagenDesdeTipo(tipo);
     return `Recursos/img/${dinoId}.png`;
   }
   
-  /**
-   * Obtiene información completa de un dinosaurio por tipo
-   */
+  
   obtenerInfoPorTipo(tipo) {
     const dinoId = this.obtenerImagenDesdeTipo(tipo);
     return this.dinosaurios[dinoId] || null;
   }
   
-  /**
-   * Obtiene información completa de un dinosaurio por ID de imagen
-   */
+  
   obtenerInfoPorId(dinoId) {
     return this.dinosaurios[dinoId] || null;
   }
   
-  /**
-   * Obtiene todos los tipos de dinosaurios disponibles
-   */
+  
   obtenerTodosLosTipos() {
     return Object.values(this.imagenATipo);
   }
   
-  /**
-   * Obtiene todos los IDs de imagen disponibles
-   */
+  
   obtenerTodosLosIds() {
     return Object.keys(this.imagenATipo);
   }
   
-  /**
-   * Verifica si un tipo de dinosaurio es válido
-   */
+  
   esTipoValido(tipo) {
     return Object.values(this.imagenATipo).includes(tipo);
   }
   
-  /**
-   * Verifica si un ID de imagen es válido
-   */
+  
   esIdValido(dinoId) {
     return Object.keys(this.imagenATipo).includes(dinoId);
   }
   
-  /**
-   * Convierte un elemento DOM de dinosaurio a objeto completo
-   */
+  
   convertirElementoAObjeto(elementoDino) {
     const img = elementoDino.querySelector('img');
     if (!img) return null;
@@ -159,7 +140,6 @@ class MapeoDinosaurios {
   }
 }
 
-// Crear instancia global
 window.mapeoDinosaurios = new MapeoDinosaurios();
 
 console.log('🦕 Sistema de mapeo de dinosaurios inicializado');

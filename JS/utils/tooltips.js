@@ -1,7 +1,11 @@
-/**
- * Sistema de tooltips para proporcionar ayuda contextual
- * Maneja la creación, posicionamiento y gestión de tooltips informativos
+/*
+ * tooltips.js:
+ * Utilidad ligera que gestiona las ayudas emergentes (tooltips) de la
+ * interfaz. Centraliza la creación, posicionamiento y remoción de
+ * tooltips para evitar duplicación de código en los distintos módulos
+ * del cliente. 
  */
+
 class SistemaTooltips {
   constructor() {
     this.tooltipActivo = null;
@@ -16,11 +20,9 @@ class SistemaTooltips {
     this.inicializar();
   }
 
-  /**
-   * Inicializa el sistema de tooltips
-   */
+  
   inicializar() {
-    // Crear contenedor para tooltips
+
     this.contenedorTooltips = document.createElement('div');
     this.contenedorTooltips.id = 'contenedor-tooltips';
     this.contenedorTooltips.style.cssText = `
@@ -32,13 +34,10 @@ class SistemaTooltips {
     `;
     document.body.appendChild(this.contenedorTooltips);
 
-    // Configurar eventos globales
     this.configurarEventosGlobales();
   }
 
-  /**
-   * Configura eventos globales para tooltips
-   */
+  
   configurarEventosGlobales() {
     document.addEventListener('mouseover', (e) => {
       const elemento = e.target.closest('[data-tooltip]');
@@ -60,22 +59,18 @@ class SistemaTooltips {
       }
     });
 
-    // Ocultar tooltip al hacer scroll
     document.addEventListener('scroll', () => {
       this.ocultarTooltip();
     });
   }
 
-  /**
-   * Muestra un tooltip con el contenido especificado
-   */
+  
   mostrarTooltip(elemento, contenido, opciones = {}) {
-    // Limpiar tooltip anterior
+
     this.ocultarTooltip();
 
     const config = { ...this.configuracion, ...opciones };
 
-    // Crear tooltip
     const tooltip = document.createElement('div');
     tooltip.className = 'tooltip-dinamico';
     tooltip.innerHTML = this.procesarContenidoTooltip(contenido);
@@ -99,11 +94,9 @@ class SistemaTooltips {
     this.contenedorTooltips.appendChild(tooltip);
     this.tooltipActivo = tooltip;
 
-    // Posicionar tooltip
     const rect = elemento.getBoundingClientRect();
     this.posicionarTooltip(tooltip, rect.left + rect.width / 2, rect.top);
 
-    // Animar aparición
     setTimeout(() => {
       if (this.tooltipActivo === tooltip) {
         tooltip.style.opacity = '1';
@@ -112,9 +105,7 @@ class SistemaTooltips {
     }, config.retraso);
   }
 
-  /**
-   * Oculta el tooltip activo
-   */
+  
   ocultarTooltip() {
     if (this.tooltipActivo) {
       const tooltip = this.tooltipActivo;
@@ -131,9 +122,7 @@ class SistemaTooltips {
     }
   }
 
-  /**
-   * Posiciona el tooltip en las coordenadas especificadas
-   */
+  
   posicionarTooltip(tooltip, x, y) {
     const rect = tooltip.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
@@ -142,22 +131,18 @@ class SistemaTooltips {
     let finalX = x + this.configuracion.offsetX;
     let finalY = y - rect.height - this.configuracion.offsetY;
 
-    // Ajustar si se sale por la derecha
     if (finalX + rect.width > viewportWidth) {
       finalX = x - rect.width - this.configuracion.offsetX;
     }
 
-    // Ajustar si se sale por arriba
     if (finalY < 0) {
       finalY = y + this.configuracion.offsetY;
     }
 
-    // Ajustar si se sale por la izquierda
     if (finalX < 0) {
       finalX = this.configuracion.offsetX;
     }
 
-    // Ajustar si se sale por abajo
     if (finalY + rect.height > viewportHeight) {
       finalY = viewportHeight - rect.height - this.configuracion.offsetY;
     }
@@ -166,34 +151,26 @@ class SistemaTooltips {
     tooltip.style.top = finalY + 'px';
   }
 
-  /**
-   * Actualiza la posición del tooltip siguiendo el mouse
-   */
+  
   actualizarPosicionTooltip(x, y) {
     if (this.tooltipActivo) {
       this.posicionarTooltip(this.tooltipActivo, x, y);
     }
   }
 
-  /**
-   * Procesa el contenido del tooltip para soportar HTML básico
-   */
+  
   procesarContenidoTooltip(contenido) {
-    // Soportar saltos de línea
+
     contenido = contenido.replace(/\\n/g, '<br>');
-    
-    // Soportar texto en negrita
+
     contenido = contenido.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    
-    // Soportar texto en cursiva
+
     contenido = contenido.replace(/\*(.*?)\*/g, '<em>$1</em>');
     
     return contenido;
   }
 
-  /**
-   * Crea tooltips específicos para zonas del tablero con reglas actualizadas
-   */
+  
   configurarTooltipsZonas() {
     const zonasInfo = {
       'bosque-semejanza': {
@@ -247,9 +224,7 @@ class SistemaTooltips {
     });
   }
 
-  /**
-   * Crea tooltips para dinosaurios
-   */
+  
   configurarTooltipsDinosaurios() {
     const dinosauriosInfo = {
       'dino1': {
@@ -300,9 +275,7 @@ class SistemaTooltips {
     });
   }
 
-  /**
-   * Crea tooltips para controles del juego
-   */
+  
   configurarTooltipsControles() {
     const controles = {
       'btn-deshacer': 'Deshace el último movimiento realizado\\n**Atajo:** Ctrl+Z',
@@ -318,9 +291,7 @@ class SistemaTooltips {
     });
   }
 
-  /**
-   * Muestra un tooltip de ayuda temporal
-   */
+  
   mostrarAyudaTemporal(mensaje, duracion = 3000) {
     const ayuda = document.createElement('div');
     ayuda.className = 'tooltip-ayuda-temporal';
@@ -347,13 +318,11 @@ class SistemaTooltips {
 
     document.body.appendChild(ayuda);
 
-    // Animar aparición
     setTimeout(() => {
       ayuda.style.opacity = '1';
       ayuda.style.transform = 'translate(-50%, -50%) scale(1)';
     }, 10);
 
-    // Animar desaparición
     setTimeout(() => {
       ayuda.style.opacity = '0';
       ayuda.style.transform = 'translate(-50%, -50%) scale(0.8)';
@@ -366,34 +335,26 @@ class SistemaTooltips {
     }, duracion);
   }
 
-  /**
-   * Configura todos los tooltips del juego
-   */
+  
   configurarTodosLosTooltips() {
     this.configurarTooltipsZonas();
     this.configurarTooltipsDinosaurios();
     this.configurarTooltipsControles();
   }
 
-  /**
-   * Limpia todos los tooltips
-   */
+  
   limpiarTooltips() {
     this.ocultarTooltip();
-    
-    // Remover atributos de tooltip
+
     document.querySelectorAll('[data-tooltip]').forEach(elemento => {
       elemento.removeAttribute('data-tooltip');
     });
   }
 
-  /**
-   * Actualiza la configuración de tooltips
-   */
+  
   actualizarConfiguracion(nuevaConfig) {
     this.configuracion = { ...this.configuracion, ...nuevaConfig };
   }
 }
 
-// Crear instancia global
 window.sistemaTooltips = new SistemaTooltips();

@@ -1,6 +1,6 @@
-/* ======= ESTILOS ESPECÍFICOS PARA LA PÁGINA FÍSICO (SEGUIMIENTO) ======= */
 
-/* Contenido principal del modo físico */
+
+
 #contenido {
   max-width: 900px;
   width: 100%;
@@ -13,7 +13,7 @@
   transform: translateX(220px);
 }
 
-/* Grilla del formulario de seguimiento */
+
 .form-grid {
   display: flex;
   justify-content: center;
@@ -29,7 +29,7 @@
   min-width: 250px;
 }
 
-/* Campos de entrada específicos */
+
 input[type="text"] {
   padding: 10px;
   border-radius: 5px;
@@ -42,7 +42,7 @@ input[type="text"]:focus {
   border-color: #00cc66;
 }
 
-/* Botón de envío del formulario */
+
 button[type="submit"] {
   padding: 12px 30px;
   background-color: #3b351f;
@@ -58,7 +58,7 @@ button[type="submit"]:hover {
   background-color: #5c3a21;
 }
 
-/* Footer específico del modo físico */
+
 .footer-prehistorico {
   background-color: #3b351f;
   color: #fceabb;

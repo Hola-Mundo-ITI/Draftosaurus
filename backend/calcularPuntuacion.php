@@ -1,7 +1,13 @@
 <?php
-// Wrapper minimal que delega en ScoreCalculator (centraliza la lógica de puntuación)
+
+/*
+ * Script calcularPuntuacion.php:
+ * Endpoint ligero que delega en ScoreCalculator para calcular y devolver
+ * el informe de puntuación. Mantiene la compatibilidad con la API que
+ * espera un POST con los datos necesarios.
+ */
+
 require_once __DIR__ . '/ScoreCalculator.php';
 
-// Delegar toda la lógica y respuesta HTTP al manejador estático
 ScoreCalculator::handleHttpRequest();
 ?>

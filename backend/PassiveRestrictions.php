@@ -1,14 +1,25 @@
 <?php
 
+/*
+ * Clase RestriccionesPasivas:
+ * Define y aplica las reglas permanentes de cada zona del tablero (capacidad,
+ * tipo de especie y ordenamiento). Se encarga de validar colocaciones y
+ * calcular slots válidos según las reglas de cada recinto.
+ */
 class RestriccionesPasivas {
     private $reglasZonas;
 
+    /*
+     * Inicializa las reglas por zona al crear la instancia.
+     */
     public function __construct() {
         $this->reglasZonas = $this->definirReglasZonas();
     }
 
-    /**
-     * Define las reglas pasivas de cada recinto (claves en español).
+    
+    /*
+     * Devuelve la definición estática de reglas para cada zona del tablero
+     * (capacidad, tipo de especie aceptada, ordenamiento y descripción).
      */
     protected function definirReglasZonas(): array {
         return [
@@ -57,9 +68,11 @@ class RestriccionesPasivas {
         ];
     }
 
-    /**
-     * Valida si se puede colocar un dinosaurio en un recinto.
-     * Devuelve ['valid' => bool, 'reason' => string]
+    
+    /*
+     * Valida una colocación en una zona concreta comprobando capacidad,
+     * tipo de especie y ordenamiento. Devuelve un array con el resultado y
+     * una razón si no es válido.
      */
     public function validarColocacion(
         string $zoneId,
@@ -73,13 +86,11 @@ class RestriccionesPasivas {
             return ['valid' => false, 'reason' => 'Zona no reconocida'];
         }
 
-        // Validar capacidad
         $capacidad = $this->validarCapacidad($dinosaursInZone, $rules['capacidad']);
         if (!$capacidad['valid']) {
             return $capacidad;
         }
 
-        // Validar especie
         $especie = $this->validarEspecie(
             $dinosaursInZone,
             $dinosaur,
@@ -89,7 +100,6 @@ class RestriccionesPasivas {
             return $especie;
         }
 
-        // Validar ordenamiento
         $orden = $this->validarOrdenamiento(
             $dinosaursInZone,
             $slot,
@@ -102,6 +112,9 @@ class RestriccionesPasivas {
         return ['valid' => true, 'reason' => 'Colocación válida'];
     }
 
+    /*
+     * Comprueba si hay espacio en la zona para añadir otro dinosaurio.
+     */
     protected function validarCapacidad(array $dinosaursInZone, int $maxCapacidad): array {
         if (count($dinosaursInZone) >= $maxCapacidad) {
             return ['valid' => false, 'reason' => 'Recinto lleno'];
@@ -109,6 +122,10 @@ class RestriccionesPasivas {
         return ['valid' => true];
     }
 
+    /*
+     * Aplica la regla de tipo de especie de la zona. Puede delegar en
+     * validaciones más concretas según el tipo (misma especie, diferentes, etc.).
+     */
     protected function validarEspecie(array $dinosaursInZone, object $dinosaur, string $tipoEspecie): array {
         switch ($tipoEspecie) {
             case 'mismaEspecie':
@@ -122,22 +139,39 @@ class RestriccionesPasivas {
         }
     }
 
+    /*
+     * Valida que todos los dinosaurios en la zona sean de la misma especie
+     * que el que se intenta colocar. Si la zona está vacía, se permite.
+     */
     protected function validarMismaEspecie(array $dinosaursInZone, object $dinosaur): array {
         if (empty($dinosaursInZone)) {
             return ['valid' => true];
         }
 
-        $existingSpecies = $dinosaursInZone[0]->type;
-        if ($dinosaur->type !== $existingSpecies) {
+        $existingSpecies = isset($dinosaursInZone[0]->type) ? $dinosaursInZone[0]->type : ($dinosaursInZone[0]->tipo ?? null);
+        $incomingSpecies = $dinosaur->type ?? ($dinosaur->tipo ?? null);
+
+        if ($incomingSpecies === null || $existingSpecies === null) {
             return [
                 'valid' => false,
-                'reason' => "Solo dinosaurios {$existingSpecies} permitidos en este recinto"
+                'reason' => 'Información de especie incompleta para validación'
+            ];
+        }
+
+        if ($incomingSpecies !== $existingSpecies) {
+            return [
+                'valid' => false,
+                'reason' => "Solo dinosaurios del tipo '{$existingSpecies}' permitidos en este recinto"
             ];
         }
 
         return ['valid' => true];
     }
 
+    /*
+     * Valida que el dinosaurio a colocar tenga una especie distinta de las
+     * ya presentes en la zona.
+     */
     protected function validarEspeciesDiferentes(array $dinosaursInZone, object $dinosaur): array {
         $existingSpecies = array_map(function($d) { return $d->type; }, $dinosaursInZone);
 
@@ -151,6 +185,10 @@ class RestriccionesPasivas {
         return ['valid' => true];
     }
 
+    /*
+     * Evalúa el criterio de ordenamiento (secuencial o libre) y delega a la
+     * validación específica si hace falta.
+     */
     protected function validarOrdenamiento(array $dinosaursInZone, int $slot, string $ordenamiento): array {
         switch ($ordenamiento) {
             case 'secuencial':
@@ -162,21 +200,46 @@ class RestriccionesPasivas {
         }
     }
 
+    /*
+     * Valida la colocación secuencial: determina el slot esperado y compara
+     * con el slot solicitado, devolviendo el siguiente slot cuando no coincide.
+     */
     protected function validarOrdenSecuencial(array $dinosaursInZone, int $slot): array {
-        $expectedSlot = count($dinosaursInZone) + 1;
+        $occupiedSlots = array_map(function($d) {
+            if (isset($d->slot)) return (int)$d->slot;
+
+            if (isset($d->pos)) return (int)$d->pos;
+            if (isset($d->position)) return (int)$d->position;
+            return null;
+        }, $dinosaursInZone);
+
+        $occupiedSlots = array_filter($occupiedSlots, fn($s) => $s !== null);
+        sort($occupiedSlots);
+
+        $expectedSlot = 1;
+        foreach ($occupiedSlots as $occupied) {
+            if ($expectedSlot < $occupied) {
+
+                break;
+            }
+
+            $expectedSlot = $occupied + 1;
+        }
 
         if ($slot !== $expectedSlot) {
             return [
                 'valid' => false,
-                'reason' => "Debe colocar en el slot {$expectedSlot} (de izquierda a derecha)"
+                'reason' => "Debe colocar en el slot {$expectedSlot} (orden secuencial requerido, de izquierda a derecha)"
             ];
         }
 
         return ['valid' => true];
     }
 
-    /**
-     * Obtiene los slots válidos para un recinto (devuelve enteros).
+    
+    /*
+     * Calcula y devuelve los slots válidos para una zona según las reglas
+     * (considera capacidad, especie y ordenamiento).
      */
     public function obtenerSlotsValidos(string $zoneId, array $dinosaursInZone, object $dinosaur): array {
         $rules = $this->reglasZonas[$zoneId] ?? null;
@@ -206,16 +269,20 @@ class RestriccionesPasivas {
         }
     }
 
-    /**
-     * Obtiene información de un recinto (claves en español).
+    
+    /*
+     * Recupera la información legible de una zona (capacidad, tipo, ordenamiento,
+     * descripción) o null si la zona no existe.
      */
     public function obtenerInfoZona(string $zoneId): ?array {
         return $this->reglasZonas[$zoneId] ?? null;
     }
 }
 
-// Wrapper para mantener compatibilidad con el API existente en inglés
 class PassiveRestrictions extends RestriccionesPasivas {
+    /*
+     * Adaptador en inglés: reutiliza la implementación en español.
+     */
     public function __construct() {
         parent::__construct();
     }
@@ -228,7 +295,6 @@ class PassiveRestrictions extends RestriccionesPasivas {
         return $this->obtenerSlotsValidos($zoneId, $dinosaursInZone, $dinosaur);
     }
 
-    // Devuelve la info de la zona con claves en inglés para compatibilidad
     public function getZoneInfo(string $zoneId): ?array {
         $info = $this->obtenerInfoZona($zoneId);
         if (!$info) return null;

@@ -1,16 +1,7 @@
-/* navigation.js
-   Script centralizado para el sistema de navegación unificado de Draftosaurus
-   - Maneja apertura/cierre de menú lateral
-   - Cambia el icono entre 'hamburger' y 'X'
-   - Cierra con clic fuera (overlay), con Escape y al seleccionar enlaces en móvil
-   - Añade atributos ARIA y control de foco (focus trap básico)
-   - Inicialización robusta y comprobación de elementos del DOM
-*/
+
 
 (function () {
-  'use strict';
-
-  // Configuración local (coincide con includes/nav_config.php)
+  'use strict';
   const CONFIG = {
     menuToggleId: 'menuToggle',
     menuId: 'mainMenu',
@@ -26,23 +17,14 @@
   const FOCUSABLE_SELECTORS = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
 
   function init() {
-    try {
-      // Buscar elemento del toggle por id
-      menuToggle = document.getElementById(CONFIG.menuToggleId)
-        // fallback: botón que controla el menú por aria-controls
-        || document.querySelector(`[aria-controls="${CONFIG.menuId}"]`)
-        // fallback a clase existente
+    try {
+      menuToggle = document.getElementById(CONFIG.menuToggleId)
+        || document.querySelector(`[aria-controls="${CONFIG.menuId}"]`)
         || document.querySelector('.menu-toggle')
         || document.querySelector('.boton-menu')
-        || document.querySelector('.menu-icon');
-
-      // Buscar el nodo del menú por id o por clase histórica
-      menuNode = document.getElementById(CONFIG.menuId) || document.querySelector('.offcanvas-menu') || document.querySelector('.navegacion-lateral') || document.querySelector('.menu-lateral') || document.querySelector('aside[role="navigation"]');
-
-      // Buscar overlay por id o por clase existente
-      overlayNode = document.getElementById(CONFIG.overlayId) || document.querySelector('.nav-overlay') || document.querySelector('.overlay');
-
-      // Buscar main content con múltiples patrones para compatibilidad
+        || document.querySelector('.menu-icon');
+      menuNode = document.getElementById(CONFIG.menuId) || document.querySelector('.offcanvas-menu') || document.querySelector('.navegacion-lateral') || document.querySelector('.menu-lateral') || document.querySelector('aside[role="navigation"]');
+      overlayNode = document.getElementById(CONFIG.overlayId) || document.querySelector('.nav-overlay') || document.querySelector('.overlay');
       mainContent = document.getElementById(CONFIG.mainContentId) || document.getElementById('contenido') || document.querySelector('.main-content') || document.querySelector('main[role="main"]');
 
       if (!menuToggle || !menuNode || !overlayNode) {
@@ -50,15 +32,11 @@
         return;
       }
 
-      menuLinks = Array.from(menuNode.querySelectorAll(CONFIG.menuListSelector + ' a'));
-
-      // Estado ARIA inicial
+      menuLinks = Array.from(menuNode.querySelectorAll(CONFIG.menuListSelector + ' a'));
       menuToggle.setAttribute('aria-expanded', 'false');
       menuToggle.setAttribute('aria-controls', menuNode.id || '');
       menuNode.setAttribute('aria-hidden', 'true');
-      menuNode.setAttribute('role', 'navigation');
-
-      // Event listeners
+      menuNode.setAttribute('role', 'navigation');
       menuToggle.addEventListener('click', onToggleClick);
       overlayNode.addEventListener('click', closeMenuIfOpen);
       document.addEventListener('keydown', onKeyDown);
@@ -73,9 +51,7 @@
             console.error('[navigation.js] Error al manejar click en enlace del menú', e);
           }
         });
-      });
-
-      // Soporte para navegación por teclado dentro del menú (focus trap básico)
+      });
       menuNode.addEventListener('keydown', trapFocus);
 
       if (!menuToggle.hasAttribute('aria-label')) menuToggle.setAttribute('aria-label', 'Abrir menú de navegación');

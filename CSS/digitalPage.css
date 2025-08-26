@@ -1,6 +1,6 @@
-/* ======= ESTILOS ESPECÍFICOS PARA LA PÁGINA DIGITAL (JUEGO) ======= */
 
-/* Encabezado de la partida */
+
+
 .encabezado-partida {
   display: flex;
   justify-content: space-between;
@@ -40,7 +40,7 @@
   margin-left: 5px;
 }
 
-/* Zona de juego principal */
+
 .zona-juego {
   display: flex;
   justify-content: center;
@@ -57,7 +57,7 @@
   gap: 15px;
 }
 
-/* Dinosaurios arrastrables */
+
 .dinosaurio {
   width: 100px;
   height: 100px;
@@ -92,7 +92,7 @@
   opacity: 0.5;
 }
 
-/* Contenedor del tablero */
+
 .contenedor-tablero {
   display: flex;
   flex-direction: column;
@@ -113,7 +113,7 @@
   margin: 0 auto;
 }
 
-/* Estilos para las zonas del tablero - INVISIBLES */
+
 .zona-tablero {
   position: absolute;
   background-color: transparent;
@@ -133,7 +133,7 @@
 
 .titulo-zona {
   display: none;
-  /* Ocultar títulos completamente */
+  
 }
 
 .slots-zona {
@@ -182,8 +182,8 @@
   border: none;
 }
 
-/* Posicionamiento específico de cada zona sobre el SVG */
-/* Coordenadas optimizadas para el tablero SVG de 770x768px */
+
+
 
 .bosque-semejanza {
   top: 120px;
@@ -280,14 +280,14 @@
   height: 19px;
 }
 
-/* Posicionar el slot 7 centrado en la última fila */
+
 .dinos-rio .slot:nth-child(7) {
   grid-column: 1 / 3;
 }
 
 
 
-/* Estilos para el modo calibrado */
+
 .modo-calibrado .zona-tablero {
   border: 2px solid #FFD700 !important;
   background-color: rgba(255, 215, 0, 0.2) !important;
@@ -334,7 +334,7 @@
   font-size: 11px;
 }
 
-/* Estados de los dinosaurios */
+
 .dinosaurio.seleccionado {
   transform: scale(1.1);
   box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
@@ -347,7 +347,7 @@
   cursor: not-allowed;
 }
 
-/* Dado virtual */
+
 .dado-virtual {
   background-color: rgb(247, 231, 204);
   width: 90px;
@@ -390,7 +390,7 @@
   font-family: 'Papyrus', fantasy;
 }
 
-/* Estados del dado */
+
 .dado-virtual.lanzando {
   animation: rotar-dado 1s ease-in-out;
 }
@@ -416,7 +416,7 @@
   box-shadow: none;
 }
 
-/* Animación de lanzamiento */
+
 @keyframes rotar-dado {
   0% {
     transform: rotate(0deg) scale(1);
@@ -439,7 +439,7 @@
   }
 }
 
-/* Indicador de cara del dado */
+
 .cara-dado-resultado {
   position: absolute;
   top: 5px;
@@ -460,7 +460,7 @@
   opacity: 1;
 }
 
-/* Botón de puntaje */
+
 .boton-puntaje {
   width: 120px;
   height: 50px;
@@ -484,7 +484,7 @@
   transform: scale(1.05);
 }
 
-/* Botón de lanzar dado */
+
 .boton-lanzar-dado {
   width: 140px;
   height: 50px;
@@ -523,7 +523,7 @@
   box-shadow: none;
 }
 
-/* Contenedor de acciones del juego */
+
 .acciones-juego {
   display: flex;
   justify-content: center;
@@ -532,10 +532,9 @@
   margin-top: 20px;
 }
 
-/*
- ======= ESTILOS PARA EL SISTEMA POINT AND CLICK ======= */
 
-/* Controles del juego */
+
+
 .controles-juego {
   display: flex;
   justify-content: space-between;
@@ -608,7 +607,7 @@
   background-color: #FF5722;
 }
 
-/* Tooltips para zonas */
+
 .tooltip-zona {
   position: absolute;
   top: -60px;
@@ -635,7 +634,7 @@
   border-top-color: rgba(0, 0, 0, 0.9);
 }
 
-/* Área de mensajes */
+
 .area-mensajes {
   position: fixed;
   top: 20px;
@@ -673,7 +672,7 @@
   color: white;
 }
 
-/* Modal de puntuación */
+
 .modal-puntuacion {
   position: fixed;
   top: 0;
@@ -768,7 +767,7 @@
   transform: scale(1.05);
 }
 
-/* Error de inicialización */
+
 .error-inicializacion {
   background-color: #ffebee;
   border: 2px solid #f44336;
@@ -799,7 +798,7 @@
   background-color: #d32f2f;
 }
 
-/* Efectos visuales para slots */
+
 .efecto-confirmacion,
 .efecto-error {
   position: absolute;
@@ -840,7 +839,7 @@
   cursor: not-allowed;
 }
 
-/* Estilos específicos para restricciones secuenciales */
+
 .bosque-semejanza .slot.disponible,
 .prado-diferencia .slot.disponible,
 .dinos-rio .slot.disponible {
@@ -857,7 +856,7 @@
   opacity: 0.3;
 }
 
-/* Indicadores visuales para zonas con reglas especiales */
+
 .isla-solitaria .slot.disponible {
   border-color: #9C27B0;
   box-shadow: 0 0 10px rgba(156, 39, 176, 0.7);
@@ -884,7 +883,7 @@
 
 
 
-/* Estilos para slots no disponibles por zona */
+
 .isla-solitaria .slot.no-disponible,
 .rey-selva .slot.no-disponible {
   border-color: #9E9E9E;
@@ -899,7 +898,7 @@
   opacity: 0.3;
 }
 
-/* Feedback mejorado para mensajes específicos */
+
 .mensaje.bosque {
   background-color: #2196F3;
   border-left: 4px solid #1976D2;
@@ -920,7 +919,7 @@
   border-left: 4px solid #F57C00;
 }
 
-/* Preview de dinosaurio */
+
 .preview-dinosaurio {
   position: absolute;
   top: 0;
@@ -934,7 +933,7 @@
   border-radius: 6px;
 }
 
-/* Animaciones */
+
 @keyframes pulso-seleccion {
 
   0%,
@@ -1115,7 +1114,7 @@
 
 
 
-/* Responsive para tablero */
+
 @media (max-width: 1024px) {
   .tablero-juego {
     width: 700px;
@@ -1215,7 +1214,7 @@
   }
 }
 
-/* Accesibilidad */
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
@@ -1224,7 +1223,7 @@
   }
 }
 
-/* Modo de alto contraste */
+
 @media (prefers-contrast: high) {
   .zona-tablero {
     border-width: 3px;
@@ -1247,10 +1246,9 @@
   }
 }
 
-/* ===== 
-ESTILOS DEL SISTEMA DE DADOS ===== */
 
-/* Contenedor principal del dado */
+
+
 .dado-container {
   position: fixed;
   top: 20px;
@@ -1265,7 +1263,7 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Estado del dado */
+
 .dado-resultado {
   display: flex;
   align-items: center;
@@ -1285,7 +1283,7 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   transition: all 0.3s ease;
 }
 
-/* Estados del jugador */
+
 .jugador-libre .cara-dado {
   background: linear-gradient(135deg, #4CAF50, #45a049);
   animation: pulso-libre 2s infinite;
@@ -1301,7 +1299,7 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   opacity: 0.7;
 }
 
-/* Información del dado */
+
 .info-dado h3 {
   margin: 0 0 5px 0;
   font-size: 1.1em;
@@ -1327,7 +1325,7 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   font-size: 0.85em;
 }
 
-/* Información de ronda */
+
 .ronda-info {
   margin-top: 10px;
   padding-top: 10px;
@@ -1347,7 +1345,7 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   font-style: italic;
 }
 
-/* Zonas permitidas */
+
 .zonas-permitidas {
   margin-top: 8px;
   padding: 5px 8px;
@@ -1357,7 +1355,7 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   color: #666;
 }
 
-/* Animaciones del dado */
+
 @keyframes pulso-libre {
 
   0%,
@@ -1386,9 +1384,9 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   }
 }
 
-/* ===== ESTILOS PARA SLOTS RESTRINGIDOS POR EL DADO ===== */
 
-/* Restricciones del dado */
+
+
 .slot.restringido-dado {
   background-color: rgba(231, 76, 60, 0.3);
   border: 2px dashed #e74c3c;
@@ -1404,7 +1402,7 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   opacity: 0.7;
 }
 
-/* Restricciones del recinto */
+
 .slot.restringido-recinto {
   background-color: rgba(241, 196, 15, 0.3);
   border: 2px dashed #f1c40f;
@@ -1420,7 +1418,7 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   opacity: 0.7;
 }
 
-/* Animaciones de feedback inválido específicas para el dado */
+
 .slot.invalido-dado {
   animation: shake-dado 0.5s ease-in-out;
   background-color: rgba(231, 76, 60, 0.5) !important;
@@ -1463,15 +1461,15 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   }
 }
 
-/* ===== MEJORAS VISUALES ADICIONALES PARA EL DADO ===== */
 
-/* Efecto hover para el contenedor del dado */
+
+
 .dado-container:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Slots disponibles con restricción del dado */
+
 .slot.disponible.dado-activo {
   border-color: #4CAF50;
   box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
@@ -1492,7 +1490,7 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   }
 }
 
-/* Responsive para el dado en pantallas pequeñas */
+
 @media (max-width: 768px) {
   .dado-container {
     position: fixed;
@@ -1524,7 +1522,7 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   }
 }
 
-/* Tema oscuro para el dado (opcional) */
+
 @media (prefers-color-scheme: dark) {
   .dado-container {
     background: rgba(45, 45, 45, 0.95);
@@ -1554,7 +1552,7 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   }
 }
 
-/* Indicadores visuales para diferentes tipos de restricciones del dado */
+
 .slot.bosque-permitido {
   border-color: #2d5a27;
   box-shadow: 0 0 6px rgba(45, 90, 39, 0.6);
@@ -1584,10 +1582,9 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   border-color: #e74c3c;
   box-shadow: 0 0 6px rgba(231, 76, 60, 0.6);
 }
-/* 
-======= ESTILOS PARA SISTEMA DE BOTS ======= */
 
-/* Indicadores de jugador con bots */
+
+
 .numero-jugador.bot-jugando {
   background-color: #4CAF50;
   color: white;
@@ -1601,7 +1598,7 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   50% { opacity: 0.6; }
 }
 
-/* Modal de puntuación con bots */
+
 .modal-puntuacion .puntuacion-jugador h4 {
   margin-bottom: 10px;
   padding: 5px 10px;
@@ -1623,14 +1620,14 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   color: white;
 }
 
-/* Mensajes específicos para bots */
+
 .mensaje.bot-info {
   background-color: #E8F5E8;
   border-left: 4px solid #4CAF50;
   color: #2E7D32;
 }
 
-/* Indicador de cantidad de jugadores con bots */
+
 .cantidad-jugadores {
   font-size: 0.9rem;
   background-color: rgba(76, 175, 80, 0.1);
@@ -1638,7 +1635,7 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   color: #2E7D32;
 }
 
-/* Animación para slots cuando bot está jugando */
+
 .slot.bot-considerando {
   animation: bot-considering 0.8s infinite;
 }
@@ -1652,7 +1649,7 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   }
 }
 
-/* Estilos para controles de bots */
+
 .controles-bots {
   position: fixed;
   bottom: 20px;
@@ -1691,7 +1688,7 @@ ESTILOS DEL SISTEMA DE DADOS ===== */
   cursor: not-allowed;
 }
 
-/* Indicador de turno de bot */
+
 .turno-bot-indicator {
   position: fixed;
   top: 50%;

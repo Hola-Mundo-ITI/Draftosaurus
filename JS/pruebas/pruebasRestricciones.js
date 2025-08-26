@@ -1,7 +1,4 @@
-/**
- * Pruebas para verificar las restricciones de recintos implementadas
- * Todas las pruebas están en español siguiendo camelCase
- */
+
 class PruebasRestricciones {
   constructor() {
     this.validadorZona = new ValidadorZona();
@@ -9,9 +6,7 @@ class PruebasRestricciones {
     this.resultadosPruebas = [];
   }
 
-  /**
-   * Ejecuta todas las pruebas de restricciones
-   */
+  
   ejecutarTodasLasPruebas() {
     console.log('🧪 Iniciando pruebas de restricciones de recintos...');
     
@@ -27,18 +22,12 @@ class PruebasRestricciones {
     this.mostrarResumenPruebas();
   }
 
-  /**
-   * Pruebas para Bosque de la Semejanza
-   */
+  
   probarBosqueSemejanza() {
-    console.log('🌲 Probando Bosque de la Semejanza...');
-    
-    // Crear slot mock
+    console.log('🌲 Probando Bosque de la Semejanza...');
     const crearSlotMock = (numero) => ({
       dataset: { slot: numero.toString() }
-    });
-
-    // Prueba 1: Primer dinosaurio debe ir en slot 1
+    });
     const dinosaurios1 = [];
     const resultado1 = this.validadorZona.validarBosqueSemejanza(
       dinosaurios1, 
@@ -49,9 +38,7 @@ class PruebasRestricciones {
       'Bosque - Primer dinosaurio en slot 1',
       resultado1.valido === true,
       'Debe permitir primer dinosaurio en slot 1'
-    );
-
-    // Prueba 2: Primer dinosaurio NO debe ir en slot 2
+    );
     const resultado2 = this.validadorZona.validarBosqueSemejanza(
       dinosaurios1, 
       { tipo: 'triceratops' }, 
@@ -61,9 +48,7 @@ class PruebasRestricciones {
       'Bosque - Primer dinosaurio NO en slot 2',
       resultado2.valido === false,
       'No debe permitir primer dinosaurio en slot 2'
-    );
-
-    // Prueba 3: Segundo dinosaurio de misma especie en slot 2
+    );
     const dinosaurios3 = [{ tipo: 'triceratops', slot: '1' }];
     const resultado3 = this.validadorZona.validarBosqueSemejanza(
       dinosaurios3, 
@@ -74,9 +59,7 @@ class PruebasRestricciones {
       'Bosque - Segundo dinosaurio misma especie en slot 2',
       resultado3.valido === true,
       'Debe permitir segundo dinosaurio de misma especie en slot 2'
-    );
-
-    // Prueba 4: Segundo dinosaurio NO debe ir en slot 3
+    );
     const resultado4 = this.validadorZona.validarBosqueSemejanza(
       dinosaurios3, 
       { tipo: 'triceratops' }, 
@@ -86,9 +69,7 @@ class PruebasRestricciones {
       'Bosque - Segundo dinosaurio NO en slot 3',
       resultado4.valido === false,
       'No debe permitir segundo dinosaurio en slot 3 (debe ser secuencial)'
-    );
-
-    // Prueba 5: Dinosaurio de especie diferente
+    );
     const resultado5 = this.validadorZona.validarBosqueSemejanza(
       dinosaurios3, 
       { tipo: 'stegosaurus' }, 
@@ -101,17 +82,13 @@ class PruebasRestricciones {
     );
   }
 
-  /**
-   * Pruebas para Prado de la Diferencia
-   */
+  
   probarPradoDiferencia() {
     console.log('🌾 Probando Prado de la Diferencia...');
     
     const crearSlotMock = (numero) => ({
       dataset: { slot: numero.toString() }
-    });
-
-    // Prueba 1: Primer dinosaurio debe ir en slot 1
+    });
     const dinosaurios1 = [];
     const resultado1 = this.validadorZona.validarPradoDiferencia(
       dinosaurios1, 
@@ -122,9 +99,7 @@ class PruebasRestricciones {
       'Prado - Primer dinosaurio en slot 1',
       resultado1.valido === true,
       'Debe permitir primer dinosaurio en slot 1'
-    );
-
-    // Prueba 2: Segundo dinosaurio diferente en slot 2
+    );
     const dinosaurios2 = [{ tipo: 'triceratops', slot: '1' }];
     const resultado2 = this.validadorZona.validarPradoDiferencia(
       dinosaurios2, 
@@ -135,9 +110,7 @@ class PruebasRestricciones {
       'Prado - Segundo dinosaurio diferente en slot 2',
       resultado2.valido === true,
       'Debe permitir segundo dinosaurio diferente en slot 2'
-    );
-
-    // Prueba 3: Dinosaurio de misma especie
+    );
     const resultado3 = this.validadorZona.validarPradoDiferencia(
       dinosaurios2, 
       { tipo: 'triceratops' }, 
@@ -147,9 +120,7 @@ class PruebasRestricciones {
       'Prado - Misma especie',
       resultado3.valido === false,
       'No debe permitir misma especie'
-    );
-
-    // Prueba 4: Segundo dinosaurio NO debe ir en slot 3
+    );
     const resultado4 = this.validadorZona.validarPradoDiferencia(
       dinosaurios2, 
       { tipo: 'brontosaurus' }, 
@@ -162,13 +133,9 @@ class PruebasRestricciones {
     );
   }
 
-  /**
-   * Pruebas para Rey de la Selva
-   */
+  
   probarReySelva() {
-    console.log('👑 Probando Rey de la Selva...');
-    
-    // Simular tableros de múltiples jugadores
+    console.log('👑 Probando Rey de la Selva...');
     const todosLosTableros = {
       1: {
         'rey-selva': [{ tipo: 'trex', jugadorColocado: 1 }],
@@ -178,27 +145,21 @@ class PruebasRestricciones {
         'rey-selva': [],
         'bosque-semejanza': [{ tipo: 'trex', jugadorColocado: 2 }]
       }
-    };
-
-    // Prueba 1: Jugador 1 tiene más T-Rex (2 vs 1)
+    };
     const dinosauriosRey1 = [{ tipo: 'trex', jugadorColocado: 1 }];
     const puntos1 = this.calculadoraPuntuacion.calcularReySelva(dinosauriosRey1, todosLosTableros, 1);
     this.verificarPrueba(
       'Rey - Jugador tiene más de la especie',
       puntos1 === 7,
       'Debe dar 7 puntos cuando el jugador tiene más de esa especie'
-    );
-
-    // Prueba 2: Jugador 2 tiene menos T-Rex (1 vs 2)
+    );
     const dinosauriosRey2 = [{ tipo: 'trex', jugadorColocado: 2 }];
     const puntos2 = this.calculadoraPuntuacion.calcularReySelva(dinosauriosRey2, todosLosTableros, 2);
     this.verificarPrueba(
       'Rey - Jugador tiene menos de la especie',
       puntos2 === 0,
       'Debe dar 0 puntos cuando otro jugador tiene más de esa especie'
-    );
-
-    // Prueba 3: Empate (ambos tienen igual cantidad)
+    );
     const tableriosEmpate = {
       1: {
         'rey-selva': [{ tipo: 'triceratops', jugadorColocado: 1 }],
@@ -222,13 +183,9 @@ class PruebasRestricciones {
     );
   }
 
-  /**
-   * Pruebas para Isla Solitaria
-   */
+  
   probarIslaSolitaria() {
-    console.log('🏝️ Probando Isla Solitaria...');
-    
-    // Prueba 1: Dinosaurio único en todo el parque
+    console.log('🏝️ Probando Isla Solitaria...');
     const tableroUnico = {
       'isla-solitaria': [{ tipo: 'pteranodon', jugadorColocado: 1 }],
       'bosque-semejanza': [{ tipo: 'triceratops', jugadorColocado: 1 }],
@@ -241,9 +198,7 @@ class PruebasRestricciones {
       'Isla - Dinosaurio único en el parque',
       puntos1 === 7,
       'Debe dar 7 puntos cuando es único de su especie en todo el parque'
-    );
-
-    // Prueba 2: Dinosaurio NO único (hay más de la misma especie)
+    );
     const tableroNoUnico = {
       'isla-solitaria': [{ tipo: 'pteranodon', jugadorColocado: 1 }],
       'bosque-semejanza': [{ tipo: 'pteranodon', jugadorColocado: 1 }],
@@ -256,9 +211,7 @@ class PruebasRestricciones {
       'Isla - Dinosaurio NO único en el parque',
       puntos2 === 0,
       'Debe dar 0 puntos cuando hay más de la misma especie en el parque'
-    );
-
-    // Prueba 3: Más de un dinosaurio en la isla
+    );
     const dinosauriosIsla3 = [
       { tipo: 'pteranodon', jugadorColocado: 1 },
       { tipo: 'triceratops', jugadorColocado: 1 }
@@ -271,13 +224,9 @@ class PruebasRestricciones {
     );
   }
 
-  /**
-   * Pruebas para Pradera del Amor
-   */
+  
   probarPraderaAmor() {
-    console.log('💕 Probando Pradera del Amor...');
-    
-    // Prueba 1: Una pareja completa
+    console.log('💕 Probando Pradera del Amor...');
     const dinosaurios1 = [
       { tipo: 'triceratops', jugadorColocado: 1 },
       { tipo: 'triceratops', jugadorColocado: 1 }
@@ -287,9 +236,7 @@ class PruebasRestricciones {
       'Pradera - Una pareja completa',
       puntos1 === 5,
       'Debe dar 5 puntos por una pareja completa'
-    );
-
-    // Prueba 2: Dos parejas completas
+    );
     const dinosaurios2 = [
       { tipo: 'triceratops', jugadorColocado: 1 },
       { tipo: 'triceratops', jugadorColocado: 1 },
@@ -301,9 +248,7 @@ class PruebasRestricciones {
       'Pradera - Dos parejas completas',
       puntos2 === 10,
       'Debe dar 10 puntos por dos parejas completas'
-    );
-
-    // Prueba 3: Dinosaurios sin pareja
+    );
     const dinosaurios3 = [
       { tipo: 'triceratops', jugadorColocado: 1 },
       { tipo: 'stegosaurus', jugadorColocado: 1 },
@@ -314,9 +259,7 @@ class PruebasRestricciones {
       'Pradera - Dinosaurios sin pareja',
       puntos3 === 0,
       'Debe dar 0 puntos cuando no hay parejas completas'
-    );
-
-    // Prueba 4: Pareja completa + dinosaurio solitario
+    );
     const dinosaurios4 = [
       { tipo: 'triceratops', jugadorColocado: 1 },
       { tipo: 'triceratops', jugadorColocado: 1 },
@@ -330,13 +273,9 @@ class PruebasRestricciones {
     );
   }
 
-  /**
-   * Pruebas para Trío Frondoso
-   */
+  
   probarTrioFrondoso() {
-    console.log('🌿 Probando Trío Frondoso...');
-    
-    // Prueba 1: Exactamente 3 dinosaurios
+    console.log('🌿 Probando Trío Frondoso...');
     const dinosaurios1 = [
       { tipo: 'triceratops', jugadorColocado: 1 },
       { tipo: 'stegosaurus', jugadorColocado: 1 },
@@ -347,9 +286,7 @@ class PruebasRestricciones {
       'Trío - Exactamente 3 dinosaurios',
       puntos1 === 7,
       'Debe dar 7 puntos con exactamente 3 dinosaurios'
-    );
-
-    // Prueba 2: Menos de 3 dinosaurios
+    );
     const dinosaurios2 = [
       { tipo: 'triceratops', jugadorColocado: 1 },
       { tipo: 'stegosaurus', jugadorColocado: 1 }
@@ -359,9 +296,7 @@ class PruebasRestricciones {
       'Trío - Menos de 3 dinosaurios',
       puntos2 === 0,
       'Debe dar 0 puntos con menos de 3 dinosaurios'
-    );
-
-    // Prueba 3: Más de 3 dinosaurios (no debería pasar, pero por seguridad)
+    );
     const dinosaurios3 = [
       { tipo: 'triceratops', jugadorColocado: 1 },
       { tipo: 'stegosaurus', jugadorColocado: 1 },
@@ -376,17 +311,13 @@ class PruebasRestricciones {
     );
   }
 
-  /**
-   * Pruebas para Dinosaurios en el Río
-   */
+  
   probarDinosRio() {
     console.log('🌊 Probando Dinosaurios en el Río...');
     
     const crearSlotMock = (numero) => ({
       dataset: { slot: numero.toString() }
-    });
-
-    // Prueba 1: Primer dinosaurio debe ir en slot 1
+    });
     const dinosaurios1 = [];
     const resultado1 = this.validadorZona.validarDinosRio(
       dinosaurios1, 
@@ -397,9 +328,7 @@ class PruebasRestricciones {
       'Río - Primer dinosaurio en slot 1',
       resultado1.valido === true,
       'Debe permitir primer dinosaurio en slot 1'
-    );
-
-    // Prueba 2: Primer dinosaurio NO debe ir en slot 2
+    );
     const resultado2 = this.validadorZona.validarDinosRio(
       dinosaurios1, 
       { tipo: 'triceratops' }, 
@@ -409,9 +338,7 @@ class PruebasRestricciones {
       'Río - Primer dinosaurio NO en slot 2',
       resultado2.valido === false,
       'No debe permitir primer dinosaurio en slot 2'
-    );
-
-    // Prueba 3: Segundo dinosaurio en slot 2 (secuencial)
+    );
     const dinosaurios3 = [{ tipo: 'triceratops', slot: '1' }];
     const resultado3 = this.validadorZona.validarDinosRio(
       dinosaurios3, 
@@ -422,9 +349,7 @@ class PruebasRestricciones {
       'Río - Segundo dinosaurio en slot 2',
       resultado3.valido === true,
       'Debe permitir segundo dinosaurio en slot 2 (secuencial)'
-    );
-
-    // Prueba 4: Segundo dinosaurio NO debe ir en slot 4
+    );
     const resultado4 = this.validadorZona.validarDinosRio(
       dinosaurios3, 
       { tipo: 'brontosaurus' }, 
@@ -434,9 +359,7 @@ class PruebasRestricciones {
       'Río - Segundo dinosaurio NO en slot 4',
       resultado4.valido === false,
       'No debe permitir segundo dinosaurio en slot 4 (debe ser secuencial)'
-    );
-
-    // Prueba 5: Permite cualquier especie
+    );
     const resultado5 = this.validadorZona.validarDinosRio(
       dinosaurios3, 
       { tipo: 'triceratops' }, 
@@ -449,17 +372,13 @@ class PruebasRestricciones {
     );
   }
 
-  /**
-   * Pruebas para Zona del T-Rex
-   */
+  
   probarZonaTRex() {
     console.log('🦖 Probando Zona del T-Rex...');
     
     const crearSlotMock = (numero) => ({
       dataset: { slot: numero.toString() }
-    });
-
-    // Prueba 1: T-Rex puede ir en su zona
+    });
     const dinosaurios1 = [];
     const resultado1 = this.validadorZona.validarZonaTRex(
       dinosaurios1, 
@@ -470,9 +389,7 @@ class PruebasRestricciones {
       'Zona T-Rex - T-Rex permitido',
       resultado1.valido === true,
       'Debe permitir T-Rex en su zona especial'
-    );
-
-    // Prueba 2: Otros dinosaurios NO pueden ir
+    );
     const resultado2 = this.validadorZona.validarZonaTRex(
       dinosaurios1, 
       { tipo: 'triceratops' }, 
@@ -482,9 +399,7 @@ class PruebasRestricciones {
       'Zona T-Rex - Otros dinosaurios NO permitidos',
       resultado2.valido === false,
       'No debe permitir otros dinosaurios en la zona del T-Rex'
-    );
-
-    // Prueba 3: Solo un dinosaurio permitido
+    );
     const dinosaurios3 = [{ tipo: 'trex', slot: '1' }];
     const resultado3 = this.validadorZona.validarZonaTRex(
       dinosaurios3, 
@@ -495,9 +410,7 @@ class PruebasRestricciones {
       'Zona T-Rex - Solo un dinosaurio',
       resultado3.valido === false,
       'No debe permitir más de un dinosaurio en la zona del T-Rex'
-    );
-
-    // Prueba 4: Verificar puntuación
+    );
     const dinosauriosParaPuntos = [{ tipo: 'trex', jugadorColocado: 1 }];
     const puntos = this.calculadoraPuntuacion.calcularZonaTRex(dinosauriosParaPuntos);
     this.verificarPrueba(
@@ -507,9 +420,7 @@ class PruebasRestricciones {
     );
   }
 
-  /**
-   * Verifica una prueba individual
-   */
+  
   verificarPrueba(nombre, condicion, descripcion) {
     const resultado = {
       nombre,
@@ -529,9 +440,7 @@ class PruebasRestricciones {
     }
   }
 
-  /**
-   * Muestra el resumen de todas las pruebas
-   */
+  
   mostrarResumenPruebas() {
     const totalPruebas = this.resultadosPruebas.length;
     const pruebasExitosas = this.resultadosPruebas.filter(p => p.exitosa).length;
@@ -563,9 +472,7 @@ class PruebasRestricciones {
     };
   }
 
-  /**
-   * Ejecuta pruebas específicas de una zona
-   */
+  
   probarZonaEspecifica(nombreZona) {
     console.log(`🎯 Probando zona específica: ${nombreZona}`);
     
@@ -610,9 +517,7 @@ class PruebasRestricciones {
     this.mostrarResumenPruebas();
   }
 
-  /**
-   * Genera un reporte detallado en formato JSON
-   */
+  
   generarReporteDetallado() {
     return {
       fechaEjecucion: new Date().toISOString(),
@@ -629,18 +534,12 @@ class PruebasRestricciones {
       }
     };
   }
-}
-
-// Hacer disponible globalmente para debugging
-window.PruebasRestricciones = PruebasRestricciones;
-
-// Función de conveniencia para ejecutar pruebas desde la consola
+}
+window.PruebasRestricciones = PruebasRestricciones;
 window.ejecutarPruebasRestricciones = function() {
   const pruebas = new PruebasRestricciones();
   return pruebas.ejecutarTodasLasPruebas();
-};
-
-// Función para probar zona específica
+};
 window.probarZona = function(nombreZona) {
   const pruebas = new PruebasRestricciones();
   return pruebas.probarZonaEspecifica(nombreZona);

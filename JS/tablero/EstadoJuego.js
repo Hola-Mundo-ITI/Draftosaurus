@@ -1,7 +1,11 @@
-/**
- * Clase para manejar el estado completo del juego
- * Controla turnos, rondas, puntuación y persistencia
+/*
+ * EstadoJuego.js:
+ * Contiene la clase EstadoJuego que mantiene el estado central del juego
+ * (turnos, rondas, tablero, mazos y estadísticas). Se encarga de exponer
+ * métodos para inicializar el estado, colocar dinosaurios, calcular
+ * puntuaciones y sincronizar la interfaz.
  */
+
 class EstadoJuego {
   constructor() {
     this.estado = this.inicializarEstado();
@@ -9,23 +13,17 @@ class EstadoJuego {
     this.configurarPersistencia();
   }
 
-  /**
-   * Inicializa el estado base del juego
-   */
+  
   inicializarEstado() {
     return {
       turnoActual: 1,
       rondaActual: 1,
       jugadorActual: 1,
       totalJugadores: 3,
-      tablero: {
-        'bosque-semejanza': [],
-        'trio-frondoso': [],
-        'prado-diferencia': [],
-        'pradera-amor': [],
-        'isla-solitaria': [],
-        'rey-selva': [],
-        'dinos-rio': []
+      tableros: {
+        1: this.inicializarTableroVacio(),
+        2: this.inicializarTableroVacio(),
+        3: this.inicializarTableroVacio()
       },
       puntuacion: {
         jugador1: 0,
@@ -33,6 +31,8 @@ class EstadoJuego {
         jugador3: 0
       },
       dinosauriosDisponibles: this.generarDinosauriosDisponibles(),
+
+      mazos: this.generarMazosIniciales(),
       configuracion: {
         modoJuego: 'clasico',
         tiempoTurno: null,
@@ -44,7 +44,7 @@ class EstadoJuego {
         tiempoJuego: 0,
         inicioPartida: new Date()
       },
-      // Estado del dado para sincronizar con backend
+
       dado: {
         activo: false,
         caraActual: null,
@@ -54,9 +54,20 @@ class EstadoJuego {
     };
   }
 
-  /**
-   * Genera la lista inicial de dinosaurios disponibles
-   */
+  
+  inicializarTableroVacio() {
+    return {
+      'bosque-semejanza': [],
+      'trio-frondoso': [],
+      'prado-diferencia': [],
+      'pradera-amor': [],
+      'isla-solitaria': [],
+      'rey-selva': [],
+      'dinos-rio': []
+    };
+  }
+
+  
   generarDinosauriosDisponibles() {
     return [
       { id: 1, tipo: 'triceratops', disponible: true, imagen: 'Recursos/img/dino1.png' },
@@ -68,22 +79,44 @@ class EstadoJuego {
     ];
   }
 
-  /**
-   * Avanza al siguiente turno
-   */
+  
+  generarMazosIniciales() {
+    const tiposDinosaurios = ['triceratops', 'stegosaurus', 'brontosaurus', 'trex', 'velociraptor', 'pteranodon'];
+    return {
+      1: this.crearMazoAleatorio(tiposDinosaurios),
+      2: this.crearMazoAleatorio(tiposDinosaurios),
+      3: this.crearMazoAleatorio(tiposDinosaurios)
+    };
+  }
+
+  crearMazoAleatorio(tiposDinosaurios) {
+    const mazo = tiposDinosaurios.map((tipo, index) => ({
+      id: `dino_${tipo}_${Date.now()}_${Math.floor(Math.random() * 10000)}_${index}`,
+      tipo: tipo,
+      disponible: true,
+      imagen: `Recursos/img/dino${index + 1}.png`
+    }));
+
+    for (let i = mazo.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [mazo[i], mazo[j]] = [mazo[j], mazo[i]];
+    }
+
+    return mazo;
+  }
+
+  
   avanzarTurno() {
     this.guardarEstadoEnHistorial();
     
     this.estado.turnoActual++;
-    
-    // Ciclar entre jugadores 1, 2, 3
+
     this.estado.jugadorActual++;
     if (this.estado.jugadorActual > this.estado.totalJugadores) {
       this.estado.jugadorActual = 1;
     }
-    
-    // Verificar si se completa una ronda (todos los jugadores han jugado)
-    // Una ronda se completa cuando el turno es múltiplo del número de jugadores
+
+
     if (this.estado.turnoActual % this.estado.totalJugadores === 0 && this.estado.turnoActual > 0) {
       this.avanzarRonda();
     }
@@ -92,8 +125,7 @@ class EstadoJuego {
     this.guardarEstado();
     
     console.log(`Turno ${this.estado.turnoActual}, Jugador ${this.estado.jugadorActual}`);
-    
-    // NUEVO: Activar bot si es su turno
+
     if (window.sistemaBots && window.sistemaBots.esBot(this.estado.jugadorActual)) {
       setTimeout(() => {
         window.sistemaBots.ejecutarTurnoBot(this.estado.jugadorActual);
@@ -101,25 +133,27 @@ class EstadoJuego {
     }
   }
 
-  /**
-   * Avanza a la siguiente ronda
-   * ACTUALIZADO: Integra sistema de dados
-   */
+  
   avanzarRonda() {
     this.estado.rondaActual++;
     this.estado.turnoActual = 1;
     this.estado.jugadorActual = 1;
-    
-    // NO regenerar dinosaurios - mantener el pool global que se va agotando
-    // Los dinosaurios se marcan como no disponibles cuando se colocan
-    
-    // NUEVO: Lanzar dado para la nueva ronda y guardar estado en el estadoJuego
+
+    try {
+      this.rotarMazos();
+      console.log('[EstadoJuego] Mazos rotados al iniciar nueva ronda');
+    } catch (e) {
+      console.warn('[EstadoJuego] Error al rotar mazos:', e);
+    }
+
+
+
     if (window.manejadorDado) {
       try {
         const estadoDado = window.manejadorDado.lanzarDadoParaRonda(this.estado.rondaActual, this.estado.totalJugadores);
         if (estadoDado) {
           this.estado.dado = estadoDado;
-          // Asegurar persistencia inmediata del cambio
+
           this.guardarEstado();
           console.log('[EstadoJuego] Estado del dado actualizado al avanzarRonda:', estadoDado);
         }
@@ -133,87 +167,145 @@ class EstadoJuego {
     console.log(`Nueva ronda ${this.estado.rondaActual} - Dinosaurios disponibles: ${this.estado.dinosauriosDisponibles.filter(d => d.disponible).length}`);
   }
 
-  /**
-   * Coloca un dinosaurio en el tablero
-   */
-  colocarDinosaurio(zonaId, dinosaurio, slotId) {
-    // Agregar al tablero
-    this.estado.tablero[zonaId].push({
-      ...dinosaurio,
-      slot: slotId,
-      turnoColocado: this.estado.turnoActual,
-      jugadorColocado: this.estado.jugadorActual
-    });
+  
+  rotarMazos() {
+    const mazos = this.estado.mazos || {};
+    const temp = mazos[1];
+    mazos[1] = mazos[2] || [];
+    mazos[2] = mazos[3] || [];
+    mazos[3] = temp || [];
+    this.estado.mazos = mazos;
 
-    // Marcar dinosaurio como no disponible
-    const dinoDisponible = this.estado.dinosauriosDisponibles.find(d => d.id === dinosaurio.id);
-    if (dinoDisponible) {
-      dinoDisponible.disponible = false;
-    }
-
-    // Actualizar estadísticas
-    this.estado.estadisticas.movimientosRealizados++;
-    
     this.guardarEstado();
-    
-    console.log(`Dinosaurio colocado en ${zonaId}:`, dinosaurio);
   }
 
-  /**
-   * Calcula la puntuación actual
-   */
-  calcularPuntuacion() {
-    // Obtener todos los tableros para comparaciones entre jugadores
-    const todosLosTableros = {
-      1: this.estado.tablero, // Asumiendo que el estado actual es del jugador 1
-      2: this.obtenerTableroOtroJugador() // Función a implementar para multijugador
+  
+  colocarDinosaurio(jugadorId, zonaId, dinosaurio, slotId) {
+
+    // Compatibilidad con llamadas antiguas: colocarDinosaurio(zonaId, dinosaurio, slotId)
+    if (typeof jugadorId === 'string' && typeof zonaId !== 'string') {
+      // Forma legacy detectada: primer parámetro es zonaId
+      slotId = dinosaurio;
+      dinosaurio = zonaId;
+      zonaId = jugadorId;
+      jugadorId = this.estado.jugadorActual || 1;
+    }
+
+    const tipo = dinosaurio.tipo ?? dinosaurio.type ?? 'desconocido';
+    const imagen = dinosaurio.imagen ?? dinosaurio.image ?? this.obtenerImagenPorTipo(tipo);
+    const jugador = jugadorId || (this.estado.jugadorActual || 1);
+
+    const dinosaurioCompleto = {
+      ...dinosaurio,
+      id: dinosaurio.id ?? (`dino_${tipo}_${Date.now()}`),
+      tipo: tipo,
+      imagen: imagen,
+      slot: slotId,
+      turnoColocado: this.estado.turnoActual,
+      jugadorColocado: jugador
     };
-    
-    this.estado.puntuacion.jugador1 = calculadoraPuntuacion.calcularPuntuacionJugador(
-      this.estado.tablero, 
-      1, 
-      todosLosTableros
-    ).total;
-    
-    // Para jugador 2 (cuando se implemente multijugador completo)
-    // this.estado.puntuacion.jugador2 = calculadoraPuntuacion.calcularPuntuacionJugador(
-    //   tableroJugador2, 
-    //   2, 
-    //   todosLosTableros
-    // ).total;
-    
+
+    if (!this.estado.tableros) this.estado.tableros = {};
+    if (!this.estado.tableros[jugador]) this.estado.tableros[jugador] = this.inicializarTableroVacio();
+    if (!this.estado.tableros[jugador][zonaId]) this.estado.tableros[jugador][zonaId] = [];
+
+    this.estado.tableros[jugador][zonaId].push(dinosaurioCompleto);
+
+    try {
+      const dinoDisponible = this.estado.dinosauriosDisponibles.find(d => d.id === dinosaurioCompleto.id);
+      if (dinoDisponible) dinoDisponible.disponible = false;
+    } catch (e) {
+      console.warn('[EstadoJuego] Error marcando dinosaurio en pool global como no disponible', e);
+    }
+
+    try {
+      const mazoJugador = this.estado.mazos && this.estado.mazos[jugador];
+      if (mazoJugador) {
+        const dinoEnMazo = mazoJugador.find(d => d.id === dinosaurioCompleto.id || d.id == dinosaurioCompleto.id || d.tipo === dinosaurioCompleto.tipo);
+        if (dinoEnMazo) dinoEnMazo.disponible = false;
+      }
+    } catch (e) {
+      console.warn('[EstadoJuego] No se pudo sincronizar mazo del jugador al colocar dinosaurio', e);
+    }
+
+    this.estado.estadisticas.movimientosRealizados++;
+
+    this.guardarEstado();
+
+    console.log(`Dinosaurio colocado en ${zonaId} (jugador ${jugador}):`, dinosaurioCompleto);
+  }
+
+  obtenerImagenPorTipo(tipo) {
+    const mapaImagenes = {
+      'triceratops': 'Recursos/img/dino1.png',
+      'stegosaurus': 'Recursos/img/dino2.png',
+      'brontosaurus': 'Recursos/img/dino3.png',
+      'trex': 'Recursos/img/dino4.png',
+      'velociraptor': 'Recursos/img/dino5.png',
+      'pteranodon': 'Recursos/img/dino6.png',
+      'desconocido': 'Recursos/img/dino1.png'
+    };
+
+    try {
+      return mapaImagenes[tipo] || 'Recursos/img/dino1.png';
+    } catch (e) {
+      console.warn('[EstadoJuego] obtenerImagenPorTipo falló para tipo:', tipo, e);
+      return 'Recursos/img/dino1.png';
+    }
+  }
+
+  
+  calcularPuntuacion() {
+
+    const todosLosTableros = this.estado.tableros || {};
+
+    try {
+      Object.keys(todosLosTableros).forEach(jId => {
+        const tableroJugador = todosLosTableros[jId] || this.inicializarTableroVacio();
+        if (!this.estado.puntuacion) this.estado.puntuacion = {};
+        if (typeof calculadoraPuntuacion !== 'undefined' && calculadoraPuntuacion && typeof calculadoraPuntuacion.calcularPuntuacionJugador === 'function') {
+          const resultado = calculadoraPuntuacion.calcularPuntuacionJugador(tableroJugador, parseInt(jId), todosLosTableros);
+          this.estado.puntuacion[`jugador${jId}`] = resultado?.total ?? 0;
+        } else {
+          this.estado.puntuacion[`jugador${jId}`] = 0;
+        }
+      });
+    } catch (e) {
+      console.warn('[EstadoJuego] Error calculando puntuaciones por tablero:', e);
+    }
+
     this.actualizarInterfazPuntuacion();
-    
     return this.estado.puntuacion;
   }
 
-  /**
-   * Función placeholder para obtener tablero del otro jugador
-   */
+  
   obtenerTableroOtroJugador() {
-    // TODO: Implementar cuando se tenga multijugador real
-    // Por ahora, retornar tablero vacío
-    return {
-      'bosque-semejanza': [],
-      'trio-frondoso': [],
-      'prado-diferencia': [],
-      'pradera-amor': [],
-      'isla-solitaria': [],
-      'rey-selva': [],
-      'dinos-rio': []
-    };
+
+
+    return this.inicializarTableroVacio();
   }
 
-  /**
-   * Verifica si el juego ha terminado
-   */
+  
   verificarFinJuego() {
-    // Verificar si no hay más dinosaurios disponibles
+
+    try {
+      for (let jugadorId = 1; jugadorId <= this.estado.totalJugadores; jugadorId++) {
+        const mazo = (this.estado.mazos && this.estado.mazos[jugadorId]) || [];
+        const tiene = mazo.some(d => d.disponible);
+        if (tiene) return false; // Aún hay dinosaurios en algún mazo
+      }
+
+      console.log('Fin del juego: Todos los mazos están vacíos');
+      this.finalizarJuego();
+      return true;
+    } catch (e) {
+      console.warn('[EstadoJuego] Error verificando fin de juego por mazos, cayendo al chequeo anterior', e);
+    }
+
     const dinosauriosDisponibles = this.estado.dinosauriosDisponibles.filter(d => d.disponible);
-    
-    // El juego termina cuando NO hay dinosaurios disponibles Y es el final de una ronda completa
+
     if (dinosauriosDisponibles.length === 0) {
-      // Solo terminar si todos los jugadores de la ronda actual han jugado
+
       const jugadoresQueHanJugadoEnRonda = (this.estado.turnoActual - 1) % this.estado.totalJugadores;
       
       if (jugadoresQueHanJugadoEnRonda === 0) {
@@ -226,7 +318,6 @@ class EstadoJuego {
       }
     }
 
-    // También terminar si se han jugado demasiadas rondas (seguridad)
     const rondasMaximas = 10;
     if (this.estado.rondaActual > rondasMaximas) {
       console.log('Fin del juego: Máximo de rondas alcanzado');
@@ -237,9 +328,7 @@ class EstadoJuego {
     return false;
   }
 
-  /**
-   * Finaliza el juego y muestra resultados
-   */
+  
   finalizarJuego() {
     this.estado.estadisticas.tiempoJuego = new Date() - this.estado.estadisticas.inicioPartida;
     
@@ -252,9 +341,7 @@ class EstadoJuego {
     console.log('¡Juego terminado!', { ganador, puntuacionFinal });
   }
 
-  /**
-   * Deshace el último movimiento
-   */
+  
   deshacerMovimiento() {
     if (this.historial.length === 0) {
       console.log('No hay movimientos para deshacer');
@@ -271,11 +358,9 @@ class EstadoJuego {
     return true;
   }
 
-  /**
-   * Guarda el estado actual en el historial
-   */
+  
   guardarEstadoEnHistorial() {
-    // Mantener solo los últimos 10 estados
+
     if (this.historial.length >= 10) {
       this.historial.shift();
     }
@@ -283,9 +368,7 @@ class EstadoJuego {
     this.historial.push(JSON.parse(JSON.stringify(this.estado)));
   }
 
-  /**
-   * Reinicia el juego completamente
-   */
+  
   reiniciarJuego() {
     this.estado = this.inicializarEstado();
     this.historial = [];
@@ -296,27 +379,21 @@ class EstadoJuego {
     console.log('Juego reiniciado');
   }
 
-  /**
-   * Configura la persistencia del estado
-   */
+  
   configurarPersistencia() {
-    // Cargar estado guardado si existe
+
     this.cargarEstado();
-    
-    // Guardar estado automáticamente cada 30 segundos
+
     setInterval(() => {
       this.guardarEstado();
     }, 30000);
-    
-    // Guardar estado al cerrar la página
+
     window.addEventListener('beforeunload', () => {
       this.guardarEstado();
     });
   }
 
-  /**
-   * Guarda el estado en localStorage
-   */
+  
   guardarEstado() {
     try {
       const estadoParaGuardar = {
@@ -330,17 +407,14 @@ class EstadoJuego {
     }
   }
 
-  /**
-   * Carga el estado desde localStorage
-   */
+  
   cargarEstado() {
     try {
       const estadoGuardado = localStorage.getItem('draftosaurus_estado');
       
       if (estadoGuardado) {
         const estadoParsed = JSON.parse(estadoGuardado);
-        
-        // Verificar que el estado no sea muy antiguo (más de 24 horas)
+
         const fechaGuardado = new Date(estadoParsed.fechaGuardado);
         const ahora = new Date();
         const diferencia = ahora - fechaGuardado;
@@ -355,16 +429,12 @@ class EstadoJuego {
     }
   }
 
-  /**
-   * Limpia el almacenamiento local
-   */
+  
   limpiarAlmacenamientoLocal() {
     localStorage.removeItem('draftosaurus_estado');
   }
 
-  /**
-   * Actualiza la interfaz del turno actual
-   */
+  
   actualizarInterfazTurno() {
     const elementoTurno = document.querySelector('.ronda-actual .valor');
     if (elementoTurno) {
@@ -377,9 +447,7 @@ class EstadoJuego {
     }
   }
 
-  /**
-   * Actualiza la interfaz de la ronda actual
-   */
+  
   actualizarInterfazRonda() {
     const elementoRonda = document.querySelector('.ronda-actual');
     if (elementoRonda) {
@@ -387,42 +455,36 @@ class EstadoJuego {
     }
   }
 
-  /**
-   * Actualiza la interfaz de puntuación
-   */
+  
   actualizarInterfazPuntuacion() {
-    // Esta función se implementará cuando tengamos la interfaz de puntuación
+
     console.log('Puntuación actualizada:', this.estado.puntuacion);
   }
 
-  /**
-   * Actualiza toda la interfaz
-   */
+  
   actualizarInterfazCompleta() {
     this.actualizarInterfazTurno();
     this.actualizarInterfazRonda();
     this.actualizarInterfazPuntuacion();
-    
-    // Actualizar tablero visual
+
     this.actualizarTableroVisual();
   }
 
-  /**
-   * Actualiza el tablero visual basado en el estado
-   */
+  
   actualizarTableroVisual() {
-    // Limpiar tablero
+
     document.querySelectorAll('.slot').forEach(slot => {
       slot.innerHTML = '';
       slot.dataset.ocupado = 'false';
     });
 
-    // Restaurar dinosaurios colocados
-    Object.entries(this.estado.tablero).forEach(([zonaId, dinosaurios]) => {
+    const tableroUsuario = (this.estado.tableros && this.estado.tableros[1]) ? this.estado.tableros[1] : this.inicializarTableroVacio();
+
+    Object.entries(tableroUsuario).forEach(([zonaId, dinosaurios]) => {
       dinosaurios.forEach(dino => {
         const zona = document.querySelector(`[data-zona="${zonaId}"]`);
+        if (!zona) return;
         const slot = zona.querySelector(`[data-slot="${dino.slot}"]`);
-        
         if (slot) {
           const img = document.createElement('img');
           img.src = dino.imagen;
@@ -436,27 +498,41 @@ class EstadoJuego {
           img.style.transform = 'translate(-50%, -50%)';
           img.style.zIndex = '10';
           img.style.pointerEvents = 'none';
-          
+
           slot.appendChild(img);
           slot.dataset.ocupado = 'true';
         }
       });
     });
 
-    // Actualizar dinosaurios disponibles
     document.querySelectorAll('.dinosaurio').forEach((dino, index) => {
-      const dinoData = this.estado.dinosauriosDisponibles[index];
-      if (dinoData && !dinoData.disponible) {
-        dino.style.display = 'none';
-      } else {
-        dino.style.display = 'flex';
+      try {
+        const estado = this.estado;
+        const jugador = estado.jugadorActual || 1;
+        const mazoJugador = (estado.mazos && estado.mazos[jugador]) || null;
+
+        if (mazoJugador && mazoJugador[index]) {
+          const dinoData = mazoJugador[index];
+          if (dinoData && !dinoData.disponible) {
+            dino.style.display = 'none';
+          } else {
+            dino.style.display = 'flex';
+          }
+        } else {
+          const dinoDataGlobal = this.estado.dinosauriosDisponibles[index];
+          if (dinoDataGlobal && !dinoDataGlobal.disponible) {
+            dino.style.display = 'none';
+          } else {
+            dino.style.display = 'flex';
+          }
+        }
+      } catch (err) {
+
       }
     });
   }
 
-  /**
-   * Muestra los resultados finales del juego
-   */
+  
   mostrarResultadosFinales(ganador, puntuacion) {
     const modal = document.createElement('div');
     modal.className = 'modal-resultados';
@@ -484,9 +560,7 @@ class EstadoJuego {
     document.body.appendChild(modal);
   }
 
-  /**
-   * Guarda las estadísticas finales
-   */
+  
   guardarEstadisticasFinales() {
     const estadisticas = {
       fecha: new Date().toISOString(),
@@ -495,11 +569,9 @@ class EstadoJuego {
       rondas: this.estado.rondaActual
     };
 
-    // Guardar en historial de partidas
     let historialPartidas = JSON.parse(localStorage.getItem('draftosaurus_historial') || '[]');
     historialPartidas.push(estadisticas);
-    
-    // Mantener solo las últimas 50 partidas
+
     if (historialPartidas.length > 50) {
       historialPartidas = historialPartidas.slice(-50);
     }
@@ -507,16 +579,12 @@ class EstadoJuego {
     localStorage.setItem('draftosaurus_historial', JSON.stringify(historialPartidas));
   }
 
-  /**
-   * Obtiene el estado actual del juego
-   */
+  
   obtenerEstado() {
     return { ...this.estado };
   }
 
-  /**
-   * Obtiene estadísticas del juego
-   */
+  
   obtenerEstadisticas() {
     return {
       ...this.estado.estadisticas,
@@ -524,9 +592,7 @@ class EstadoJuego {
     };
   }
 
-  /**
-   * Configura opciones del juego
-   */
+  
   configurarJuego(opciones) {
     this.estado.configuracion = { ...this.estado.configuracion, ...opciones };
     this.guardarEstado();

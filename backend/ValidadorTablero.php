@@ -2,15 +2,29 @@
 require_once 'PassiveRestrictions.php';
 require_once 'ActiveRestrictions.php';
 
+/*
+ * Clase ValidadorTablero:
+ * Orquesta la validación completa de una colocación teniendo en cuenta
+ * las restricciones activas (dado) y las restricciones pasivas (reglas
+ * de cada zona). Proporciona utilidades para obtener slots válidos y
+ * zonas disponibles para un jugador dado.
+ */
 class ValidadorTablero {
     private $restriccionesPasivas;
     private $restriccionesActivas;
 
+    /*
+     * Inicializa los validadores pasivo y activo al crear la instancia.
+     */
     public function __construct() {
         $this->restriccionesPasivas = new PassiveRestrictions();
         $this->restriccionesActivas = new ActiveRestrictions();
     }
 
+    /*
+     * Valida una solicitud de colocación combinando comprobaciones de
+     * restricciones activas y pasivas. Devuelve un array con 'valid' y 'reason'.
+     */
     public function validarColocacion(
         string $zonaId,
         array $dinosauriosEnZona,
@@ -31,6 +45,25 @@ class ValidadorTablero {
                 return $validacionActiva;
             }
 
+
+            try {
+                $infoZona = $this->restriccionesPasivas->obtenerInfoZona($zonaId);
+                if ($infoZona && isset($infoZona['ordenamiento']) && $infoZona['ordenamiento'] === 'secuencial') {
+                    $resSeq = $this->validarPlacementSecuencial($dinosauriosEnZona, $slot);
+                    if (isset($resSeq['valid']) && !$resSeq['valid']) {
+                        return [
+                            'valid' => false,
+                            'reason' => $resSeq['reason'] ?? 'Colocación no secuencial',
+                            'type' => 'passiveSequential',
+                            'nextSlot' => $resSeq['nextSlot'] ?? null
+                        ];
+                    }
+                }
+            } catch (Exception $e) {
+                error_log('[ValidadorTablero] Error comprobando orden secuencial: ' . $e->getMessage());
+
+            }
+
             $validacionPasiva = $this->restriccionesPasivas->validatePlacement(
                 $zonaId,
                 $dinosauriosEnZona,
@@ -49,31 +82,33 @@ class ValidadorTablero {
         }
     }
 
+    /*
+     * Comprueba las restricciones impuestas por el dado (si está activo) y
+     * devuelve un resultado que puede bloquear la colocación si procede.
+     */
     private function validarRestriccionesActivas(
         string $zonaId,
         $estadoTablero,
         int $jugadorId,
         $estadoJuego
     ): array {
-        // Normalizar nulls/ tipos
+
         if ($estadoTablero === null) {
             error_log('[ValidadorTablero] validarRestriccionesActivas: estadoTablero es null, inicializando a array vacío');
             $estadoTablero = [];
         }
 
-        // Asegurar que $estadoJuego sea objeto; si viene como array convertir
         if (!is_object($estadoJuego)) {
             if (is_array($estadoJuego)) {
                 $estadoJuego = json_decode(json_encode($estadoJuego));
                 error_log('[ValidadorTablero] validarRestriccionesActivas: estadoJuego convertido de array a objeto');
             } else {
                 error_log('[ValidadorTablero] validarRestriccionesActivas: estadoJuego no es objeto ni array, tipo: ' . gettype($estadoJuego));
-                // No podemos evaluar restricciones activas sin un estado válido; asumir sin restricción activa
+
                 return ['valid' => true];
             }
         }
 
-        // Compatibilidad: si frontend viejo envía 'diceState' o propiedades en inglés, mapear a español
         if (isset($estadoJuego->diceState) && !isset($estadoJuego->dado)) {
             $estadoJuego->dado = (object)[
                 'activo' => $estadoJuego->diceState->active ?? false,
@@ -84,19 +119,16 @@ class ValidadorTablero {
             error_log('[ValidadorTablero] Mapeado diceState -> dado para compatibilidad');
         }
 
-        // Si no hay estado del dado o no está activo, no aplicar restricciones activas
         if (!isset($estadoJuego->dado) || !($estadoJuego->dado->activo ?? false)) {
             return ['valid' => true];
         }
 
         $dadoState = $estadoJuego->dado;
 
-        // Si el jugador que tiró el dado es el actual, no aplicar la restricción
         if ($jugadorId === ($dadoState->jugadorQueLanzo ?? null)) {
             return ['valid' => true];
         }
 
-        // Asegurar que $estadoTablero sea array antes de pasar a ActiveRestrictions
         if (!is_array($estadoTablero)) {
             error_log('[ValidadorTablero] validarRestriccionesActivas: estadoTablero no es array, tipo: ' . gettype($estadoTablero));
             $estadoTablero = [];
@@ -126,6 +158,10 @@ class ValidadorTablero {
         return ['valid' => true];
     }
 
+    /*
+     * Devuelve los slots válidos para una zona concreta teniendo en cuenta
+     * también las restricciones activas actuales del juego.
+     */
     public function obtenerSlotsValidos(
         string $zonaId,
         array $dinosauriosEnZona,
@@ -134,13 +170,12 @@ class ValidadorTablero {
         $estadoJuego
     ): array {
         try {
-            // Validaciones de tipos y manejo de nulos
+
             if ($dinosaurio === null) {
                 error_log('[ValidadorTablero] obtenerSlotsValidos: dinosaurio es null');
                 return [];
             }
 
-            // Si $dinosaurio viene como array, convertir a objeto
             if (is_array($dinosaurio)) {
                 $dinosaurio = json_decode(json_encode($dinosaurio));
                 error_log('[ValidadorTablero] obtenerSlotsValidos: dinosaurio convertido de array a objeto');
@@ -151,7 +186,6 @@ class ValidadorTablero {
                 return [];
             }
 
-            // Manejo de estado del juego nulo o no objeto
             if (!is_object($estadoJuego)) {
                 if (is_array($estadoJuego)) {
                     $estadoJuego = json_decode(json_encode($estadoJuego));
@@ -162,13 +196,11 @@ class ValidadorTablero {
                 }
             }
 
-            // Compatibilidad: mapear 'board' a 'tablero' si existe
             if (isset($estadoJuego->board) && !isset($estadoJuego->tablero)) {
                 $estadoJuego->tablero = $estadoJuego->board;
                 error_log('[ValidadorTablero] map board -> tablero para compatibilidad');
             }
 
-            // Asegurar que tablero exista y sea array
             $estadoTablero = [];
             if (isset($estadoJuego->tablero) && is_array($estadoJuego->tablero)) {
                 $estadoTablero = $estadoJuego->tablero;
@@ -189,7 +221,6 @@ class ValidadorTablero {
                 return [];
             }
 
-            // Pasar dinosaurio como objeto ya validado a las restricciones pasivas
             return $this->restriccionesPasivas->getValidSlots(
                 $zonaId,
                 $dinosauriosEnZona,
@@ -202,9 +233,13 @@ class ValidadorTablero {
         }
     }
 
+    /*
+     * Calcula qué zonas están disponibles para un jugador en el estado de
+     * juego dado, respetando la lógica del dado cuando está activo.
+     */
     public function obtenerZonasDisponibles(int $jugadorId, $estadoJuego): array {
         try {
-            // Compatibilidad: mapear 'diceState' a 'dado' si es necesario
+
             if (isset($estadoJuego->diceState) && !isset($estadoJuego->dado)) {
                 $estadoJuego->dado = (object)[
                     'activo' => $estadoJuego->diceState->active ?? false,
@@ -243,6 +278,10 @@ class ValidadorTablero {
         }
     }
 
+    /*
+     * Genera un mensaje de error legible para el usuario a partir del
+     * resultado de validación y la zona en cuestión.
+     */
     public function generarMensajeError(string $zonaId, array $validacion): string {
         if (isset($validacion['type']) && $validacion['type'] === 'activeRestriction') {
             return $validacion['reason'];
@@ -260,4 +299,44 @@ class ValidadorTablero {
 
         return $mensajes[$zonaId] ?? $validacion['reason'];
     }
+
+    /*
+     * Valida que una colocación secuencial sea realizada en el siguiente
+     * slot esperado y devuelve información sobre el siguiente slot si falla.
+     */
+    private function validarPlacementSecuencial(array $dinosauriosEnZona, int $slot): array {
+        try {
+
+            $occupied = array_map(function($d) {
+                if (isset($d->slot)) return (int)$d->slot;
+                if (isset($d->pos)) return (int)$d->pos;
+                if (isset($d->position)) return (int)$d->position;
+                return null;
+            }, $dinosauriosEnZona);
+
+            $occupied = array_filter($occupied, fn($s) => $s !== null);
+            sort($occupied);
+
+            $expected = 1;
+            foreach ($occupied as $occ) {
+                if ($expected < $occ) break;
+                $expected = $occ + 1;
+            }
+
+            if ($slot !== $expected) {
+                error_log("[ValidadorTablero] validarPlacementSecuencial: intento en slot {$slot}, se esperaba {$expected}");
+                return [
+                    'valid' => false,
+                    'reason' => "Debe colocar en el slot {$expected} (orden secuencial requerido)",
+                    'nextSlot' => $expected
+                ];
+            }
+
+            return ['valid' => true, 'reason' => 'Colocación secuencial válida', 'nextSlot' => $expected];
+        } catch (Exception $e) {
+            error_log('[ValidadorTablero] Error en validarPlacementSecuencial: ' . $e->getMessage());
+            return ['valid' => false, 'reason' => 'Error interno validando orden secuencial', 'nextSlot' => null];
+        }
+    }
+
 }

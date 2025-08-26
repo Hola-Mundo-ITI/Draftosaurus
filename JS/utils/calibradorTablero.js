@@ -1,7 +1,4 @@
-/**
- * Utilidad para calibrar las posiciones de las zonas del tablero SVG
- * Permite ajustar dinámicamente las coordenadas de cada zona
- */
+
 class CalibradorTablero {
   constructor() {
     this.modoCalibrado = false;
@@ -10,9 +7,7 @@ class CalibradorTablero {
     this.configurarEventos();
   }
 
-  /**
-   * Obtiene las posiciones originales de todas las zonas
-   */
+  
   obtenerPosicionesOriginales() {
     const zonas = document.querySelectorAll('.zona-tablero');
     const posiciones = {};
@@ -33,42 +28,28 @@ class CalibradorTablero {
     return posiciones;
   }
 
-  /**
-   * Activa el modo de calibrado
-   */
+  
   activarModoCalibrado() {
     this.modoCalibrado = true;
-    document.body.classList.add('modo-calibrado');
-    
-    // Crear panel de control
-    this.crearPanelControl();
-    
-    // Hacer zonas arrastrables
+    document.body.classList.add('modo-calibrado');
+    this.crearPanelControl();
     this.hacerZonasArrastrables();
     
     console.log('🔧 Modo calibrado activado');
   }
 
-  /**
-   * Desactiva el modo de calibrado
-   */
+  
   desactivarModoCalibrado() {
     this.modoCalibrado = false;
-    document.body.classList.remove('modo-calibrado');
-    
-    // Remover panel de control
+    document.body.classList.remove('modo-calibrado');
     const panel = document.getElementById('panel-calibrado');
-    if (panel) panel.remove();
-    
-    // Remover eventos de arrastre
+    if (panel) panel.remove();
     this.removerEventosArrastre();
     
     console.log('✅ Modo calibrado desactivado');
   }
 
-  /**
-   * Crea el panel de control para calibración
-   */
+  
   crearPanelControl() {
     const panel = document.createElement('div');
     panel.id = 'panel-calibrado';
@@ -101,18 +82,14 @@ class CalibradorTablero {
       min-width: 300px;
     `;
     
-    document.body.appendChild(panel);
-    
-    // Configurar eventos del panel
+    document.body.appendChild(panel);
     document.getElementById('btn-guardar-posiciones').onclick = () => this.guardarPosiciones();
     document.getElementById('btn-restaurar-posiciones').onclick = () => this.restaurarPosiciones();
     document.getElementById('btn-exportar-css').onclick = () => this.exportarCSS();
     document.getElementById('btn-cerrar-calibrado').onclick = () => this.desactivarModoCalibrado();
   }
 
-  /**
-   * Hace las zonas arrastrables para calibración
-   */
+  
   hacerZonasArrastrables() {
     const zonas = document.querySelectorAll('.zona-tablero');
     
@@ -166,9 +143,7 @@ class CalibradorTablero {
     });
   }
 
-  /**
-   * Actualiza la información de la zona seleccionada
-   */
+  
   actualizarInfoZona(zona) {
     const zonaId = zona.dataset.zona;
     const estilos = window.getComputedStyle(zona);
@@ -185,9 +160,7 @@ class CalibradorTablero {
     }
   }
 
-  /**
-   * Guarda las posiciones actuales
-   */
+  
   guardarPosiciones() {
     const zonas = document.querySelectorAll('.zona-tablero');
     const posiciones = {};
@@ -208,9 +181,7 @@ class CalibradorTablero {
     alert('Posiciones guardadas en localStorage');
   }
 
-  /**
-   * Restaura las posiciones originales
-   */
+  
   restaurarPosiciones() {
     Object.entries(this.posicionesOriginales).forEach(([zonaId, pos]) => {
       const zona = document.querySelector(`[data-zona="${zonaId}"]`);
@@ -225,12 +196,10 @@ class CalibradorTablero {
     console.log('🔄 Posiciones restauradas');
   }
 
-  /**
-   * Exporta el CSS con las posiciones actuales
-   */
+  
   exportarCSS() {
     const zonas = document.querySelectorAll('.zona-tablero');
-    let css = '/* Posiciones calibradas del tablero */\n\n';
+    let css = '\n\n';
     
     zonas.forEach(zona => {
       const zonaId = zona.dataset.zona;
@@ -242,9 +211,7 @@ class CalibradorTablero {
       css += `  width: ${parseInt(estilos.width)}px;\n`;
       css += `  height: ${parseInt(estilos.height)}px;\n`;
       css += `}\n\n`;
-    });
-    
-    // Copiar al portapapeles
+    });
     navigator.clipboard.writeText(css).then(() => {
       alert('CSS copiado al portapapeles');
     });
@@ -252,9 +219,7 @@ class CalibradorTablero {
     console.log('📋 CSS exportado:', css);
   }
 
-  /**
-   * Carga posiciones guardadas
-   */
+  
   cargarPosicionesGuardadas() {
     const posicionesGuardadas = localStorage.getItem('draftosaurus_posiciones_calibradas');
     
@@ -275,11 +240,8 @@ class CalibradorTablero {
     }
   }
 
-  /**
-   * Configura eventos globales
-   */
-  configurarEventos() {
-    // Atajo de teclado para activar calibrado (Ctrl+Shift+C)
+  
+  configurarEventos() {
     document.addEventListener('keydown', (e) => {
       if (e.ctrlKey && e.shiftKey && e.key === 'C') {
         e.preventDefault();
@@ -292,9 +254,7 @@ class CalibradorTablero {
     });
   }
 
-  /**
-   * Remueve eventos de arrastre
-   */
+  
   removerEventosArrastre() {
     const zonas = document.querySelectorAll('.zona-tablero');
     
@@ -302,17 +262,13 @@ class CalibradorTablero {
       zona.style.cursor = '';
       zona.style.border = '';
       zona.style.backgroundColor = '';
-      zona.style.zIndex = '';
-      
-      // Clonar elemento para remover todos los event listeners
+      zona.style.zIndex = '';
       const nuevoZona = zona.cloneNode(true);
       zona.parentNode.replaceChild(nuevoZona, zona);
     });
   }
 
-  /**
-   * Aplica posiciones predefinidas optimizadas para el SVG
-   */
+  
   aplicarPosicionesOptimizadas() {
     const posicionesOptimizadas = {
       'bosque-semejanza': { top: 120, left: 80, width: 160, height: 100 },
@@ -337,17 +293,12 @@ class CalibradorTablero {
 
     console.log('🎯 Posiciones optimizadas aplicadas');
   }
-}
-
-// Crear instancia global
-window.calibradorTablero = new CalibradorTablero();
-
-// Aplicar posiciones optimizadas al cargar
+}
+window.calibradorTablero = new CalibradorTablero();
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     if (window.calibradorTablero) {
-      calibradorTablero.aplicarPosicionesOptimizadas();
-      // Cargar posiciones guardadas si existen
+      calibradorTablero.aplicarPosicionesOptimizadas();
       calibradorTablero.cargarPosicionesGuardadas();
     }
   }, 1000);

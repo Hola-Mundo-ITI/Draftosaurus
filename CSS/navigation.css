@@ -1,24 +1,19 @@
-/* navigation.css
-   Sistema de navegación unificado para Draftosaurus
-   - Mantiene la estética existente (colores y tipografía)
-   - Transiciones suaves y overlay semitransparente
-   - Estados visuales accesibles (focus, aria-current)
-*/
+
 
 :root {
   --nav-width: 250px;
-  --nav-bg: #e8dcb1; /* color del menú lateral */
-  --nav-accent: #6b4f28; /* color primario */
-  --nav-foreground: #3b2d15; /* texto */
+  --nav-bg: #e8dcb1; 
+  --nav-accent: #6b4f28; 
+  --nav-foreground: #3b2d15; 
   --overlay-bg: rgba(0,0,0,0.45);
   --transition-fast: 0.26s;
   --transition-slow: 0.36s;
 }
 
-/* Reset local para evitar fugas desde estilos globales */
+
 .nav-overlay, .offcanvas-menu, .menu-toggle { box-sizing: border-box; }
 
-/* Botón de menú (hamburger) */
+
 .menu-toggle {
   border-radius: 25px;
   background: none;
@@ -39,7 +34,7 @@
   border-radius: 6px;
 }
 
-/* Menú lateral (offcanvas) */
+
 .offcanvas-menu {
   position: fixed;
   top: 0;
@@ -59,7 +54,7 @@
   left: 0;
 }
 
-/* Lista de enlaces */
+
 .menu-list {
   list-style: none;
 }
@@ -86,14 +81,14 @@
   transform: translateX(2px);
 }
 
-/* Página actual */
+
 .menu-list a[aria-current="page"] {
   background-color: var(--nav-accent);
   font-weight: 700;
   color: #FFFFFF !important;
 }
 
-/* Overlay que cubre el resto de la página cuando el menú está activo */
+
 .nav-overlay {
   position: fixed;
   top: 0;
@@ -112,8 +107,8 @@
   opacity: 1;
 }
 
-/* Empuja el contenido principal cuando el menú está abierto (opcional en desktop) */
-/* Requiere que el main tenga id="mainContent" o clase .main-content */
+
+
 .main-content {
   transition: transform var(--transition-slow) ease;
 }
@@ -122,27 +117,26 @@
   transform: translateX(var(--nav-width));
 }
 
-/* Soporte para reducir movimiento: respetar preferencia */
+
 @media (prefers-reduced-motion: reduce) {
   .offcanvas-menu,
   .nav-overlay,
   .main-content { transition: none !important; }
 }
 
-/* Estilos responsivos: ancho del menú más pequeño en móviles */
+
 @media (max-width: 768px) {
   :root { --nav-width: 200px; }
   .offcanvas-menu { left: calc(-1 * var(--nav-width)); }
   .main-content.shifted { transform: translateX(var(--nav-width)); }
 }
 
-/* Indicadores visuales adicionales para elementos interactivos */
+
 .menu-list a[role="menuitem"]:focus {
   box-shadow: 0 0 0 4px rgba(107,79,40,0.12);
 }
 
-/* Asegurar que el menú ocupe el lector de pantalla correctamente */
+
 .offcanvas-menu[aria-hidden="true"] { visibility: hidden; }
 .offcanvas-menu[aria-hidden="false"] { visibility: visible; }
 
-/* Fin de navigation.css */

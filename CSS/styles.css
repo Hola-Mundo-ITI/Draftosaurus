@@ -1,4 +1,4 @@
-/* ======= REINICIO GLOBAL Y ESTILOS BASE ======= */
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -12,9 +12,9 @@ body {
     position: relative;
 }
 
-/* ======= COMPONENTES DE NAVEGACIÓN ======= */
 
-/* Botón del menú */
+
+
 .boton-menu,
 .menu-icon {
     position: fixed;
@@ -34,7 +34,7 @@ body {
     color: #a0522d;
 }
 
-/* Navegación lateral */
+
 .offcanvas-menu,
 .navegacion-lateral,
 .menu-lateral {
@@ -82,7 +82,7 @@ body {
     color: #7b4c29;
 }
 
-/* ======= ÁREAS DE CONTENIDO PRINCIPAL ======= */
+
 .main-content,
 #contenido {
     max-width: 900px;
@@ -96,7 +96,7 @@ body {
     transform: translateX(220px);
 }
 
-/* ======= TIPOGRAFÍA ======= */
+
 h1 {
     font-size: 2rem;
     margin-bottom: 30px;
@@ -121,7 +121,7 @@ h2 {
     color: #2e2a1c;
 }
 
-/* ======= BOTONES GENERALES ======= */
+
 .btn,
 .boton-accion {
     padding: 12px;
@@ -194,7 +194,7 @@ h2 {
     margin: auto;
 }
 
-/* ======= FORMULARIOS GENERALES ======= */
+
 form {
     display: flex;
     flex-direction: column;
@@ -239,7 +239,7 @@ select {
     font-size: 1rem;
 }
 
-/* ======= IMÁGENES DE LOGO ======= */
+
 .logo-image,
 .imagen-logo {
     max-width: 250px;
@@ -252,7 +252,7 @@ select {
     margin-bottom: 20px;
 }
 
-/* ======= CLASES DE UTILIDAD ======= */
+
 .enlace-texto {
     background: none;
     border: none;
@@ -282,7 +282,7 @@ select {
     color: #555;
 }
 
-/* ======= PIE DE PÁGINA ======= */
+
 .site-footer,
 .footer-prehistorico {
     background-color: #3b351f;

@@ -1,7 +1,11 @@
-/**
- * Clase principal para manejar el tablero con sistema Point and Click
- * Controla la selección de dinosaurios y su colocación en el tablero
+/*
+ * TableroPointClick.js:
+ * Módulo responsable de gestionar la interacción por clic en el tablero.
+ * Traduce eventos de puntero a intentos de colocación, muestra ayudas de
+ * interfaz y delega la validación al validador del backend cuando procede.
+ * Comentarios en español en tercera persona; la implementación no cambia.
  */
+
 class TableroPointClick {
   constructor() {
     this.dinosaurioSeleccionado = null;
@@ -16,9 +20,7 @@ class TableroPointClick {
     this.configurarEventos();
   }
 
-  /**
-   * Define las zonas del tablero con sus reglas específicas
-   */
+  
   definirZonas() {
     return {
       'bosque-semejanza': {
@@ -74,25 +76,20 @@ class TableroPointClick {
     };
   }
 
-  /**
-   * Inicializa el estado del tablero
-   */
+  
   inicializarTablero() {
     Object.keys(this.zonas).forEach(zonaId => {
       this.estadoJuego.tablero[zonaId] = [];
     });
   }
 
-  /**
-   * Configura todos los eventos de clic
-   * ACTUALIZADO: Usa delegación de eventos y protecciones contra elementos nulos
-   */
+  
   configurarEventos() {
-    // Evitar registrar listeners múltiples veces
+
     if (this.eventosConfigurados) return;
 
     try {
-      // Delegación de eventos para clicks: maneja dinosaurios y slots (incluye elementos dinámicos)
+
       document.addEventListener('click', (e) => {
         try {
           const dinosaurio = e.target.closest && e.target.closest('.dinosaurio');
@@ -111,7 +108,6 @@ class TableroPointClick {
         }
       });
 
-      // Eventos para zonas (mouseenter/mouseleave) con validación
       const zonas = document.querySelectorAll('.zona-tablero');
       if (zonas && zonas.length) {
         zonas.forEach(zona => {
@@ -132,11 +128,9 @@ class TableroPointClick {
     }
   }
 
-  /**
-   * Selecciona un dinosaurio para colocar
-   */
+  
   seleccionarDinosaurio(elementoDino) {
-    // Usar ManejadorSeleccion si está disponible
+
     if (window.manejadorSeleccion) {
       try {
         manejadorSeleccion.limpiarSeleccionAnterior();
@@ -145,13 +139,12 @@ class TableroPointClick {
         console.warn('Error invoking manejadorSeleccion methods', e);
       }
     } else {
-      // Fallback al sistema antiguo
+
       document.querySelectorAll('.dinosaurio').forEach(d => d.classList.remove('seleccionado'));
       document.querySelectorAll('.slot').forEach(s => s.classList.remove('disponible', 'no-disponible'));
       elementoDino.classList.add('seleccionado');
     }
 
-    // Determinar tipo usando mapeoDinosaurios si está disponible
     let tipoDetectado = null;
     let imagenSrc = null;
     try {
@@ -168,24 +161,20 @@ class TableroPointClick {
       tipoDetectado = this.obtenerTipoDinosaurio(elementoDino);
     }
 
-    // Actualizar estado interno
     this.dinosaurioSeleccionado = {
       elemento: elementoDino,
       tipo: tipoDetectado,
       imagen: imagenSrc || (elementoDino.querySelector('img') ? elementoDino.querySelector('img').src : '')
     };
 
-    // Resaltar slots disponibles
     this.resaltarSlotsDisponibles();
 
     if (window.debugValidacion) console.log('Dinosaurio seleccionado:', this.dinosaurioSeleccionado.tipo);
   }
 
-  /**
-   * Obtiene el tipo de dinosaurio basado en la imagen
-   */
+  
   obtenerTipoDinosaurio(elementoDino) {
-    // Preferir mapeo global si existe
+
     try {
       const img = elementoDino.querySelector('img');
       const src = img ? img.src : '';
@@ -193,7 +182,6 @@ class TableroPointClick {
         return window.mapeoDinosaurios.obtenerTipoDesdeSrc(src);
       }
 
-      // Fallback por nombre de archivo
       if (src.includes('dino1')) return 'triceratops';
       if (src.includes('dino2')) return 'stegosaurus';
       if (src.includes('dino3')) return 'brontosaurus';
@@ -207,26 +195,21 @@ class TableroPointClick {
     return 'desconocido';
   }
 
-  /**
-   * Resalta los slots donde se puede colocar el dinosaurio seleccionado
-   */
+  
   async resaltarSlotsDisponibles() {
     if (!this.dinosaurioSeleccionado) return;
 
-    // Limpiar clases anteriores en todos los slots
     document.querySelectorAll('.slot').forEach(s => {
       s.classList.remove('disponible', 'no-disponible');
       s.removeAttribute('title');
     });
 
-    // Intentar obtener estado del juego
     const estado = (window.estadoJuego && typeof window.estadoJuego.obtenerEstado === 'function') ? window.estadoJuego.obtenerEstado() : this.estadoJuego;
     const jugadorId = (window.estadoJuego && typeof window.estadoJuego.obtenerEstado === 'function') ? estado.jugadorActual : 1;
 
-    // Si el validador remoto está disponible, pedir slots válidos por zona
     if (window.validadorDado && typeof window.validadorDado.getValidSlots === 'function') {
       try {
-        // Recorrer zonas presentes en el DOM
+
         const zonasDOM = document.querySelectorAll('.zona-tablero');
         for (const zonaElem of Array.from(zonasDOM)) {
           const zonaId = zonaElem.dataset.zona;
@@ -234,10 +217,8 @@ class TableroPointClick {
 
           const result = await window.validadorDado.getValidSlots(zonaId, dinosauriosEnZona, this.dinosaurioSeleccionado, jugadorId, estado);
 
-          // Normalizar respuesta
           const validSlots = (result && (result.validSlots || result.slotsValidos)) ? (result.validSlots || result.slotsValidos) : [];
 
-          // Marcar slots en la zona
           zonaElem.querySelectorAll('.slot').forEach(slot => {
             const slotIndex = parseInt(slot.dataset.slot);
             if (slot.dataset.ocupado === 'false') {
@@ -256,20 +237,19 @@ class TableroPointClick {
 
       } catch (err) {
         console.error('Error obteniendo slots válidos del backend:', err);
-        // continuar a fallback
+
       }
     }
 
-    // Fallback: simple heurística cliente (muy básica)
     document.querySelectorAll('.slot').forEach(slot => {
       const zona = slot.closest('.zona-tablero');
       const zonaId = zona ? zona.dataset.zona : null;
       if (!zonaId) return;
 
       if (slot.dataset.ocupado === 'false') {
-        // heurística simple: permitir si no está lleno
+
         const dinoEnZona = (this.estadoJuego && this.estadoJuego.tablero && this.estadoJuego.tablero[zonaId]) ? this.estadoJuego.tablero[zonaId] : [];
-        const capacidad = zonaElem ? (zonaElem.querySelectorAll('.slot').length || 6) : 6;
+        const capacidad = zona ? (zona.querySelectorAll('.slot').length || 6) : 6;
         if (dinoEnZona.length < capacidad) {
           slot.classList.add('disponible');
         } else {
@@ -279,10 +259,7 @@ class TableroPointClick {
     });
   }
 
-  /**
-   * Intenta colocar el dinosaurio seleccionado en un slot
-   * ACTUALIZADO: Integra información del jugador para validación del dado
-   */
+  
   async intentarColocarDinosaurio(slot) {
     if (!this.dinosaurioSeleccionado) {
       this.mostrarMensaje('Primero selecciona un dinosaurio', 'advertencia');
@@ -296,19 +273,15 @@ class TableroPointClick {
 
     const zona = slot.closest('.zona-tablero');
     const zonaId = zona.dataset.zona;
-    
-    // NUEVO: Obtener ID del jugador actual
+
     const jugadorId = this.obtenerJugadorActual();
-    
-    // CORREGIDO: Verificar que estadoJuego esté disponible antes de usarlo
+
     const estadoJuego = window.estadoJuego ? window.estadoJuego.obtenerEstado() : null;
-    
-    // Verificación de seguridad adicional
+
     if (!estadoJuego) {
       console.warn('Estado del juego no disponible, reintentando inicialización...');
       this.mostrarMensaje('Juego inicializándose, por favor espera...', 'info');
-      
-      // Reintentar después de un breve delay
+
       setTimeout(() => {
         if (window.estadoJuego) {
           this.intentarColocarDinosaurio(slot);
@@ -319,7 +292,6 @@ class TableroPointClick {
       return;
     }
 
-    // ACTUALIZADO: Pasar información completa al validador
     const validacion = window.validarMovimiento ? 
       await window.validarMovimiento(zonaId, this.dinosaurioSeleccionado, slot.dataset.slot ? parseInt(slot.dataset.slot) : null, jugadorId, estadoJuego) :
       this.validarColocacionLocal(zonaId, slot, jugadorId, estadoJuego);
@@ -335,10 +307,7 @@ class TableroPointClick {
     this.colocarDinosaurio(slot, zonaId);
   }
 
-  /**
-   * Nueva función de validación local con slot
-   * ACTUALIZADO: Incluye parámetros para validación del dado
-   */
+  
   validarColocacionLocal(zonaId, slot, jugadorId, estadoJuego) {
     const dinosauriosEnZona = this.estadoJuego.tablero[zonaId];
     
@@ -352,17 +321,14 @@ class TableroPointClick {
         estadoJuego
       );
     }
-    
-    // Fallback a validación simple
+
     return { valido: this.puedeColocarEnZona(this.dinosaurioSeleccionado, zonaId) };
   }
 
-  /**
-   * Nuevo método para obtener jugador actual
-   */
+  
   obtenerJugadorActual() {
-    // Por ahora, asumir jugador 1 (humano)
-    // En futuro multijugador, obtener del estado del juego
+
+
     if (window.estadoJuego) {
       const estado = window.estadoJuego.obtenerEstado();
       return estado.jugadorActual || 1;
@@ -370,11 +336,9 @@ class TableroPointClick {
     return 1;
   }
 
-  /**
-   * Muestra mensajes específicos según la zona y tipo de error
-   */
+  
   mostrarMensajeEspecifico(validacion, zonaId) {
-    // Si el mensaje ya tiene emoji, usarlo directamente
+
     if (validacion.razon.includes('🌲') || validacion.razon.includes('🌾') || 
         validacion.razon.includes('💕') || validacion.razon.includes('🌿') ||
         validacion.razon.includes('🏝️') || validacion.razon.includes('👑') ||
@@ -383,7 +347,6 @@ class TableroPointClick {
       return;
     }
 
-    // Mensajes personalizados para casos sin emoji
     const mensajesPersonalizados = {
       'bosque-semejanza': {
         'secuencial': '🌲 En el Bosque: coloca de izquierda a derecha sin espacios',
@@ -421,16 +384,13 @@ class TableroPointClick {
     this.mostrarMensaje(mensaje, 'error');
   }
 
-  /**
-   * Coloca el dinosaurio en el slot especificado
-   */
+  
   colocarDinosaurio(slot, zonaId) {
-    // Mostrar feedback visual positivo
+
     if (window.manejadorSeleccion) {
       manejadorSeleccion.mostrarFeedbackValido(slot);
     }
 
-    // Animar colocación si está disponible
     if (window.manejadorSeleccion && manejadorSeleccion.animarColocacionDinosaurio) {
       manejadorSeleccion.animarColocacionDinosaurio(
         this.dinosaurioSeleccionado.elemento,
@@ -442,11 +402,9 @@ class TableroPointClick {
     }
   }
 
-  /**
-   * Completa la colocación del dinosaurio
-   */
+  
   completarColocacion(slot, zonaId) {
-    // Crear imagen del dinosaurio en el slot
+
     const imgDino = document.createElement('img');
     imgDino.src = this.dinosaurioSeleccionado.imagen;
     imgDino.alt = `Dinosaurio ${this.dinosaurioSeleccionado.tipo}`;
@@ -464,32 +422,30 @@ class TableroPointClick {
     slot.dataset.ocupado = 'true';
     slot.classList.remove('disponible', 'no-disponible');
 
-    // Crear objeto dinosaurio para el estado
+    const dinoIdFromElem = this.dinosaurioSeleccionado.elemento.dataset.dinoId || null;
     const dinosaurioParaEstado = {
-      id: Date.now(), // ID único temporal
+      id: dinoIdFromElem || Date.now(),
       tipo: this.dinosaurioSeleccionado.tipo,
-      slot: slot.dataset.slot,
+      slot: parseInt(slot.dataset.slot),
       imagen: this.dinosaurioSeleccionado.imagen,
-      jugadorColocado: 1 // Por defecto jugador 1
+      jugadorColocado: this.obtenerJugadorActual()
     };
 
-    // Actualizar estado local PRIMERO
-    this.estadoJuego.tablero[zonaId].push(dinosaurioParaEstado);
 
-    // Registrar movimiento en el estado global si está disponible
     if (window.registrarMovimiento) {
       window.registrarMovimiento(zonaId, dinosaurioParaEstado, slot.dataset.slot);
     }
 
-    // Sincronizar con el estado global si existe
     if (window.estadoJuego) {
-      window.estadoJuego.colocarDinosaurio(zonaId, dinosaurioParaEstado, slot.dataset.slot);
+      try {
+        const jugadorActual = this.obtenerJugadorActual();
+        // Llamada con la nueva firma: (jugadorId, zonaId, dinosaurio, slot)
+        window.estadoJuego.colocarDinosaurio(jugadorActual, zonaId, dinosaurioParaEstado, slot.dataset.slot);
+      } catch(e) {  }
     }
 
-    // Remover dinosaurio de la zona de selección
     this.dinosaurioSeleccionado.elemento.style.display = 'none';
 
-    // Limpiar selección
     this.limpiarSeleccion();
     
     this.mostrarMensaje(`Dinosaurio colocado en ${this.zonas[zonaId].nombre}`, 'exito');
@@ -498,19 +454,15 @@ class TableroPointClick {
     console.log('Dinosaurio colocado:', dinosaurioParaEstado);
   }
 
-  /**
-   * Verifica si se puede colocar un dinosaurio en una zona específica
-   */
+  
   puedeColocarEnZona(dinosaurio, zonaId) {
     const zona = this.zonas[zonaId];
     const dinosauriosEnZona = this.estadoJuego.tablero[zonaId];
 
-    // Verificar si la zona está llena
     if (dinosauriosEnZona.length >= zona.slots) {
       return false;
     }
 
-    // Aplicar reglas específicas de cada zona
     switch (zona.regla) {
       case 'mismo-tipo':
         return dinosauriosEnZona.length === 0 || 
@@ -523,7 +475,7 @@ class TableroPointClick {
         return dinosauriosEnZona.length === 0;
       
       case 'mas-grande':
-        // Rey de la Selva acepta cualquier dinosaurio (solo límite de 1)
+
         return dinosauriosEnZona.length === 0;
       
       default:
@@ -531,15 +483,13 @@ class TableroPointClick {
     }
   }
 
-  /**
-   * Limpia la selección actual
-   */
+  
   limpiarSeleccion() {
-    // Usar ManejadorSeleccion si está disponible
+
     if (window.manejadorSeleccion) {
       manejadorSeleccion.limpiarSeleccionAnterior();
     } else {
-      // Fallback al sistema antiguo
+
       document.querySelectorAll('.dinosaurio').forEach(d => d.classList.remove('seleccionado'));
       document.querySelectorAll('.slot').forEach(s => {
         s.classList.remove('disponible', 'no-disponible', 'seleccionado');
@@ -551,14 +501,11 @@ class TableroPointClick {
     this.dinosaurioSeleccionado = null;
   }
 
-  /**
-   * Muestra información de la zona al pasar el mouse
-   */
+  
   mostrarInfoZona(zona) {
     const zonaId = zona.dataset.zona;
     const infoZona = this.zonas[zonaId];
-    
-    // Crear tooltip si no existe
+
     let tooltip = zona.querySelector('.tooltip-zona');
     if (!tooltip) {
       tooltip = document.createElement('div');
@@ -574,9 +521,7 @@ class TableroPointClick {
     tooltip.style.display = 'block';
   }
 
-  /**
-   * Oculta información de la zona
-   */
+  
   ocultarInfoZona(zona) {
     const tooltip = zona.querySelector('.tooltip-zona');
     if (tooltip) {
@@ -584,11 +529,9 @@ class TableroPointClick {
     }
   }
 
-  /**
-   * Muestra mensajes al usuario
-   */
+  
   mostrarMensaje(mensaje, tipo = 'info') {
-    // Crear o actualizar área de mensajes
+
     let areaMensajes = document.getElementById('area-mensajes');
     if (!areaMensajes) {
       areaMensajes = document.createElement('div');
@@ -600,37 +543,30 @@ class TableroPointClick {
     areaMensajes.innerHTML = `<div class="mensaje ${tipo}">${mensaje}</div>`;
     areaMensajes.style.display = 'block';
 
-    // Ocultar después de 3 segundos
     setTimeout(() => {
       areaMensajes.style.display = 'none';
     }, 3000);
   }
 
-  /**
-   * Obtiene el estado actual del juego
-   */
+  
   obtenerEstadoJuego() {
     return this.estadoJuego;
   }
 
-  /**
-   * Reinicia el tablero
-   */
+  
   reiniciarTablero() {
-    // Limpiar slots
+
     document.querySelectorAll('.slot').forEach(slot => {
       slot.innerHTML = '';
       slot.dataset.ocupado = 'false';
       slot.classList.remove('disponible', 'seleccionado');
     });
 
-    // Mostrar todos los dinosaurios
     document.querySelectorAll('.dinosaurio').forEach(dino => {
       dino.style.display = 'flex';
       dino.classList.remove('seleccionado');
     });
 
-    // Reiniciar estado
     this.inicializarTablero();
     this.dinosaurioSeleccionado = null;
     

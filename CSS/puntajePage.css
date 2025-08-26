@@ -1,6 +1,6 @@
-/* ======= ESTILOS ESPECÍFICOS PARA LA PÁGINA DE PUNTAJES ======= */
 
-/* Título principal de puntajes */
+
+
 .titulo-puntaje {
   text-align: center;
   margin-top: 80px;
@@ -9,7 +9,7 @@
   font-family: 'Papyrus', fantasy;
 }
 
-/* Contenido principal de puntajes */
+
 .contenido-puntaje {
   display: flex;
   flex-wrap: wrap;
@@ -18,7 +18,7 @@
   gap: 50px;
 }
 
-/* Secciones de ganador y ranking */
+
 .ganador-partida,
 .ranking-top5 {
   background-color: #fef6e1;
@@ -29,7 +29,7 @@
   text-align: center;
 }
 
-/* Caja específica del ganador */
+
 .caja-ganador {
   border: 2px solid #3b2d15;
   padding: 15px;
@@ -37,7 +37,7 @@
   margin-top: 10px;
 }
 
-/* Lista del ranking */
+
 .lista-ranking {
   list-style: decimal inside;
   margin-top: 15px;
@@ -49,7 +49,7 @@
   font-weight: bold;
 }
 
-/* Botón secundario específico de puntajes */
+
 .btn-secundario {
   background-color: #3b2d15;
   color: #fef6e1;

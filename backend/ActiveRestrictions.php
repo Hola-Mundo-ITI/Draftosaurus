@@ -1,11 +1,21 @@
 <?php
 
+/*
+ * Clase RestriccionesActivas:
+ * Gestiona las restricciones temporales que impone el dado durante una ronda.
+ * Proporciona mapeos de áreas/lados, definición de caras del dado y utilidades
+ * para calcular qué recintos están permitidos según la cara activa y el estado
+ * del tablero.
+ */
 class RestriccionesActivas {
     private $mapeoAreas;
     private $mapeoLados;
     private $carasDado;
     private $todasZonas;
 
+    /*
+     * Inicializa los mapeos y las caras del dado al crear la instancia.
+     */
     public function __construct() {
         $this->mapeoAreas = $this->definirMapeoAreas();
         $this->mapeoLados = $this->definirMapeoLados();
@@ -13,8 +23,10 @@ class RestriccionesActivas {
         $this->todasZonas = $this->obtenerTodasZonas();
     }
 
-    /**
-     * Define el mapeo de recintos por areas (Bosque/Llanura).
+    
+    /*
+     * Devuelve el mapeo de áreas a recintos que define qué recintos
+     * pertenecen a cada área temática del tablero.
      */
     protected function definirMapeoAreas(): array {
         return [
@@ -23,8 +35,10 @@ class RestriccionesActivas {
         ];
     }
 
-    /**
-     * Define el mapeo de recintos por lados del río.
+    
+    /*
+     * Devuelve el mapeo de lados del río a recintos. Útil para caras del dado
+     * que limitan por izquierda/derecha del río.
      */
     protected function definirMapeoLados(): array {
         return [
@@ -33,8 +47,10 @@ class RestriccionesActivas {
         ];
     }
 
-    /**
-     * Define las caras del dado y sus restricciones.
+    
+    /*
+     * Define las caras del dado con su metadato (nombre, tipo, zonas y descripción).
+     * Estas definiciones se usan para aplicar el filtrado de zonas permitido.
      */
     protected function definirCarasDado(): array {
         return [
@@ -70,13 +86,11 @@ class RestriccionesActivas {
         ];
     }
 
-    /**
-     * Filtra los recintos disponibles según la cara del dado.
-     *
-     * @param string $caraActual Cara actual del dado.
-     * @param array $estadoTablero Estado actual del tablero (dinosaurios en cada zona).
-     * @param int $jugadorQueLanzo ID del jugador que lanzó el dado.
-     * @return array Un array de strings con los IDs de los recintos permitidos.
+    
+    /*
+     * Dado el nombre de la cara activa y el estado del tablero, devuelve la
+     * lista de zonas permitidas por esa cara. Si la cara no se reconoce, devuelve
+     * todas las zonas por defecto.
      */
     public function filtrarZonasPorDado(
         string $caraActual,
@@ -103,12 +117,10 @@ class RestriccionesActivas {
         }
     }
 
-    /**
-     * Filtra recintos para restricciones dinámicas.
-     *
-     * @param string $caraActual Cara actual del dado.
-     * @param array $estadoTablero Estado actual del tablero.
-     * @return array Un array de strings con los IDs de los recintos permitidos.
+    
+    /*
+     * Maneja las caras del dado que requieren cálculo dinámico (p. ej. recintos
+     * vacíos) y delega a funciones específicas según la cara.
      */
     protected function filtrarZonasDinamicas(string $caraActual, array $estadoTablero): array {
         switch ($caraActual) {
@@ -120,12 +132,9 @@ class RestriccionesActivas {
         }
     }
 
-    /**
-     * Filtra solo los recintos que están vacíos.
-     *
-     * @param array $zonas Array de IDs de zonas a filtrar.
-     * @param array $estadoTablero Estado actual del tablero.
-     * @return array Un array de strings con los IDs de los recintos vacíos.
+    
+    /*
+     * Devuelve solo las zonas que actualmente están vacías según el estado del tablero.
      */
     protected function filtrarZonasVacias(array $zonas, array $estadoTablero): array {
         return array_filter($zonas, function($zona) use ($estadoTablero) {
@@ -134,10 +143,10 @@ class RestriccionesActivas {
         });
     }
 
-    /**
-     * Obtiene todos los recintos (excepto el río).
-     *
-     * @return array Un array de strings con los IDs de todos los recintos.
+    
+    /*
+     * Lista todas las zonas conocidas por el sistema. Se usa como valor por defecto
+     * cuando no hay restricciones aplicables o la cara del dado no se reconoce.
      */
     public function obtenerTodasZonas(): array {
         return [
@@ -150,14 +159,10 @@ class RestriccionesActivas {
         ];
     }
 
-    /**
-     * Verifica si un recinto está permitido por las restricciones activas.
-     *
-     * @param string $zoneId ID de la zona.
-     * @param string $caraActual Cara actual del dado.
-     * @param array $estadoTablero Estado actual del tablero.
-     * @param int $jugadorQueLanzo ID del jugador que lanzó el dado.
-     * @return bool True si el recinto está permitido, false en caso contrario.
+    
+    /*
+     * Indica si una zona concreta está permitida según la cara actual del dado.
+     * La zona 'dinos-rio' siempre se considera permitida (comodín).
      */
     public function zonaPermitida(
         string $zoneId,
@@ -165,7 +170,7 @@ class RestriccionesActivas {
         array $estadoTablero,
         int $jugadorQueLanzo
     ): bool {
-        // El río siempre está disponible como comodín
+
         if ($zoneId === 'dinos-rio') {
             return true;
         }
@@ -174,23 +179,20 @@ class RestriccionesActivas {
         return in_array($zoneId, $zonasPermitidas);
     }
 
-    /**
-     * Obtiene información sobre la restricción actual del dado.
-     *
-     * @param string $caraActual Cara actual del dado.
-     * @return array|null Un array con la información de la cara del dado o null si no se encuentra.
+    
+    /*
+     * Devuelve los metadatos de la restricción asociada a una cara del dado,
+     * o null si la cara no existe.
      */
     public function obtenerInfoRestriccion(string $caraActual): ?array {
         return $this->carasDado[$caraActual] ?? null;
     }
 
-    /**
-     * Obtiene mensaje explicativo de la restricción del dado.
-     *
-     * @param string $caraActual Cara actual del dado.
-     * @param int $playerId ID del jugador actual.
-     * @param int $jugadorQueLanzo ID del jugador que lanzó el dado.
-     * @return string Mensaje explicativo de la restricción.
+    
+    /*
+     * Construye un mensaje legible para el jugador explicando la restricción
+     * vigente según la cara del dado. Si el jugador lanzó el dado, indica
+     * que puede colocar libremente.
      */
     public function obtenerMensajeRestriccion(
         string $caraActual,
@@ -211,36 +213,54 @@ class RestriccionesActivas {
     }
 }
 
-// Compatibilidad: wrapper con nombres en inglés para no romper el sistema existente
+/*
+ * Clase ActiveRestrictions (adaptador en inglés):
+ * Expone métodos equivalentes en inglés que delegan en la implementación
+ * en español, facilitando compatibilidad con consumidores que usan nombres
+ * en inglés.
+ */
 class ActiveRestrictions extends RestriccionesActivas {
+    /*
+     * Simple inicializador que reusa el constructor de la clase base.
+     */
     public function __construct() {
         parent::__construct();
     }
 
+    /* Devuelve el mapeo de áreas. */
     public function defineAreaMapping(): array { return $this->definirMapeoAreas(); }
+    /* Devuelve el mapeo de lados. */
     public function defineSideMapping(): array { return $this->definirMapeoLados(); }
+    /* Devuelve la definición de caras del dado. */
     public function defineDiceFaces(): array { return $this->definirCarasDado(); }
 
+    /* Delegación para obtener zonas permitidas según la cara. */
     public function filterZonesByDice(string $currentFace, array $boardState, int $playerWhoRolled): array {
         return $this->filtrarZonasPorDado($currentFace, $boardState, $playerWhoRolled);
     }
 
+    /* Delegación para zonas dinámicas. */
     public function filterDynamicZones(string $currentFace, array $boardState): array {
         return $this->filtrarZonasDinamicas($currentFace, $boardState);
     }
 
+    /* Delegación para filtrar zonas vacías. */
     public function filterEmptyZones(array $zones, array $boardState): array {
         return $this->filtrarZonasVacias($zones, $boardState);
     }
 
+    /* Devuelve todas las zonas (adaptador en inglés). */
     public function getAllZones(): array { return $this->obtenerTodasZonas(); }
 
+    /* Verifica si una zona está permitida (adaptador en inglés). */
     public function isZoneAllowed(string $zoneId, string $currentFace, array $boardState, int $playerWhoRolled): bool {
         return $this->zonaPermitida($zoneId, $currentFace, $boardState, $playerWhoRolled);
     }
 
+    /* Devuelve la información de la restricción actual. */
     public function getRestrictionInfo(string $currentFace): ?array { return $this->obtenerInfoRestriccion($currentFace); }
 
+    /* Devuelve el mensaje de restricción en inglés delegando en la implementación base. */
     public function getRestrictionMessage(string $currentFace, int $playerId, int $playerWhoRolled): string {
         return $this->obtenerMensajeRestriccion($currentFace, $playerId, $playerWhoRolled);
     }

@@ -128,8 +128,7 @@ definirMapeoLados() {
 
 ### Filtrado de Recintos
 ```javascript
-filtrarRecintosPorDado(caraActual, estadoTablero, jugadorId, jugadorQueLanzo) {
-  // El jugador que lanzó está exento
+filtrarRecintosPorDado(caraActual, estadoTablero, jugadorId, jugadorQueLanzo) {
   if (jugadorId === jugadorQueLanzo) {
     return this.obtenerTodosLosRecintos();
   }
@@ -301,17 +300,14 @@ validarOrdenSecuencial(dinosauriosEnZona, slot) {
 Actúa como punto de entrada que coordina ambos tipos de restricciones:
 
 ```javascript
-validarColocacion(zonaId, dinosauriosEnZona, dinosaurio, slot, jugadorId, estadoJuego) {
-  // 1. Validar restricciones activas (dado)
+validarColocacion(zonaId, dinosauriosEnZona, dinosaurio, slot, jugadorId, estadoJuego) {
   const validacionActiva = this.validarRestriccionesActivas(
     zonaId, estadoJuego.tablero, jugadorId, estadoJuego
   );
   
   if (!validacionActiva.valido) {
     return validacionActiva;
-  }
-  
-  // 2. Validar restricciones pasivas (recinto)
+  }
   const validacionPasiva = this.restriccionesPasivas.validarColocacion(
     zonaId, dinosauriosEnZona, dinosaurio, slot
   );

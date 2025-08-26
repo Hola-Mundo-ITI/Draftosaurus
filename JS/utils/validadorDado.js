@@ -1,10 +1,14 @@
-/**
- * Clase para validar las restricciones del dado de colocación
- * Se integra con el sistema de validación existente
+/*
+ * validadorDado.js:
+ * Módulo utilitario que encapsula la lógica necesaria para evaluar las
+ * restricciones activas definidas por el dado. Proporciona funciones para
+ * interpretar la cara actual, filtrar recintos permitidos y exponer helpers
+ * usados por la interfaz.
  */
+
 class ValidadorDado {
   constructor(options = {}) {
-    // kept for compatibility; client-side rules removed
+
     this.debug = options.debug || false;
     console.log('🎯 ValidadorDado inicializado correctamente');
   }
@@ -46,7 +50,6 @@ class ValidadorDado {
         })
       });
 
-      // Comprobación robusta del tipo de contenido y manejo de errores HTTP
       const contentType = response.headers.get('content-type') || '';
       if (!response.ok) {
         const texto = await response.text();
@@ -64,7 +67,6 @@ class ValidadorDado {
         }
       }
 
-      // Si no es JSON, sacar texto para debug y devolver fallback seguro
       const text = await response.text();
       console.error('ValidadorDado: respuesta no JSON al obtener slots válidos:', text.slice(0, 1000));
       return { valido: false, razon: 'Respuesta inválida del servidor', validSlots: [] };
@@ -75,21 +77,19 @@ class ValidadorDado {
     }
   }
 
-  // Backwards-compatible stubs for previously used helpers
   async validarMovimiento(zonaId, dinosaurio, slot, jugadorId, estadoJuego) {
-    // alias used in some places: map to validarPlacement
+
     return await this.validarPlacement(zonaId, estadoJuego ? (estadoJuego.tablero && estadoJuego.tablero[zonaId] ? estadoJuego.tablero[zonaId] : []) : [], dinosaurio, slot, jugadorId, estadoJuego);
   }
 
   obtenerInfoRestriccionActual() {
-    // Info del dado vive en el backend; cliente puede leer window.manejadorDado si existe
+
     if (window.manejadorDado && typeof window.manejadorDado.obtenerInfoRestriccionActual === 'function') {
-      try { return window.manejadorDado.obtenerInfoRestriccionActual(); } catch (e) { /* ignore */ }
+      try { return window.manejadorDado.obtenerInfoRestriccionActual(); } catch (e) {  }
     }
     return null;
   }
 
-  // Otros métodos ligeros que antes existían devuelven valores neutrales o llaman al backend cuando aplica
   obtenerZonasPermitidas(jugadorId, estadoJuego) {
     const info = this.obtenerInfoRestriccionActual();
     if (!info) return [];

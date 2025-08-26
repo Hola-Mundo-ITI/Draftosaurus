@@ -1,14 +1,25 @@
 <?php
 
+/*
+ * Clase ScoreCalculator:
+ * Encapsula la lógica de cálculo de puntuaciones por jugador y zona.
+ * Proporciona funciones para generar informes de puntuación y aplicar
+ * reglas específicas por recinto sin alterar la lógica de cálculo.
+ */
 class ScoreCalculator {
     private $scoringSystems;
 
+    /*
+     * Inicializa los sistemas de puntuación mapeando cada zona a su función
+     * de cálculo y descripción.
+     */
     public function __construct() {
         $this->scoringSystems = $this->defineScoringSystems();
     }
 
-    /**
-     * Define los sistemas de puntuación para cada zona.
+    /*
+     * Define las funciones de puntuación para cada zona. Cada entrada contiene
+     * una función 'calculate' y una descripción breve.
      */
     private function defineScoringSystems(): array {
         return [
@@ -43,13 +54,9 @@ class ScoreCalculator {
         ];
     }
 
-    /**
-     * Calcula la puntuación total de un jugador.
-     *
-     * @param object $playerBoard Objeto del tablero del jugador, con zonas y dinosaurios.
-     * @param int $playerId ID del jugador.
-     * @param array $allPlayerBoards Array de todos los tableros de los jugadores (para Rey de la Selva).
-     * @return array Reporte de puntuación.
+    /*
+     * Calcula la puntuación base de un jugador recorriendo sus recintos y
+     * aplicando el sistema de puntuación correspondiente a cada zona.
      */
     public function calculatePlayerScore(object $playerBoard, int $playerId, array $allPlayerBoards): array {
         $totalScore = 0;
@@ -61,7 +68,7 @@ class ScoreCalculator {
                 $system = $this->scoringSystems[$zoneId] ?? null;
 
                 if ($system) {
-                    // Cálculos especiales para Rey de la Selva e Isla Solitaria
+
                     if ($zoneId === 'rey-selva') {
                         $score = $this->calculateJungleKing($dinosaurios, $allPlayerBoards, $playerId);
                     } else if ($zoneId === 'isla-solitaria') {
@@ -86,16 +93,12 @@ class ScoreCalculator {
         ];
     }
 
-    /**
-     * Genera un reporte detallado de puntuación, incluyendo bonificaciones.
-     *
-     * @param object $fullBoard Objeto del tablero completo del juego.
-     * @param int $playerId ID del jugador.
-     * @param array $allPlayerBoards Array de todos los tableros de los jugadores (para Rey de la Selva).
-     * @return array Reporte completo de puntuación.
+    /*
+     * Genera un informe de puntuación completo para un jugador, incluyendo
+     * bono por objetivos y detalles por zona.
      */
     public function generateScoreReport(object $fullBoard, int $playerId, array $allPlayerBoards): array {
-        // Extraer el tablero del jugador específico del tablero completo
+
         $playerBoard = new stdClass();
         foreach ($fullBoard as $zoneId => $dinosInZone) {
             $playerBoard->{$zoneId} = array_filter($dinosInZone, fn($dino) => ($dino->playerPlaced ?? 0) === $playerId);
@@ -116,8 +119,10 @@ class ScoreCalculator {
         ];
     }
 
-    // --- Métodos de cálculo de puntuación por zona ---
-
+    /*
+     * Calcula puntos por similitud en el bosque: usa una tabla de puntuación
+     * en función de la mayor cantidad de la misma especie.
+     */
     private function calculateForestSimilarity(array $dinosaurios): int {
         if (empty($dinosaurios)) return 0;
         $counts = [];
@@ -132,10 +137,16 @@ class ScoreCalculator {
         return $scoreTable[min($maxCount, count($scoreTable) - 1)] ?? 0;
     }
 
+    /*
+     * Retorna 7 puntos únicamente si hay exactamente 3 dinosaurios en el recinto.
+     */
     private function calculateThreesomeGrove(array $dinosaurios): int {
         return count($dinosaurios) === 3 ? 7 : 0;
     }
 
+    /*
+     * Calcula puntos por variedad de especies en el prado.
+     */
     private function calculateMeadowDifference(array $dinosaurios): int {
         $uniqueTypes = [];
         foreach ($dinosaurios as $dino) {
@@ -146,6 +157,9 @@ class ScoreCalculator {
         return $scoreTable[min($typeCount, count($scoreTable) - 1)] ?? 0;
     }
 
+    /*
+     * Calcula puntos en la pradera por parejas completas de la misma especie.
+     */
     private function calculateLovePrairie(array $dinosaurios): int {
         $counts = [];
         foreach ($dinosaurios as $dino) {
@@ -158,6 +172,10 @@ class ScoreCalculator {
         return $pairs * 5;
     }
 
+    /*
+     * Calcula la bonificación de 'rey de la selva': comprueba que nadie tenga
+     * más de la misma especie que el jugador actual.
+     */
     private function calculateJungleKing(array $dinosaurios, array $allPlayerBoards, int $playerId): int {
         if (count($dinosaurios) !== 1) return 0;
 
@@ -175,6 +193,9 @@ class ScoreCalculator {
         return 7; // Nadie tiene más, recibe los puntos (incluye empates)
     }
 
+    /*
+     * 7 puntos si el dinosaurio es único de su especie en el parque del jugador.
+     */
     private function calculateLonelyIsland(array $dinosaurios, object $playerBoard): int {
         if (count($dinosaurios) !== 1) return 0;
 
@@ -192,14 +213,18 @@ class ScoreCalculator {
         return $totalSpeciesInPark === 1 ? 7 : 0;
     }
 
+    /*
+     * Puntuación para dinosaurios en el río usando tabla de valores por cantidad.
+     */
     private function calculateRiverDinos(array $dinosaurios): int {
         $count = count($dinosaurios);
         $scoreTable = [0, 1, 3, 6, 10, 15, 21, 28];
         return $scoreTable[min($count, count($scoreTable) - 1)] ?? 0;
     }
 
-    // --- Métodos de bonificación ---
-
+    /*
+     * Calcula bonos globales por completar zonas y por diversidad de especies.
+     */
     private function calculateBonuses(object $playerBoard, int $playerId): array {
         $totalBonuses = 0;
         $bonusDetails = [];
@@ -222,6 +247,9 @@ class ScoreCalculator {
         ];
     }
 
+    /*
+     * Cuenta cuántas zonas completadas tiene el jugador según reglas propias.
+     */
     private function countCompletedZones(object $playerBoard, int $playerId): int {
         $completedZonesCount = 0;
         foreach ($playerBoard as $zoneId => $dinosaurios) {
@@ -232,6 +260,9 @@ class ScoreCalculator {
         return $completedZonesCount;
     }
 
+    /*
+     * Verifica si una zona cumple su criterio de finalización.
+     */
     private function isZoneCompleted(string $zoneId, array $dinosaurios): bool {
         $completionRules = [
             'bosque-semejanza' => fn($dinos) => count($dinos) >= 3,
@@ -247,6 +278,9 @@ class ScoreCalculator {
         return $rule ? $rule($dinosaurios) : false;
     }
 
+    /*
+     * Indica si hay al menos una pareja completa dentro de los dinosaurios.
+     */
     private function hasCompletePairs(array $dinosaurios): bool {
         $counts = [];
         foreach ($dinosaurios as $dino) {
@@ -258,6 +292,9 @@ class ScoreCalculator {
         return false;
     }
 
+    /*
+     * Calcula la diversidad total de especies en el tablero del jugador.
+     */
     private function calculateDiversity(object $playerBoard, int $playerId): int {
         $uniqueTypes = [];
         foreach ($playerBoard as $dinosaurios) {
@@ -268,8 +305,9 @@ class ScoreCalculator {
         return count($uniqueTypes);
     }
 
-    // --- Métodos auxiliares ---
-
+    /*
+     * Cuenta cuántas veces aparece una especie en el parque del jugador.
+     */
     private function countSpeciesInPark(object $playerBoard, string $speciesType): int {
         $count = 0;
         foreach ($playerBoard as $zoneDinos) {
@@ -282,6 +320,9 @@ class ScoreCalculator {
         return $count;
     }
 
+    /*
+     * Obtiene una descripción legible de la zona para incluir en los detalles.
+     */
     private function getZoneDescription(string $zoneId): string {
         $descriptions = [
             'bosque-semejanza' => 'Puntos por dinosaurios de la misma especie',
@@ -295,10 +336,9 @@ class ScoreCalculator {
         return $descriptions[$zoneId] ?? 'Puntuación especial';
     }
 
-    /**
-     * Manejador HTTP estático para exponer la lógica de cálculo desde un endpoint.
-     * Se deja aquí para centralizar lógica y permitir que otros wrappers simplemente incluyan este archivo y llamen a:
-     * ScoreCalculator::handleHttpRequest();
+    /*
+     * Maneja solicitudes HTTP entrantes para calcular puntuaciones y devolver
+     * un informe. Método estático utilizable por el endpoint PHP.
      */
     public static function handleHttpRequest(): void {
         header('Content-Type: application/json; charset=utf-8');

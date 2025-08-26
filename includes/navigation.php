@@ -1,10 +1,6 @@
-<?php
-// Navegación común para todas las páginas
+<?php
 include_once __DIR__ . '/nav_config.php';
-$currentPage = basename($_SERVER['PHP_SELF'], '.php');
-
-// Compatibilidad: aceptar múltiples nombres de variable que pueden definir las páginas
-// Prioridad: variables definidas por la página > constantes de nav_config.php > valores por defecto
+$currentPage = basename($_SERVER['PHP_SELF'], '.php');
 $menuToggleId = 
     (isset($menuButtonId) ? $menuButtonId : (isset($menuToggleId) ? $menuToggleId : (defined('NAV_MENU_TOGGLE_ID') ? NAV_MENU_TOGGLE_ID : 'menuToggle')));
 $menuToggleClass = 
