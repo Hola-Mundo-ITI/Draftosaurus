@@ -214,7 +214,7 @@ class RestriccionesActivas {
 }
 
 /*
- * Clase ActiveRestrictions (adaptador en inglés):
+ * Clase ActiveRestrictions:
  * Expone métodos equivalentes en inglés que delegan en la implementación
  * en español, facilitando compatibilidad con consumidores que usan nombres
  * en inglés.

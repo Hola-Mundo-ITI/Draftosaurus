@@ -1,6 +1,3 @@
-
-
-
 .encabezado-partida {
   display: flex;
   justify-content: space-between;
@@ -1707,4 +1704,71 @@
 @keyframes fade-in-out {
   0%, 100% { opacity: 0; }
   20%, 80% { opacity: 1; }
+}
+
+/* Asegurar que el texto numérico dentro de los slots no sea visible
+   (los slots mantienen data-slot y aria-label para accesibilidad) */
+.slot {
+  font-size: 0; /* evita que números textuales se muestren */
+}
+
+/* Restaurar tamaño de fuente para contenido dentro del slot que sí deba mostrarse */
+.slot img, .slot .contenido-visible {
+  font-size: initial;
+}
+
+/* Fuerza ocultamiento de cualquier texto numérico dentro de los casilleros */
+.slot {
+  font-size: 0 !important; /* ya estaba, reforzado */
+  text-indent: -9999px !important; /* desplaza texto fuera del área visible */
+  line-height: 0 !important;
+}
+
+/* Restaurar visibilidad para imágenes u otros contenidos intencionales dentro del slot */
+.slot img,
+.slot .contenido-visible {
+  font-size: initial !important;
+  text-indent: 0 !important;
+  line-height: normal !important;
+}
+
+/* Evitar que pseudo-elementos (::before/::after) muestren números o marcadores */
+.slot::before,
+.slot::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* 
+  Ocultar números visibles dentro de los slots
+  - Mantener aria-label para accesibilidad
+  - Permitir que imágenes y elementos con la clase .contenido-visible sean visibles
+  - Evitar pseudoelementos que muestren números
+   */
+
+.slot {
+  /* Forzar que el texto dentro de los slots no sea visible
+     (se mantiene aria-label para lectores de pantalla) */
+  font-size: 0 !important;
+  line-height: 0 !important;
+  text-indent: -9999px !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+
+/* Restaurar visibilidad para imágenes u otros contenidos intencionales dentro del slot */
+.slot img,
+.slot .contenido-visible {
+  font-size: initial !important;
+  line-height: normal !important;
+  text-indent: 0 !important;
+  white-space: normal !important;
+  overflow: visible !important;
+}
+
+/* Evitar que pseudo-elementos (::before/::after) muestren números o marcadores */
+.slot::before,
+.slot::after {
+  content: none !important;
+  display: none !important;
 }

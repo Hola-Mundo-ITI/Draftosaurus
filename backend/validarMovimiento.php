@@ -70,6 +70,42 @@ try {
     $playerId = array_key_exists('playerId', $datos) ? $datos['playerId'] : null;
     $gameState = $datos['gameState'] ?? null;
 
+    // Normalizar dinosaursInZone: asegurarnos que sea array de objetos y propiedades consistentes
+    if (!is_array($dinosaursInZone)) {
+        $dinosaursInZone = [];
+    }
+
+    foreach ($dinosaursInZone as $idx => $d) {
+        if (is_array($d)) {
+            $d = json_decode(json_encode($d));
+            error_log("[validarMovimiento] dinosaursInZone[{$idx}] convertido de array a objeto", 3, $logFile);
+        }
+        if (!is_object($d)) {
+        
+            error_log("[validarMovimiento] dinosaursInZone[{$idx}] no es objeto, tipo: " . gettype($d), 3, $logFile);
+            unset($dinosaursInZone[$idx]);
+            continue;
+        }
+
+        if (!isset($d->type) && isset($d->tipo)) $d->type = $d->tipo;
+        if (!isset($d->image) && isset($d->imagen)) $d->image = $d->imagen;
+        if (!isset($d->id) && (isset($d->ID) || isset($d->Id))) {
+            $d->id = $d->ID ?? $d->Id;
+        }
+
+
+        if (!isset($d->id)) {
+ 
+            $d->id = uniqid('dino_');
+            error_log("[validarMovimiento] dinosaursInZone[{$idx}] sin id, se asignó temporario: {$d->id}", 3, $logFile);
+        }
+
+        $dinosaursInZone[$idx] = $d;
+    }
+
+    // Reindex array to avoid holes
+    $dinosaursInZone = array_values($dinosaursInZone);
+
     $dinosaurObj = null;
     if ($dinosaur !== null) {
         if (is_array($dinosaur)) {

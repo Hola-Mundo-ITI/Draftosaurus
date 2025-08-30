@@ -18,7 +18,7 @@ include 'includes/head.php';
         <a href="fisico.php" class="btn-image-button" role="button">
           <img src="Recursos/img/botonModoFisico.png" alt="Modo Físico" class="button-image" width="150px" height="50px">
         </a>
-        <a href="digital.php" class="btn-image-button" role="button">
+        <a href="seleccionarBots.php" class="btn-image-button" role="button">
           <img src="Recursos/img/botonMododDigital.png" alt="Modo Digital" class="button-image" width="150px" height="50px">
         </a>
       </div>

@@ -31,10 +31,59 @@ include 'includes/head.php';
         <img id="imagen-dado" src="Recursos/img/dado.png" alt="Dado Virtual mostrando resultado" />
         <div class="texto-dado">Lanzar Dado</div>
       </div>
-      <div class="cantidad-jugadores" aria-live="polite">🤖 <span class="valor">Partida Automática</span> (Tú vs 2 Bots)</div>
+      <div class="cantidad-jugadores" aria-live="polite"><span class="valor">Partida Automática</span> (Tú vs <span id="numero-bots">2</span> Bots)</div>
     </div>
   </header>
   
+  <!-- Inicializar configuración de bots según parámetro GET 'bots' -->
+  <script>
+    (function(){
+      // Leer parámetro 'bots' desde la URL en el cliente y normalizar entre 2 y 4
+      const urlParams = new URLSearchParams(window.location.search);
+      let selectedBots = parseInt(urlParams.get('bots')) || null;
+      if (selectedBots === null || Number.isNaN(selectedBots)) selectedBots = 3; // fallback si no se especifica
+      selectedBots = Math.max(2, Math.min(4, selectedBots));
+
+      // Exponer configuración global para el resto de scripts
+      window.SELECTED_BOTS_COUNT = selectedBots; // número de bots seleccionados
+      window.INIT_TOTAL_JUGADORES = selectedBots + 1; // humano (1) + bots
+
+      // Construir mapping de bots: jugadores 2..N son bots activos
+      const nombres = ['Bot Alpha','Bot Beta','Bot Gamma','Bot Delta'];
+      const botsMap = {};
+      for (let i = 0; i < selectedBots; i++) {
+        const playerId = i + 2; // bots comienzan en jugador 2
+        botsMap[playerId] = { nombre: nombres[i] || `Bot ${i+1}`, activo: true };
+      }
+      window.INIT_BOT_MAP = botsMap;
+
+      // Actualizar UI indicador de cantidad de bots
+      function updateBotUI() {
+        const span = document.getElementById('numero-bots');
+        if (span) span.textContent = String(window.SELECTED_BOTS_COUNT);
+        const jugadoresValor = document.querySelector('.cantidad-jugadores .valor');
+        if (jugadoresValor) jugadoresValor.textContent = `Partida Automática (Tú vs ${window.SELECTED_BOTS_COUNT} Bot${window.SELECTED_BOTS_COUNT>1?'s':''})`;
+      }
+
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', updateBotUI); else updateBotUI();
+
+      // Esperar a que la clase SistemaBots exista y crear la instancia cliente ligera
+      const tryInit = setInterval(() => {
+        if (typeof SistemaBots === 'function') {
+          try {
+            window.sistemaBots = new SistemaBots({ bots: window.INIT_BOT_MAP, tiempoEspera: 1200 });
+            console.log('SistemaBots cliente inicializado. Bots configurados:', Object.keys(window.INIT_BOT_MAP).length);
+          } catch (e) {
+            console.warn('No se pudo instanciar SistemaBots automáticamente:', e);
+          }
+          clearInterval(tryInit);
+        }
+      }, 200);
+
+      // Guardar variable para compatibilidad con EstadoJuego (que lee window.INIT_TOTAL_JUGADORES)
+    })();
+  </script>
+
   <main id="mainContent" class="zona-juego" role="main">
     <section class="zona-dinos izquierda" aria-label="Dinosaurios disponibles - lado izquierdo">
       <h2 class="visually-hidden">Dinosaurios disponibles para colocar</h2>
@@ -136,7 +185,7 @@ include 'includes/head.php';
       </div>
       <nav class="acciones-juego">
         <button id="btn-lanzar-dado" class="boton-lanzar-dado" onclick="lanzarDadoManual()" title="Lanzar dado para nueva restricción">
-          🎲 Lanzar Dado
+          Lanzar Dado
         </button>
         <a href="puntaje.php" class="boton-puntaje" role="button">Ver Puntaje</a>
       </nav>

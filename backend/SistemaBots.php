@@ -14,12 +14,20 @@ class SistemaBots {
 
     /*
      * Inicializa la lista de bots y el validador al crear la instancia.
+     * Ahora acepta un array de opciones: ['totalPlayers' => N] para generar
+     * dinámicamente bots para los jugadores 2..N. Mantiene compatibilidad
+     * con el comportamiento anterior.
      */
-    public function __construct() {
-        $this->bots = [
-            2 => ['nombre' => 'Bot Alpha', 'activo' => true],
-            3 => ['nombre' => 'Bot Beta', 'activo' => true]
-        ];
+    public function __construct($options = []) {
+        $totalPlayers = isset($options['totalPlayers']) ? max(2, intval($options['totalPlayers'])) : 3;
+
+        $defaultNames = ['Bot Alpha', 'Bot Beta', 'Bot Gamma', 'Bot Delta'];
+        $this->bots = [];
+        for ($i = 2; $i <= $totalPlayers; $i++) {
+            $name = $defaultNames[$i - 2] ?? "Bot {$i}";
+            $this->bots[$i] = ['nombre' => $name, 'activo' => true];
+        }
+
         $this->validadorTablero = new ValidadorTablero();
     }
 
@@ -36,28 +44,74 @@ class SistemaBots {
      * Devuelve null si no encuentra movimiento válido.
      */
     public function decidirMovimientoBot(int $jugadorId, object $estadoJuego): ?array {
+        // Obtener lista normalizada de dinosaurios disponibles
         $dinosauriosDisponibles = $this->obtenerDinosauriosDisponibles($estadoJuego->availableDinosaurs ?? []);
         if (empty($dinosauriosDisponibles)) {
             error_log("SistemaBots: No hay dinosaurios disponibles para el bot {$jugadorId}");
             return null;
         }
 
+        // Intentar extraer tableros enviados desde el cliente y seleccionar el tablero del bot
+        $tablerosRecibidos = [];
+        if (isset($estadoJuego->tableros)) {
+            $tablerosRecibidos = (array)$estadoJuego->tableros;
+        }
+
+        error_log("[SistemaBots] Tableros recibidos: " . json_encode(array_keys($tablerosRecibidos)));
+
+        $tableroBot = null;
+      
+        if (isset($estadoJuego->tableros)) {
+            if (is_object($estadoJuego->tableros) && isset($estadoJuego->tableros->{$jugadorId})) {
+                $tableroBot = $estadoJuego->tableros->{$jugadorId};
+            } elseif (is_array($estadoJuego->tableros) && isset($estadoJuego->tableros[$jugadorId])) {
+                $tableroBot = (object)$estadoJuego->tableros[$jugadorId];
+            }
+        }
+
+
+        if (!$tableroBot) {
+            if (isset($estadoJuego->tablero)) {
+                $tableroBot = $estadoJuego->tablero;
+            }
+        }
+
+        if (!$tableroBot) {
+            $tableroBot = $this->inicializarTableroVacio();
+        }
+
+        error_log("[SistemaBots] Tablero seleccionado para Bot {$jugadorId}: " . json_encode($tableroBot));
+
+        // Crear una copia del estado de juego para validaciones donde el tablero
+        // principal (board/tablero) apunta exclusivamente al tablero del bot
+        $estadoParaValidacion = clone $estadoJuego;
+        $estadoParaValidacion->tablero = $tableroBot;
+        $estadoParaValidacion->board = $tableroBot; // compatibilidad
+
         foreach ($dinosauriosDisponibles as $dinosaurio) {
-            $todasZonas = $this->validadorTablero->obtenerZonasDisponibles($jugadorId, $estadoJuego);
+            $todasZonas = $this->validadorTablero->obtenerZonasDisponibles($jugadorId, $estadoParaValidacion);
 
             if (!in_array('dinos-rio', $todasZonas)) {
                 $todasZonas[] = 'dinos-rio';
             }
 
             foreach ($todasZonas as $zonaId) {
-                $dinosEnZona = $estadoJuego->board->{$zonaId} ?? [];
+                $dinosEnZona = [];
+                if (is_object($tableroBot) && isset($tableroBot->{$zonaId})) {
+                    $dinosEnZona = $tableroBot->{$zonaId};
+                } elseif (is_array($tableroBot) && isset($tableroBot[$zonaId])) {
+                    $dinosEnZona = $tableroBot[$zonaId];
+                } elseif (isset($estadoJuego->board->{$zonaId})) {
+                    // último recurso: usar board global si no hay tableros
+                    $dinosEnZona = $estadoJuego->board->{$zonaId};
+                }
 
                 $slotsValidos = $this->validadorTablero->obtenerSlotsValidos(
                     $zonaId,
                     $dinosEnZona,
                     (object)['type' => $dinosaurio->type, 'id' => $dinosaurio->id, 'image' => $dinosaurio->image],
                     $jugadorId,
-                    $estadoJuego
+                    $estadoParaValidacion
                 );
 
                 if (!empty($slotsValidos)) {
@@ -111,6 +165,21 @@ class SistemaBots {
         }
 
         $this->bots[$jugadorId]['activo'] = $activo !== null ? $activo : !($this->bots[$jugadorId]['activo'] ?? false);
+    }
+
+    /*
+     * Inicializa y devuelve un tablero vacío (estructura por zonas).
+     */
+    private function inicializarTableroVacio(): object {
+        return (object)[
+            'bosque-semejanza' => [],
+            'prado-diferencia' => [],
+            'trio-frondoso' => [],
+            'pradera-amor' => [],
+            'isla-solitaria' => [],
+            'rey-selva' => [],
+            'dinos-rio' => []
+        ];
     }
 
     /*

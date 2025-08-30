@@ -27,7 +27,7 @@ class TableroPointClick {
         nombre: 'Bosque de la Semejanza',
         slots: 6,
         regla: 'mismo-tipo',
-        descripcion: 'Coloca dinosaurios del mismo tipo',
+        descripcion: 'Coloca dinosaurios del mismo tipo en cualquier orden',
         dinosaurios: []
       },
       'trio-frondoso': {
@@ -41,7 +41,7 @@ class TableroPointClick {
         nombre: 'Prado de la Diferencia',
         slots: 6,
         regla: 'todos-diferentes',
-        descripcion: 'Todos los dinosaurios deben ser diferentes',
+        descripcion: 'Todos los dinosaurios deben ser diferentes, en cualquier orden',
         dinosaurios: []
       },
       'pradera-amor': {
@@ -349,12 +349,10 @@ class TableroPointClick {
 
     const mensajesPersonalizados = {
       'bosque-semejanza': {
-        'secuencial': '🌲 En el Bosque: coloca de izquierda a derecha sin espacios',
         'especie': '🌲 En el Bosque: solo dinosaurios de la misma especie',
         'default': '🌲 Bosque de la Semejanza: ' + validacion.razon
       },
       'prado-diferencia': {
-        'secuencial': '🌾 En el Prado: coloca de izquierda a derecha sin espacios',
         'especie': '🌾 En el Prado: solo especies diferentes',
         'default': '🌾 Prado de la Diferencia: ' + validacion.razon
       },

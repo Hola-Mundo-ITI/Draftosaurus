@@ -26,14 +26,14 @@ class RestriccionesPasivas {
             'bosque-semejanza' => [
                 'capacidad' => 6,
                 'tipoEspecie' => 'mismaEspecie',
-                'ordenamiento' => 'secuencial',
-                'descripcion' => 'Todos los dinosaurios deben ser del mismo tipo, colocados de izquierda a derecha'
+                'ordenamiento' => 'libre',
+                'descripcion' => 'Todos los dinosaurios deben ser del mismo tipo'
             ],
             'prado-diferencia' => [
                 'capacidad' => 6,
                 'tipoEspecie' => 'especiesDiferentes',
-                'ordenamiento' => 'secuencial',
-                'descripcion' => 'Todas las especies deben ser diferentes, colocados de izquierda a derecha'
+                'ordenamiento' => 'libre',
+                'descripcion' => 'Todas las especies deben ser diferentes'
             ],
             'pradera-amor' => [
                 'capacidad' => 6,
@@ -148,20 +148,21 @@ class RestriccionesPasivas {
             return ['valid' => true];
         }
 
-        $existingSpecies = isset($dinosaursInZone[0]->type) ? $dinosaursInZone[0]->type : ($dinosaursInZone[0]->tipo ?? null);
+        // Aceptar ambas formas de propiedad: type (backend) o tipo (compatibilidad)
+        $existingSpecies = $dinosaursInZone[0]->type ?? ($dinosaursInZone[0]->tipo ?? null);
         $incomingSpecies = $dinosaur->type ?? ($dinosaur->tipo ?? null);
 
         if ($incomingSpecies === null || $existingSpecies === null) {
             return [
                 'valid' => false,
-                'reason' => 'Información de especie incompleta para validación'
+                'reason' => 'No se pudo determinar la especie del dinosaurio (propiedades "type" o "tipo" faltantes)'
             ];
         }
 
         if ($incomingSpecies !== $existingSpecies) {
             return [
                 'valid' => false,
-                'reason' => "Solo dinosaurios del tipo '{$existingSpecies}' permitidos en este recinto"
+                'reason' => "Especie incompatible: este recinto admite únicamente dinosaurios del tipo '{$existingSpecies}'"
             ];
         }
 
@@ -173,12 +174,23 @@ class RestriccionesPasivas {
      * ya presentes en la zona.
      */
     protected function validarEspeciesDiferentes(array $dinosaursInZone, object $dinosaur): array {
-        $existingSpecies = array_map(function($d) { return $d->type; }, $dinosaursInZone);
+        $existingSpecies = array_map(function($d) {
+            return $d->type ?? ($d->tipo ?? null);
+        }, $dinosaursInZone);
 
-        if (in_array($dinosaur->type, $existingSpecies)) {
+        $incomingSpecies = $dinosaur->type ?? ($dinosaur->tipo ?? null);
+
+        if ($incomingSpecies === null) {
             return [
                 'valid' => false,
-                'reason' => 'Solo especies diferentes permitidas en este recinto'
+                'reason' => 'No se pudo determinar la especie entrante (propiedades "type" o "tipo" faltantes)'
+            ];
+        }
+
+        if (in_array($incomingSpecies, $existingSpecies, true)) {
+            return [
+                'valid' => false,
+                'reason' => "La especie '{$incomingSpecies}' ya está presente en este recinto; se requieren especies diferentes"
             ];
         }
 
@@ -205,9 +217,25 @@ class RestriccionesPasivas {
      * con el slot solicitado, devolviendo el siguiente slot cuando no coincide.
      */
     protected function validarOrdenSecuencial(array $dinosaursInZone, int $slot): array {
+        $expectedSlot = $this->calcularSlotSiguienteSecuencial($dinosaursInZone);
+
+        if ($slot !== $expectedSlot) {
+            return [
+                'valid' => false,
+                'reason' => "Colocación secuencial requerida: debe usar el slot {$expectedSlot} (siguiente disponible sin huecos)"
+            ];
+        }
+
+        return ['valid' => true];
+    }
+
+    /**
+     * Calcula el siguiente slot secuencial esperado (sin huecos).
+     * Devuelve 1 si la zona está vacía, o el primer hueco/slot siguiente.
+     */
+    protected function calcularSlotSiguienteSecuencial(array $dinosaursInZone): int {
         $occupiedSlots = array_map(function($d) {
             if (isset($d->slot)) return (int)$d->slot;
-
             if (isset($d->pos)) return (int)$d->pos;
             if (isset($d->position)) return (int)$d->position;
             return null;
@@ -219,21 +247,14 @@ class RestriccionesPasivas {
         $expectedSlot = 1;
         foreach ($occupiedSlots as $occupied) {
             if ($expectedSlot < $occupied) {
-
+                // hay un hueco: el siguiente esperado es $expectedSlot
                 break;
             }
-
+            // si $expectedSlot == $occupied avanzamos al siguiente
             $expectedSlot = $occupied + 1;
         }
 
-        if ($slot !== $expectedSlot) {
-            return [
-                'valid' => false,
-                'reason' => "Debe colocar en el slot {$expectedSlot} (orden secuencial requerido, de izquierda a derecha)"
-            ];
-        }
-
-        return ['valid' => true];
+        return $expectedSlot;
     }
 
     
@@ -251,7 +272,9 @@ class RestriccionesPasivas {
         if (!$especie['valid']) return [];
 
         if ($rules['ordenamiento'] === 'secuencial') {
-            $nextSlot = count($dinosaursInZone) + 1;
+            $nextSlot = $this->calcularSlotSiguienteSecuencial($dinosaursInZone);
+            // proteger por si excede capacidad
+            if ($nextSlot > $rules['capacidad']) return [];
             return [$nextSlot];
         } else {
             $occupiedSlots = array_map(function($d) {
@@ -261,7 +284,7 @@ class RestriccionesPasivas {
 
             $validSlots = [];
             for ($i = 1; $i <= $rules['capacidad']; $i++) {
-                if (!in_array($i, $occupiedSlots)) {
+                if (!in_array($i, $occupiedSlots, true)) {
                     $validSlots[] = $i;
                 }
             }

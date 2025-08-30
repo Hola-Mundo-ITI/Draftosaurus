@@ -15,24 +15,25 @@ class EstadoJuego {
 
   
   inicializarEstado() {
+    const totalPlayers = (typeof window !== 'undefined' && window.INIT_TOTAL_JUGADORES) ? parseInt(window.INIT_TOTAL_JUGADORES, 10) : 3;
+
+    const tableros = {};
+    const puntuacion = {};
+    for (let p = 1; p <= totalPlayers; p++) {
+      tableros[p] = this.inicializarTableroVacio();
+      puntuacion[`jugador${p}`] = 0;
+    }
+
     return {
       turnoActual: 1,
       rondaActual: 1,
       jugadorActual: 1,
-      totalJugadores: 3,
-      tableros: {
-        1: this.inicializarTableroVacio(),
-        2: this.inicializarTableroVacio(),
-        3: this.inicializarTableroVacio()
-      },
-      puntuacion: {
-        jugador1: 0,
-        jugador2: 0,
-        jugador3: 0
-      },
+      totalJugadores: totalPlayers,
+      tableros: tableros,
+      puntuacion: puntuacion,
       dinosauriosDisponibles: this.generarDinosauriosDisponibles(),
 
-      mazos: this.generarMazosIniciales(),
+      mazos: this.generarMazosIniciales(totalPlayers),
       configuracion: {
         modoJuego: 'clasico',
         tiempoTurno: null,
@@ -50,7 +51,10 @@ class EstadoJuego {
         caraActual: null,
         jugadorQueLanzo: null,
         rondaActual: null
-      }
+      },
+
+      // bandera global que indica si el jugador actual ya colocó en este turno
+      haColocadoEnEsteTurno: false
     };
   }
 
@@ -80,13 +84,13 @@ class EstadoJuego {
   }
 
   
-  generarMazosIniciales() {
+  generarMazosIniciales(totalPlayers = 3) {
     const tiposDinosaurios = ['triceratops', 'stegosaurus', 'brontosaurus', 'trex', 'velociraptor', 'pteranodon'];
-    return {
-      1: this.crearMazoAleatorio(tiposDinosaurios),
-      2: this.crearMazoAleatorio(tiposDinosaurios),
-      3: this.crearMazoAleatorio(tiposDinosaurios)
-    };
+    const mazos = {};
+    for (let p = 1; p <= totalPlayers; p++) {
+      mazos[p] = this.crearMazoAleatorio(tiposDinosaurios);
+    }
+    return mazos;
   }
 
   crearMazoAleatorio(tiposDinosaurios) {
@@ -107,17 +111,30 @@ class EstadoJuego {
 
   
   avanzarTurno() {
+    /*
+      avanzarTurno:
+      - Actualiza el estado para pasar al siguiente turno y potencialmente a la siguiente ronda.
+      - Reinicia la bandera haColocadoEnEsteTurno para permitir la colocación en el nuevo turno.
+      - NO debe encargarse de ejecutar la lógica de los bots; esa responsabilidad se delega
+        al controlador principal que coordina la interfaz (por ejemplo digitalPage.js).
+    */
     this.guardarEstadoEnHistorial();
-    
+
+    // Guardar jugador previo para saber si se completó la vuelta de todos los jugadores
+    const jugadorPrevio = this.estado.jugadorActual;
+
     this.estado.turnoActual++;
+
+    // Reiniciar la bandera de colocación al inicio de cada nuevo turno
+    this.estado.haColocadoEnEsteTurno = false;
 
     this.estado.jugadorActual++;
     if (this.estado.jugadorActual > this.estado.totalJugadores) {
       this.estado.jugadorActual = 1;
     }
 
-
-    if (this.estado.turnoActual % this.estado.totalJugadores === 0 && this.estado.turnoActual > 0) {
+    // Solo avanzar de ronda cuando el jugador previo era el último jugador (todos han jugado)
+    if (jugadorPrevio === this.estado.totalJugadores) {
       this.avanzarRonda();
     }
     
@@ -126,15 +143,17 @@ class EstadoJuego {
     
     console.log(`Turno ${this.estado.turnoActual}, Jugador ${this.estado.jugadorActual}`);
 
-    if (window.sistemaBots && window.sistemaBots.esBot(this.estado.jugadorActual)) {
-      setTimeout(() => {
-        window.sistemaBots.ejecutarTurnoBot(this.estado.jugadorActual);
-      }, 500);
-    }
+    // NOTA: La lógica de ejecución de bots se delega al controlador de interfaz (digitalPage.js)
   }
 
   
   avanzarRonda() {
+    /*
+      avanzarRonda:
+      - Incrementa la ronda y reinicia los contadores de turno/jugador para comenzar la nueva ronda.
+      - Problema que resuelve: asegura que el dado se lance automáticamente al iniciar cada nueva ronda (evita que bots o validadores bloqueen colocaciones por falta de lanzamiento).
+      - Interacción con otros componentes: utiliza window.manejadorDado para obtener el estado del dado, normaliza formatos legacy (diceState, dice, etc.), guarda el estado mediante guardarEstado() y despacha un evento CustomEvent('dadoLanzado') para que la UI y el backend se sincronicen.
+    */
     this.estado.rondaActual++;
     this.estado.turnoActual = 1;
     this.estado.jugadorActual = 1;
@@ -146,70 +165,195 @@ class EstadoJuego {
       console.warn('[EstadoJuego] Error al rotar mazos:', e);
     }
 
+    // Intentar lanzar y sincronizar el estado del dado automáticamente
+    try {
+      // Si existe un manejador de dado en ventana lo utilizamos
+      if (typeof window !== 'undefined' && window.manejadorDado) {
+        try {
+          const resultado = window.manejadorDado.lanzarDadoParaRonda(this.estado.rondaActual, this.estado.totalJugadores);
 
+          // Normalizar posibles nombres de propiedad del resultado
+          const estadoDadoNormalizado = {
+            activo: resultado?.activo ?? resultado?.active ?? true,
+            caraActual: resultado?.caraActual ?? resultado?.cara ?? resultado?.face ?? resultado?.currentFace ?? null,
+            jugadorQueLanzo: resultado?.jugadorQueLanzo ?? resultado?.jugador ?? resultado?.playerWhoRolled ?? null,
+            rondaActual: resultado?.rondaActual ?? resultado?.ronda ?? this.estado.rondaActual,
+            descripcionRestriccion: resultado?.descripcionRestriccion ?? resultado?.descripcion ?? resultado?.description ?? ''
+          };
 
-    if (window.manejadorDado) {
-      try {
-        const estadoDado = window.manejadorDado.lanzarDadoParaRonda(this.estado.rondaActual, this.estado.totalJugadores);
-        if (estadoDado) {
-          this.estado.dado = estadoDado;
+          this.estado.dado = estadoDadoNormalizado;
+          try { this.guardarEstado(); } catch (e) { console.warn('[EstadoJuego] No se pudo guardar estado tras lanzar dado:', e); }
 
-          this.guardarEstado();
-          console.log('[EstadoJuego] Estado del dado actualizado al avanzarRonda:', estadoDado);
+          console.log('[EstadoJuego] Estado del dado actualizado al avanzarRonda:', estadoDadoNormalizado);
+
+          // Disparar evento para que la UI y listeners externos se sincronicen
+          try {
+            if (typeof window !== 'undefined') {
+              const evento = new CustomEvent('dadoLanzado', { detail: { estado: estadoDadoNormalizado } });
+              window.dispatchEvent(evento);
+            }
+          } catch (evtErr) {
+            console.warn('[EstadoJuego] No se pudo despachar evento dadoLanzado:', evtErr);
+          }
+        } catch (e) {
+          console.warn('[EstadoJuego] No se pudo lanzar o guardar el estado del dado en avanzarRonda:', e);
         }
-      } catch (e) {
-        console.warn('[EstadoJuego] No se pudo lanzar o guardar el estado del dado en avanzarRonda:', e);
+      } else {
+        // Si no hay manejador, intentar normalizar estado.dado si proviene de formatos antiguos
+        try {
+          if (this.estado.dado && typeof this.estado.dado === 'object') {
+            // Mapear claves legacy
+            const d = this.estado.dado;
+            if (typeof d.activo === 'undefined') d.activo = d.active ?? (d.isActive ?? false);
+            if (typeof d.caraActual === 'undefined') d.caraActual = d.cara ?? d.face ?? d.currentFace ?? null;
+            if (typeof d.jugadorQueLanzo === 'undefined') d.jugadorQueLanzo = d.jugador ?? d.playerWhoRolled ?? null;
+            if (typeof d.rondaActual === 'undefined') d.rondaActual = d.ronda ?? this.estado.rondaActual;
+            this.estado.dado = d;
+            try { this.guardarEstado(); } catch (e) { console.warn('[EstadoJuego] No se pudo guardar estado tras normalizar dado:', e); }
+
+            try {
+              if (typeof window !== 'undefined') {
+                const evento = new CustomEvent('dadoLanzado', { detail: { estado: this.estado.dado } });
+                window.dispatchEvent(evento);
+              }
+            } catch (evtErr) {
+              console.warn('[EstadoJuego] No se pudo despachar evento dadoLanzado tras normalizar:', evtErr);
+            }
+          }
+        } catch (normErr) {
+          console.warn('[EstadoJuego] Error normalizando estado.dado sin manejador externo:', normErr);
+        }
       }
+    } catch (outerErr) {
+      console.warn('[EstadoJuego] Error procesando lanzamiento/normalización del dado en avanzarRonda:', outerErr);
     }
-    
+
     this.actualizarInterfazRonda();
-    
+
     console.log(`Nueva ronda ${this.estado.rondaActual} - Dinosaurios disponibles: ${this.estado.dinosauriosDisponibles.filter(d => d.disponible).length}`);
   }
 
   
+  /*
+   * rotarMazos():
+   * - Rota únicamente los dinosaurios marcados como disponibles (disponible === true)
+   * - Mantiene los dinosaurios ya colocados (disponible === false) en el mazo original
+   * - Usa deep copy para evitar referencias compartidas entre mazos
+   * - Rotación definida: los disponibles de 1 → 2, de 2 → 3, de 3 → 1
+   */
   rotarMazos() {
+    /*
+     * Rota los dinosaurios disponibles entre los mazos de los jugadores.
+     * - Solo rotan los elementos con disponible === true
+     * - El activo de cada jugador pasa al siguiente jugador (1->2->3->...->N->1)
+     */
     const mazos = this.estado.mazos || {};
-    const temp = mazos[1];
-    mazos[1] = mazos[2] || [];
-    mazos[2] = mazos[3] || [];
-    mazos[3] = temp || [];
-    this.estado.mazos = mazos;
+    const total = this.estado.totalJugadores || 3;
+
+    // Preparar arrays separados de activos/inactivos por jugador
+    const separados = {};
+    for (let i = 1; i <= total; i++) {
+      const arr = Array.isArray(mazos[i]) ? JSON.parse(JSON.stringify(mazos[i])) : [];
+      separados[i] = {
+        activos: (arr || []).filter(d => d && d.disponible === true).map(d => ({ ...d })),
+        inactivos: (arr || []).filter(d => d && d.disponible === false).map(d => ({ ...d }))
+      };
+    }
+
+    // Construir nuevos mazos: el activo del jugador previo se asigna al jugador actual
+    const nuevos = {};
+    for (let i = 1; i <= total; i++) {
+      const prev = i - 1 >= 1 ? i - 1 : total;
+      nuevos[i] = [...(separados[prev]?.activos || []), ...(separados[i]?.inactivos || [])];
+    }
+
+    this.estado.mazos = nuevos;
+
+    // Log y comprobación de duplicados
+    try {
+      const allIds = [];
+      Object.keys(this.estado.mazos || {}).forEach(k => {
+        (this.estado.mazos[k] || []).forEach(d => allIds.push(String(d.id)));
+      });
+      const duplicates = allIds.filter((id, idx) => allIds.indexOf(id) !== idx);
+      if (duplicates.length > 0) {
+        console.warn('[EstadoJuego] Rotación de mazos: IDs duplicados detectados entre mazos:', Array.from(new Set(duplicates)));
+      }
+    } catch (e) {
+      console.warn('[EstadoJuego] No se pudo comprobar unicidad de IDs tras rotar mazos:', e);
+    }
+
+    console.log('[EstadoJuego] Rotación de mazos completada. Resumen por jugador:', (function(m){
+      const res = {};
+      for (let i=1;i<= (this.estado?.totalJugadores || 3); i++) res[i] = (this.estado.mazos[i] || []).length;
+      return res;
+    }).call(this));
 
     this.guardarEstado();
   }
 
   
   colocarDinosaurio(jugadorId, zonaId, dinosaurio, slotId) {
-
-    // Compatibilidad con llamadas antiguas: colocarDinosaurio(zonaId, dinosaurio, slotId)
-    if (typeof jugadorId === 'string' && typeof zonaId !== 'string') {
-      // Forma legacy detectada: primer parámetro es zonaId
-      slotId = dinosaurio;
-      dinosaurio = zonaId;
-      zonaId = jugadorId;
+    // Compatibilidad con llamadas antiguas: detectar si se usó la firma antigua
+    if ((typeof jugadorId === 'string' || typeof jugadorId === 'number') && typeof zonaId === 'undefined') {
+      // Firma legacy: colocarDinosaurio(zonaId, dinosaurio, slotId)
+      zonaId = String(jugadorId);
+      dinosaurio = zonaId; // no-op guard
       jugadorId = this.estado.jugadorActual || 1;
+    }
+
+    // Validar jugadorId numérico y en rango
+    let jugador = parseInt(jugadorId, 10);
+    if (!Number.isInteger(jugador) || jugador < 1 || jugador > (this.estado.totalJugadores || 3)) {
+      console.warn(`[EstadoJuego] jugadorId inválido recibido (${jugadorId}). Usando jugadorActual ${this.estado.jugadorActual}`);
+      jugador = this.estado.jugadorActual || 1;
+    }
+
+    // Validar que el dado haya sido lanzado antes de permitir la colocación
+    try {
+      if (!this.estado.dado || !this.estado.dado.activo) {
+        console.warn('[EstadoJuego] Intento de colocar sin haber lanzado el dado');
+        if (typeof window !== 'undefined' && window.tableroJuego && typeof window.tableroJuego.mostrarMensaje === 'function') {
+          window.tableroJuego.mostrarMensaje('Debe lanzar el dado antes de colocar un dinosaurio', 'error');
+        }
+        return false;
+      }
+    } catch (e) {
+      console.warn('[EstadoJuego] Error comprobando estado del dado antes de colocar:', e);
+    }
+
+    // Validar que el jugador no haya colocado ya en este turno
+    if (this.estado.haColocadoEnEsteTurno) {
+      console.warn('[EstadoJuego] Jugador ya colocó en este turno');
+      if (typeof window !== 'undefined' && window.tableroJuego && typeof window.tableroJuego.mostrarMensaje === 'function') {
+        window.tableroJuego.mostrarMensaje('Solo puede colocar un dinosaurio por turno', 'error');
+      }
+      return false;
     }
 
     const tipo = dinosaurio.tipo ?? dinosaurio.type ?? 'desconocido';
     const imagen = dinosaurio.imagen ?? dinosaurio.image ?? this.obtenerImagenPorTipo(tipo);
-    const jugador = jugadorId || (this.estado.jugadorActual || 1);
 
-    const dinosaurioCompleto = {
-      ...dinosaurio,
+    const slotParsed = typeof slotId === 'string' ? parseInt(slotId, 10) : slotId;
+
+    const dinosaurioCompleto = Object.assign({}, dinosaurio, {
       id: dinosaurio.id ?? (`dino_${tipo}_${Date.now()}`),
       tipo: tipo,
       imagen: imagen,
-      slot: slotId,
+      slot: typeof slotParsed === 'number' ? slotParsed : slotId,
       turnoColocado: this.estado.turnoActual,
       jugadorColocado: jugador
-    };
+    });
 
     if (!this.estado.tableros) this.estado.tableros = {};
     if (!this.estado.tableros[jugador]) this.estado.tableros[jugador] = this.inicializarTableroVacio();
     if (!this.estado.tableros[jugador][zonaId]) this.estado.tableros[jugador][zonaId] = [];
 
+    // Insertar en el tablero específico del jugador objetivo
     this.estado.tableros[jugador][zonaId].push(dinosaurioCompleto);
+
+    // Marcar que se ha colocado en este turno
+    this.estado.haColocadoEnEsteTurno = true;
 
     try {
       const dinoDisponible = this.estado.dinosauriosDisponibles.find(d => d.id === dinosaurioCompleto.id);
@@ -220,9 +364,12 @@ class EstadoJuego {
 
     try {
       const mazoJugador = this.estado.mazos && this.estado.mazos[jugador];
-      if (mazoJugador) {
-        const dinoEnMazo = mazoJugador.find(d => d.id === dinosaurioCompleto.id || d.id == dinosaurioCompleto.id || d.tipo === dinosaurioCompleto.tipo);
+      if (Array.isArray(mazoJugador)) {
+        const dinoEnMazo = mazoJugador.find(d => d && (String(d.id) === String(dinosaurioCompleto.id) || d.tipo === dinosaurioCompleto.tipo || d.type === dinosaurioCompleto.tipo));
         if (dinoEnMazo) dinoEnMazo.disponible = false;
+      } else {
+        // No hubo mazo para el jugador objetivo: informar
+        console.warn(`[EstadoJuego] No se encontró mazo para jugador ${jugador} al marcar dinosaurio como no disponible`);
       }
     } catch (e) {
       console.warn('[EstadoJuego] No se pudo sincronizar mazo del jugador al colocar dinosaurio', e);
@@ -232,7 +379,23 @@ class EstadoJuego {
 
     this.guardarEstado();
 
-    console.log(`Dinosaurio colocado en ${zonaId} (jugador ${jugador}):`, dinosaurioCompleto);
+    // Logging adicional para depuración de mazos y estados
+    try {
+      console.log('[EstadoJuego] Estado de mazos luego de colocar dinosaurio:', JSON.parse(JSON.stringify(this.estado.mazos)));
+
+      // Verificar ids únicos entre mazos
+      const ids = [];
+      Object.values(this.estado.mazos || {}).forEach(mazo => {
+        (mazo || []).forEach(d => ids.push(String(d.id)));
+      });
+      const dup = ids.filter((id, idx) => ids.indexOf(id) !== idx);
+      if (dup.length) console.warn('[EstadoJuego] IDs duplicados detectados al colocar:', Array.from(new Set(dup)));
+    } catch (e) {
+      console.warn('[EstadoJuego] No se pudo loggear estado de mazos tras colocar:', e);
+    }
+
+    console.log(`[EstadoJuego] Dinosaurio colocado en zona='${zonaId}' (jugador ${jugador}):`, dinosaurioCompleto);
+    return true;
   }
 
   obtenerImagenPorTipo(tipo) {

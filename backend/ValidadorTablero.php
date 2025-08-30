@@ -34,6 +34,41 @@ class ValidadorTablero {
         object $estadoJuego
     ): array {
         try {
+            // NUEVA VALIDACIÓN: exigir que el dado haya sido lanzado antes de permitir colocar
+            if (isset($estadoJuego->diceState) && !isset($estadoJuego->dado)) {
+                $estadoJuego->dado = (object)[
+                    'activo' => $estadoJuego->diceState->active ?? false,
+                    'caraActual' => $estadoJuego->diceState->currentFace ?? null,
+                    'jugadorQueLanzo' => $estadoJuego->diceState->playerWhoRolled ?? null,
+                    'rondaActual' => $estadoJuego->diceState->round ?? ($estadoJuego->rondaActual ?? null)
+                ];
+            }
+
+            if (!isset($estadoJuego->dado) || !($estadoJuego->dado->activo ?? false)) {
+                return [
+                    'valid' => false,
+                    'reason' => 'Debe lanzar el dado antes de colocar un dinosaurio',
+                    'type' => 'dadoNoLanzado'
+                ];
+            }
+
+            // NUEVA VALIDACIÓN: impedir que el mismo jugador coloque más de un dinosaurio en el mismo turno
+            // Se acepta que el estado pueda usar nombres distintos; comprobamos varias posibles claves
+            $haColocado = $estadoJuego->haColocadoEnEsteTurno ?? ($estadoJuego->hasPlacedThisTurn ?? ($estadoJuego->placedThisTurn ?? false));
+            // Si la bandera existe y está activa y el jugador que intenta colocar coincide con el jugador actual o con el jugador que lanzó el dado, rechazamos
+            if ($haColocado) {
+                $jugadorActualEnEstado = $estadoJuego->jugadorActual ?? ($estadoJuego->currentPlayer ?? null);
+                $jugadorQueLanzo = $estadoJuego->dado->jugadorQueLanzo ?? null;
+
+                if ($jugadorActualEnEstado === null || $jugadorActualEnEstado == $jugadorId || $jugadorQueLanzo == $jugadorId) {
+                    return [
+                        'valid' => false,
+                        'reason' => 'Solo puede colocar un dinosaurio por turno',
+                        'type' => 'yaColocado'
+                    ];
+                }
+            }
+
             $validacionActiva = $this->validarRestriccionesActivas(
                 $zonaId,
                 $estadoJuego->tablero ?? [],
@@ -48,7 +83,7 @@ class ValidadorTablero {
 
             try {
                 $infoZona = $this->restriccionesPasivas->obtenerInfoZona($zonaId);
-                if ($infoZona && isset($infoZona['ordenamiento']) && $infoZona['ordenamiento'] === 'secuencial') {
+                if ($infoZona && isset($infoZona['ordenamiento']) && $infoZona['ordenamiento'] === 'secuencial' && !in_array($zonaId, ['bosque-semejanza', 'prado-diferencia'], true)) {
                     $resSeq = $this->validarPlacementSecuencial($dinosauriosEnZona, $slot);
                     if (isset($resSeq['valid']) && !$resSeq['valid']) {
                         return [
@@ -260,9 +295,23 @@ class ValidadorTablero {
                 return $this->restriccionesActivas->getAllZones();
             }
 
+            /**
+             * Filtra las zonas permitidas según el dado actual y el tablero recibido en el estado de juego.
+             * Convierte $tablero a array para evitar errores de tipo cuando proviene como stdClass.
+             * @param object $dadoState Estado del dado (caraActual, jugadorQueLanzo)
+             * @param object $estadoJuego Estado completo del juego (contiene el tablero)
+             * @return array Zonas permitidas después de aplicar las restricciones activas
+             */
+            $tablero = $estadoJuego->tablero ?? [];
+            if (is_object($tablero)) {
+                $tablero = (array) $tablero;
+            } elseif (!is_array($tablero)) {
+                $tablero = [];
+            }
+
             $permitidas = $this->restriccionesActivas->filterZonesByDice(
                 $dadoState->caraActual ?? null,
-                $estadoJuego->tablero ?? [],
+                $tablero,
                 $dadoState->jugadorQueLanzo ?? null
             );
 
