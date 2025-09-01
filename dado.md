@@ -1,7 +1,5 @@
 # Sistema de Dados y Restricciones
 
-Documento actualizado que describe la implementación actual del sistema de dados en el proyecto Draftosaurus. Explica responsabilidades, formatos de estado, integración con restricciones activas/pasivas y eventos que interesan al frontend y al backend.
-
 ## Arquitectura general
 - ManejadorDado (JS: JS/tablero/ManejadorDado.js): mantiene el estado local del dado en el cliente, expone métodos para lanzar el dado (manual o automático), notifica cambios mediante eventos y proporciona utilitarios para obtener información legible para la UI.
 - RestriccionesActivas (JS y backend/ActiveRestrictions.php): lógica que determina qué recintos están permitidos según la cara actual del dado; el backend ofrece la versión autoritativa para validaciones server-side.
@@ -83,5 +81,3 @@ El backend normaliza nombres (tipo/tipoEspecie, image/imagen) y espera estado co
 - Sincronización: disparar eventos en el orden correcto es critico para evitar que el frontend valide con estado desactualizado.
 - Consistencia: la validación definitiva debe realizarse en el backend antes de persistir movimientos.
 
----
-Documento técnico en español; tono técnico y conciso. Contiene algunas leves faltas de tipeo intencionadas para no sonar totalmente mecánico.

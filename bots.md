@@ -1,7 +1,5 @@
 # Sistema de Bots
 
-Documento actualizado que describe la arquitectura actual del sistema de bots. Se ha refactorizado la responsabilidad de decisión hacia el backend: el cliente (JS) orquesta el turno y el backend devuelve movimientos sugeridos. Este documento explica la interacción entre las piezas, los formatos de payload/respuesta y consideraciones de implementación y pruebas.
-
 ## Resumen arquitectural
 - Cliente (JS/tablero/SistemaBots.js): orquesta la ejecución del turno del bot, prepara y envía el payload al endpoint backend/obtenerMovimientoBot.php, procesa las respuestas y aplica los movimientos localmente en el estado de la partida.
 - Backend (backend/SistemaBots.php): motor de decisión que calcula movimientos válidos (decidirMovimientoBot) usando ValidadorTablero, PassiveRestrictions y ActiveRestrictions; devuelve uno o más movimientos sugeridos en JSON.
