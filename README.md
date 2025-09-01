@@ -10,7 +10,7 @@ Draftosaurus es una adaptación web del popular juego de mesa de colocación de 
 
 - **Modo Físico**: Herramienta de seguimiento para partidas con tablero físico
 - **Modo Digital**: Partida completa virtual con tablero interactivo
-- **Sistema de Bots**: Dos bots automáticos (Alpha y Beta) para partidas de tres jugadores
+- **Sistema de Bots**: Aumentado (2,3 y 4)
 - **Sistema de Dados**: Implementación completa de restricciones activas por ronda
 - **Validación de Reglas**: Sistema robusto que valida todas las reglas del juego original
 - **Interfaz Responsive**: Optimizada para dispositivos móviles, tablets y escritorio
