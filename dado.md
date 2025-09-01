@@ -1,378 +1,87 @@
 # Sistema de Dados y Restricciones
 
-## Arquitectura del Sistema
+Documento actualizado que describe la implementación actual del sistema de dados en el proyecto Draftosaurus. Explica responsabilidades, formatos de estado, integración con restricciones activas/pasivas y eventos que interesan al frontend y al backend.
 
-El sistema de dados está compuesto por tres componentes principales:
-- **ManejadorDado**: Controla el estado y lógica del dado
-- **RestriccionesActivas**: Maneja restricciones temporales del dado
-- **RestriccionesPasivas**: Maneja reglas permanentes de cada zona
+## Arquitectura general
+- ManejadorDado (JS: JS/tablero/ManejadorDado.js): mantiene el estado local del dado en el cliente, expone métodos para lanzar el dado (manual o automático), notifica cambios mediante eventos y proporciona utilitarios para obtener información legible para la UI.
+- RestriccionesActivas (JS y backend/ActiveRestrictions.php): lógica que determina qué recintos están permitidos según la cara actual del dado; el backend ofrece la versión autoritativa para validaciones server-side.
+- RestriccionesPasivas (JS y backend/PassiveRestrictions.php): reglas permanentes por zona (capacidad, tipo de especie, ordenamiento). Implementadas en JS para pre-checks de UI y en backend para validación final.
 
-## ManejadorDado
+Nota: el cliente muestra y anima el dado; las validaciones definitivas se delegan al backend cuando se ejecutan movimientos via endpoints.
 
-### Inicialización
-```javascript
-class ManejadorDado {
-  constructor() {
-    this.estadoActual = null;
-    this.rondaActual = 1;
-    this.numeroJugadores = 2;
-    this.areasTablero = this.definirAreasTablero();
-    this.reglasDado = this.definirReglasDado();
-    this.historialDados = [];
-  }
-}
-```
+## ManejadorDado — responsabilidades y API (resumen)
+- Mantiene: estadoActual { rondaActual, caraActual, jugadorQueLanzo, descripcionRestriccion, activo, fechaLanzamiento } y historialDados.
+- Métodos principales:
+  - lanzarDadoParaRonda(numeroRonda, numeroJugadores = 2) — ejecuta la lógica de determinación de quién lanza, selecciona cara (aleatoria o semilla en tests), actualiza estadoActual y devuelve el objeto de estado.
+  - determinarJugadorQueLanza(numeroRonda, numeroJugadores) — rotación simple ( (ronda-1) % jugadores + 1 ).
+  - lanzarDadoAleatorio() — devuelve una de las caras: 'bosque','llanura','banos','cafeteria','vacio'.
+  - obtenerInfoRestriccionActual() — traduce la cara actual a metadatos legibles (nombre, descripcion, recintos permitidos).
+  - notificarCambioEstado() — dispara CustomEvent 'dadoCambiado' con detail { estado, info }.
 
-### Definición de Áreas del Tablero
-```javascript
-definirAreasTablero() {
-  return {
-    bosque: ['trio-frondoso', 'bosque-semejanza', 'rey-selva'],
-    llanura: ['prado-diferencia', 'isla-solitaria', 'pradera-amor'],
-    derechaDeLRio: ['rey-selva', 'isla-solitaria', 'pradera-amor', 'dinos-rio'],
-    izquierdaDelRio: ['trio-frondoso', 'bosque-semejanza', 'prado-diferencia']
-  };
-}
-```
+Observaciones:
+- El manejo de imágenes del dado y fallback (dado.png) se realiza en el cliente; hay un mapeo de nombre de cara a recursos en Recusos/img/dado/.
+- Para pruebas es posible forzar una semilla o cara fija.
 
-### Caras del Dado
-El dado tiene 5 caras con diferentes restricciones:
+## Restricciones Activas — comportamiento
+- Propósito: limitar recintos permitidos por resultado del dado, con exenciones para el jugador que lanzó.
+- Tipos de caras:
+  - Área (bosque/llanura): permite recintos de una zona específica.
+  - Lado del río (cafeteria/banos): permite recintos a izquierda o derecha del río.
+  - Dinámico (vacio/recinto vacio): calcula recintos según estado actual (p. ej. recintos vacíos).
+- Reglas:
+  - Si jugadorId === jugadorQueLanzo → exento: devuelve todos los recintos.
+  - Filtrado en dos pasos: primero por caraDelDado, luego por dinámica interna si aplica.
+- Implementación: funciones en JS usadas para UI y la implementación en backend/ActiveRestrictions.php usada para validación server-side.
 
-#### Bosque (🌲)
-- **Restricción**: Solo recintos del área del Bosque
-- **Zonas permitidas**: trio-frondoso, bosque-semejanza, rey-selva
-- **Color**: #2d5a27
+## Restricciones Pasivas — resumen de reglas por zona
+- Cada zona define: capacidad (slots), tipoEspecie (misma, diferente, cualquiera), ordenamiento (secuencial o libre) y descripcion.
+- Zonas principales (resumen):
+  - bosque-semejanza: capacidad 6, mismaEspecie, secuencial
+  - prado-diferencia: capacidad 6, especiesDiferentes, secuencial
+  - pradera-amor: capacidad 6, cualquiera, libre
+  - trio-frondoso: capacidad 3, cualquiera, libre
+  - rey-selva: capacidad 1, cualquiera, libre
+  - isla-solitaria: capacidad 1, cualquiera, libre
+  - dinos-rio: capacidad 7, cualquiera, secuencial (comodín)
+- Validaciones típicas:
+  - validarCapacidad: comprobar slots libres
+  - validarMismaEspecie / validarEspeciesDiferentes
+  - validarOrdenSecuencial: exigir colocar en slot = longitudActual + 1
 
-#### Llanura (🌾)
-- **Restricción**: Solo recintos del área de la Llanura
-- **Zonas permitidas**: prado-diferencia, isla-solitaria, pradera-amor
-- **Color**: #8b7355
+Nota: las funciones están disponibles en JS (para feedback inmediato) y en PHP para la regla final.
 
-#### Baños (🚻)
-- **Restricción**: Solo recintos a la derecha del Río
-- **Zonas permitidas**: rey-selva, isla-solitaria, pradera-amor, dinos-rio
-- **Color**: #4a90e2
+## Integración y orden de validación
+1. Restricciones Activas (dado) — se evalúan primero para filtrar recintos permitidos.
+2. Restricciones Pasivas (zona) — se aplican después para comprobar capacidad, especie y orden.
+3. Ambas deben pasar para aceptar un movimiento.
 
-#### Cafetería (☕)
-- **Restricción**: Solo recintos a la izquierda del Río
-- **Zonas permitidas**: trio-frondoso, bosque-semejanza, prado-diferencia
-- **Color**: #d4a574
+En el cliente existe ValidadorRestricciones.js que replica este flujo antes de llamar al endpoint backend/validarMovimiento.php.
 
-#### Recinto Vacío (🏗️)
-- **Restricción**: Solo recintos que estén completamente vacíos
-- **Zonas permitidas**: Dinámicas según estado del juego
-- **Color**: #95a5a6
+## Eventos y contratos con la UI
+- Evento: 'dadoCambiado' — detail: { estado: estadoActual, info: obtenerInfoRestriccionActual() }
+- El UI escucha este evento para actualizar imagen, texto descriptivo y habilitar/deshabilitar zonas.
+- Recomendación: el frontend debe mostrar claramente si el jugador que lanza está exento.
 
-### Mecánica de Lanzamiento
+## Endpoints relevantes
+- backend/validarMovimiento.php — valida movimientos combinando ValidadorTablero y ActiveRestrictions/PassiveRestrictions server-side.
+- backend/obtenerMovimientoBot.php — consulta que puede necesitar la cara del dado y sus restricciones.
 
-#### Determinación del Jugador
-```javascript
-determinarJugadorQueLanza(numeroRonda, numeroJugadores) {
-  return ((numeroRonda - 1) % numeroJugadores) + 1;
-}
-```
-El jugador que lanza rota cada ronda: Ronda 1 → Jugador 1, Ronda 2 → Jugador 2, etc.
+Formato de estado enviado al backend (ejemplo resumido):
+- ronda: int
+- cara: 'bosque'|'llanura'|'banos'|'cafeteria'|'vacio'
+- jugadorQueLanzo: int
+- tablero: objeto con arrays por zona
 
-#### Lanzamiento Aleatorio
-```javascript
-lanzarDadoAleatorio() {
-  const caras = ['bosque', 'llanura', 'banos', 'cafeteria', 'vacio'];
-  return caras[Math.floor(Math.random() * caras.length)];
-}
-```
+El backend normaliza nombres (tipo/tipoEspecie, image/imagen) y espera estado coherente.
 
-#### Estado del Dado
-```javascript
-this.estadoActual = {
-  rondaActual: numeroRonda,
-  caraActual: caraDelDado,
-  jugadorQueLanzo: jugadorQueLanza,
-  descripcionRestriccion: this.reglasDado[caraDelDado].descripcion,
-  activo: true,
-  fechaLanzamiento: new Date()
-};
-```
+## Historial y estadísticas
+- ManejadorDado mantiene historialDados[] con entradas { ronda, cara, jugador, fecha }.
+- Métodos de utilidad: obtenerEstadisticas() que devuelve conteo de caras y total de lanzamientos.
 
-### Sistema de Exenciones
-El jugador que lanza el dado está exento de sus restricciones:
-```javascript
-jugadorEstaExento(jugadorId) {
-  return this.estadoActual && this.estadoActual.jugadorQueLanzo === jugadorId;
-}
-```
+## Limitaciones y consideraciones
+- El sistema asume que el estado global está disponible; si falta información las funciones devuelven errores controlados o null.
+- Sincronización: disparar eventos en el orden correcto es critico para evitar que el frontend valide con estado desactualizado.
+- Consistencia: la validación definitiva debe realizarse en el backend antes de persistir movimientos.
 
-## RestriccionesActivas
-
-### Propósito
-Maneja las restricciones temporales que se aplican durante una ronda específica basadas en el resultado del dado.
-
-### Mapeo de Áreas
-```javascript
-definirMapeoAreas() {
-  return {
-    bosque: ['bosque-semejanza', 'rey-selva', 'trio-frondoso'],
-    llanura: ['prado-diferencia', 'pradera-amor', 'isla-solitaria']
-  };
-}
-```
-
-### Mapeo de Lados del Río
-```javascript
-definirMapeoLados() {
-  return {
-    izquierda: ['bosque-semejanza', 'prado-diferencia', 'rey-selva'],
-    derecha: ['pradera-amor', 'trio-frondoso', 'isla-solitaria']
-  };
-}
-```
-
-### Filtrado de Recintos
-```javascript
-filtrarRecintosPorDado(caraActual, estadoTablero, jugadorId, jugadorQueLanzo) {
-  if (jugadorId === jugadorQueLanzo) {
-    return this.obtenerTodosLosRecintos();
-  }
-  
-  const caraDado = this.carasDado[caraActual];
-  
-  switch (caraDado.tipo) {
-    case 'area':
-    case 'lado':
-      return caraDado.recintos;
-    case 'dinamico':
-      return this.filtrarRecintosDinamicos(caraActual, estadoTablero);
-  }
-}
-```
-
-### Restricciones Dinámicas
-Para la cara "Recinto Vacío":
-```javascript
-filtrarRecintosVacios(recintos, estadoTablero) {
-  return recintos.filter(recinto => {
-    const dinosauriosEnRecinto = estadoTablero[recinto] || [];
-    return dinosauriosEnRecinto.length === 0;
-  });
-}
-```
-
-### Zona Comodín
-El recinto "dinos-rio" siempre está disponible independientemente de las restricciones del dado.
-
-## RestriccionesPasivas
-
-### Propósito
-Define las reglas permanentes de cada zona del tablero que siempre se aplican.
-
-### Definición de Reglas por Zona
-
-#### Bosque de la Semejanza
-```javascript
-'bosque-semejanza': {
-  capacidad: 6,
-  tipoEspecie: 'mismaEspecie',
-  ordenamiento: 'secuencial',
-  descripcion: 'Todos los dinosaurios deben ser del mismo tipo, colocados de izquierda a derecha'
-}
-```
-
-#### Prado de la Diferencia
-```javascript
-'prado-diferencia': {
-  capacidad: 6,
-  tipoEspecie: 'especiesDiferentes',
-  ordenamiento: 'secuencial',
-  descripcion: 'Todas las especies deben ser diferentes, colocados de izquierda a derecha'
-}
-```
-
-#### Pradera del Amor
-```javascript
-'pradera-amor': {
-  capacidad: 6,
-  tipoEspecie: 'cualquiera',
-  ordenamiento: 'libre',
-  descripcion: 'Cualquier especie, cualquier slot vacío'
-}
-```
-
-#### Trío Frondoso
-```javascript
-'trio-frondoso': {
-  capacidad: 3,
-  tipoEspecie: 'cualquiera',
-  ordenamiento: 'libre',
-  descripcion: 'Máximo 3 dinosaurios, cualquier especie'
-}
-```
-
-#### Rey de la Selva / Isla Solitaria
-```javascript
-'rey-selva': {
-  capacidad: 1,
-  tipoEspecie: 'cualquiera',
-  ordenamiento: 'libre',
-  descripcion: 'Solo un dinosaurio'
-}
-```
-
-#### Dinosaurios en el Río
-```javascript
-'dinos-rio': {
-  capacidad: 7,
-  tipoEspecie: 'cualquiera',
-  ordenamiento: 'secuencial',
-  descripcion: 'Comodín - siempre disponible'
-}
-```
-
-### Sistema de Validación
-
-#### Validación de Capacidad
-```javascript
-validarCapacidad(dinosauriosEnZona, capacidadMaxima) {
-  if (dinosauriosEnZona.length >= capacidadMaxima) {
-    return { valido: false, razon: 'Recinto lleno' };
-  }
-  return { valido: true };
-}
-```
-
-#### Validación de Especies
-
-##### Misma Especie
-```javascript
-validarMismaEspecie(dinosauriosEnZona, dinosaurio) {
-  if (dinosauriosEnZona.length === 0) {
-    return { valido: true };
-  }
-  
-  const especieExistente = dinosauriosEnZona[0].tipo;
-  if (dinosaurio.tipo !== especieExistente) {
-    return { 
-      valido: false, 
-      razon: `Solo dinosaurios ${especieExistente} permitidos en este recinto` 
-    };
-  }
-  
-  return { valido: true };
-}
-```
-
-##### Especies Diferentes
-```javascript
-validarEspeciesDiferentes(dinosauriosEnZona, dinosaurio) {
-  const especiesExistentes = dinosauriosEnZona.map(d => d.tipo);
-  
-  if (especiesExistentes.includes(dinosaurio.tipo)) {
-    return { 
-      valido: false, 
-      razon: 'Solo especies diferentes permitidas en este recinto' 
-    };
-  }
-  
-  return { valido: true };
-}
-```
-
-#### Validación de Ordenamiento
-
-##### Ordenamiento Secuencial
-```javascript
-validarOrdenSecuencial(dinosauriosEnZona, slot) {
-  const slotNumero = parseInt(slot);
-  const slotEsperado = dinosauriosEnZona.length + 1;
-  
-  if (slotNumero !== slotEsperado) {
-    return { 
-      valido: false, 
-      razon: `Debe colocar en el slot ${slotEsperado} (de izquierda a derecha)` 
-    };
-  }
-  
-  return { valido: true };
-}
-```
-
-## Integración de Sistemas
-
-### ValidadorRestricciones
-Actúa como punto de entrada que coordina ambos tipos de restricciones:
-
-```javascript
-validarColocacion(zonaId, dinosauriosEnZona, dinosaurio, slot, jugadorId, estadoJuego) {
-  const validacionActiva = this.validarRestriccionesActivas(
-    zonaId, estadoJuego.tablero, jugadorId, estadoJuego
-  );
-  
-  if (!validacionActiva.valido) {
-    return validacionActiva;
-  }
-  const validacionPasiva = this.restriccionesPasivas.validarColocacion(
-    zonaId, dinosauriosEnZona, dinosaurio, slot
-  );
-  
-  return validacionPasiva;
-}
-```
-
-### Orden de Aplicación
-1. **Restricciones Activas**: Se evalúan primero (dado)
-2. **Restricciones Pasivas**: Se evalúan después (zona)
-3. **Ambas deben ser válidas** para permitir el movimiento
-
-### Sistema de Eventos
-```javascript
-notificarCambioEstado() {
-  const evento = new CustomEvent('dadoCambiado', {
-    detail: {
-      estado: this.estadoActual,
-      info: this.obtenerInfoRestriccionActual()
-    }
-  });
-  window.dispatchEvent(evento);
-}
-```
-
-## Historial y Estadísticas
-
-### Registro de Lanzamientos
-```javascript
-this.historialDados.push({
-  ronda: numeroRonda,
-  cara: caraDelDado,
-  jugador: jugadorQueLanza,
-  fecha: new Date()
-});
-```
-
-### Estadísticas
-```javascript
-obtenerEstadisticas() {
-  const conteoCaras = {};
-  this.historialDados.forEach(entrada => {
-    conteoCaras[entrada.cara] = (conteoCaras[entrada.cara] || 0) + 1;
-  });
-  
-  return {
-    totalLanzamientos: this.historialDados.length,
-    conteoCaras,
-    rondaActual: this.rondaActual,
-    estadoActivo: this.estadoActual?.activo || false
-  };
-}
-```
-
-## Limitaciones y Consideraciones
-
-### Estado del Juego
-- Requiere acceso al estado global del juego para restricciones dinámicas
-- Vulnerable a errores si el estado no está disponible
-
-### Sincronización
-- Los eventos deben dispararse en el orden correcto
-- La finalización de ronda debe coordinarse con el avance de turnos
-
-### Validación
-- El sistema asume que los datos de entrada son válidos
-- No implementa validación exhaustiva de tipos de datos
+---
+Documento técnico en español; tono técnico y conciso. Contiene algunas leves faltas de tipeo intencionadas para no sonar totalmente mecánico.

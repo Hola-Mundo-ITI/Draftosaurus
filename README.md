@@ -71,6 +71,29 @@ Assets del juego:
 - `/svg/` - Gráficos vectoriales del tablero
 - `reglasDraftosaurus.pdf` - Documentación oficial del juego
 
+## Backend (PHP) — Clases y endpoints principales
+
+La carpeta `/backend/` contiene la lógica del servidor, validadores y endpoints usados por el frontend.
+
+- `backend/ActiveRestrictions.php` — Clase que expone las restricciones activas (caras del dado) y genera mensajes legibles para el cliente.
+- `backend/PassiveRestrictions.php` — Reglas pasivas por zona (capacidad, especie permitida, ordenamiento). Valida colocaciones y calcula slots válidos.
+- `backend/ScoreCalculator.php` — Calcula el puntaje final por jugador, desglosando por zona y bonificaciones.
+- `backend/ValidadorTablero.php` — Orquesta reglas pasivas y activas para validar movimientos; devuelve estado y motivos, y sugiere nextSlot cuando aplica.
+- `backend/SistemaBots.php` — Generador de movimientos automáticos; configurable para tests y niveles de dificultad.
+
+Endpoints / wrappers:
+- `backend/validarMovimiento.php` — Recibe payloads de movimiento, invoca ValidadorTablero y devuelve JSON con resultado.
+- `backend/obtenerMovimientoBot.php` — Devuelve una sugerencia de movimiento calculada por SistemaBots.
+- `backend/calcularPuntuacion.php` — Usa ScoreCalculator para devolver informe de puntuación.
+
+Logs y errores:
+- `backend/php_errors.log` — Errores PHP generales
+- `backend/validarMovimiento_errors.log` — Errores específicos del endpoint de validación
+
+Notas:
+- Las clases backend son puramente lógicas; la persistencia de estado se maneja en capas superiores o en el frontend según el modo de juego.
+- Los endpoints normalizan entrada JSON y devuelven respuestas con estructura predecible ({ valid: bool, reason: string, ... }).
+
 ## Modos de Juego
 
 ### Modo Digital
@@ -178,6 +201,7 @@ Accesible mediante `window.draftosaurusDebug` en la consola del navegador:
 
 ## Documentación Técnica
 
+- `clases.md` - Resumen de clases backend y su responsabilidad (ActiveRestrictions, PassiveRestrictions, ScoreCalculator, ValidadorTablero, SistemaBots)
 - `bots.md` - Documentación completa del sistema de bots
 - `dado.md` - Documentación del sistema de dados y restricciones
 - `INSTRUCCIONES_JUEGO.md` - Manual de usuario completo

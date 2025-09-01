@@ -1,6 +1,3 @@
-
-
-
 #contenido {
   max-width: 900px;
   width: 100%;
@@ -72,5 +69,67 @@ button[type="submit"]:hover {
   width: 100%;
   bottom: 0;
   left: 0;
-  z-index: 99;
+  z-index: 1050;
 }
+
+/* Estilos adicionales que complementan Bootstrap para fisico.php */
+.tracking-section {
+  max-width: 980px;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.95);
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+/* Ajustes de etiquetas e inputs numéricos para mejor legibilidad */
+.form-label {
+  font-weight: 600;
+  color: #2f2f2f;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: textfield;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield;
+}
+
+/* Botones con la paleta del proyecto */
+.btn-primary {
+  background-color: #3b351f;
+  border-color: #3b351f;
+  color: #fceabb;
+}
+.btn-primary:hover, .btn-primary:focus {
+  background-color: #5c3a21;
+  border-color: #5c3a21;
+  color: #fff;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: #fff;
+}
+
+/* Resultado/alert */
+#resultado-form {
+  word-break: break-word;
+}
+
+/* Mejor separación en mobile */
+@media (max-width: 767px) {
+  .tracking-section { padding: 18px; }
+  .col-12.col-md-6, .col-12.col-md-4 { flex: 0 0 100%; max-width: 100%; }
+}
+
+/* Pequeños refinamientos visuales */
+.form-text { color: #6b6b6b; }
+
+.dinosaurio-disponible { cursor: pointer; }
