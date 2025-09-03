@@ -247,8 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
       playerId: playerId,
       allPlayerBoards: { [playerId]: fullBoard }
     };
-
-    // Modo debug opcional controlado por query param ?debug=1
+    
     const params = new URLSearchParams(window.location.search);
     const debugMode = params.get('debug') === '1';
     const endpoint = 'backend/calcularPuntuacion.php' + (debugMode ? '?debug=1' : '');

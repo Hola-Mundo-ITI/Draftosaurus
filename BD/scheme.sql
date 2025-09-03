@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 
--- Tabla para almacenar estados guardados de partidas por usuario (nombres de columnas en español)
+-- Tabla para almacenar estados guardados de partidas por usuario
 CREATE TABLE IF NOT EXISTS `partidas_guardadas` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `usuario_id` INT UNSIGNED NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `partidas_guardadas` (
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 
--- Tabla canonical de roles (nombres y columnas en español)
+-- Tabla canonical de roles
 CREATE TABLE IF NOT EXISTS `roles` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `clave` VARCHAR(50) NOT NULL UNIQUE,
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 
--- Tabla de asignación many-to-many entre usuarios y roles (nombres en español)
+-- Tabla de asignación many-to-many entre usuarios y roles 
 CREATE TABLE IF NOT EXISTS `roles_usuarios` (
   `usuario_id` INT UNSIGNED NOT NULL,
   `rol_id` INT UNSIGNED NOT NULL,
