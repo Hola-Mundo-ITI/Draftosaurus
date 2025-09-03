@@ -1,7 +1,6 @@
-
-
 (function () {
-  'use strict';
+  'use strict';
+
   const CONFIG = {
     menuToggleId: 'menuToggle',
     menuId: 'mainMenu',
@@ -17,14 +16,20 @@
   const FOCUSABLE_SELECTORS = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
 
   function init() {
-    try {
-      menuToggle = document.getElementById(CONFIG.menuToggleId)
-        || document.querySelector(`[aria-controls="${CONFIG.menuId}"]`)
+    try {
+
+      menuToggle = document.getElementById(CONFIG.menuToggleId)
+
+        || document.querySelector(`[aria-controls="${CONFIG.menuId}"]`)
+
         || document.querySelector('.menu-toggle')
         || document.querySelector('.boton-menu')
-        || document.querySelector('.menu-icon');
-      menuNode = document.getElementById(CONFIG.menuId) || document.querySelector('.offcanvas-menu') || document.querySelector('.navegacion-lateral') || document.querySelector('.menu-lateral') || document.querySelector('aside[role="navigation"]');
-      overlayNode = document.getElementById(CONFIG.overlayId) || document.querySelector('.nav-overlay') || document.querySelector('.overlay');
+        || document.querySelector('.menu-icon');
+
+      menuNode = document.getElementById(CONFIG.menuId) || document.querySelector('.offcanvas-menu') || document.querySelector('.navegacion-lateral') || document.querySelector('.menu-lateral') || document.querySelector('aside[role="navigation"]');
+
+      overlayNode = document.getElementById(CONFIG.overlayId) || document.querySelector('.nav-overlay') || document.querySelector('.overlay');
+
       mainContent = document.getElementById(CONFIG.mainContentId) || document.getElementById('contenido') || document.querySelector('.main-content') || document.querySelector('main[role="main"]');
 
       if (!menuToggle || !menuNode || !overlayNode) {
@@ -32,11 +37,13 @@
         return;
       }
 
-      menuLinks = Array.from(menuNode.querySelectorAll(CONFIG.menuListSelector + ' a'));
+      menuLinks = Array.from(menuNode.querySelectorAll(CONFIG.menuListSelector + ' a'));
+
       menuToggle.setAttribute('aria-expanded', 'false');
       menuToggle.setAttribute('aria-controls', menuNode.id || '');
       menuNode.setAttribute('aria-hidden', 'true');
-      menuNode.setAttribute('role', 'navigation');
+      menuNode.setAttribute('role', 'navigation');
+
       menuToggle.addEventListener('click', onToggleClick);
       overlayNode.addEventListener('click', closeMenuIfOpen);
       document.addEventListener('keydown', onKeyDown);
@@ -51,13 +58,34 @@
             console.error('[navigation.js] Error al manejar click en enlace del menú', e);
           }
         });
-      });
+      });
+
       menuNode.addEventListener('keydown', trapFocus);
 
       if (!menuToggle.hasAttribute('aria-label')) menuToggle.setAttribute('aria-label', 'Abrir menú de navegación');
       menuToggle.textContent = ICON.closed;
 
       console.info('[navigation.js] Inicialización completada. Elementos encontrados:', { menuToggle, menuNode, overlayNode, mainContent });
+
+      // Añadir manejador para el botón de Cerrar sesión si existe
+      try {
+        const btnCerrarSesion = document.getElementById('btnCerrarSesion');
+        if (btnCerrarSesion && !btnCerrarSesion.dataset._handler) {
+          btnCerrarSesion.addEventListener('click', (e) => {
+            try {
+              e.preventDefault();
+              cerrarSesion();
+            } catch (err) {
+              console.error('[navigation.js] Error en el handler de btnCerrarSesion:', err);
+            }
+          });
+          // marcar para evitar reasignaciones
+          btnCerrarSesion.dataset._handler = '1';
+        }
+      } catch (errBtn) {
+        console.warn('[navigation.js] No se pudo configurar botón Cerrar sesión:', errBtn);
+      }
+
     } catch (err) {
       console.error('[navigation.js] Error durante la inicialización:', err);
     }
@@ -131,6 +159,37 @@
       }
     } catch (err) {
       console.error('[navigation.js] Error en trapFocus:', err);
+    }
+  }
+
+  // Función para cerrar sesión haciendo petición al backend
+  async function cerrarSesion() {
+    try {
+      const cerrarUrl = new URL('backend/cerrarSesion.php', window.location.href).toString();
+
+      const resp = await fetch(cerrarUrl, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Accept': 'application/json' }
+      });
+
+      const contentType = resp.headers.get('content-type') || '';
+      let json = null;
+      if (contentType.includes('application/json')) {
+        try { json = await resp.json(); } catch (e) { /* ignore parse errors */ }
+      }
+
+      if (resp.ok && json && (json.success === true || json.success === 'true')) {
+        // Redirigir a la página de login para evitar que el usuario vea contenido autenticado
+        window.location.href = 'logear.php';
+        return;
+      }
+
+      console.error('[navigation.js] Respuesta inválida al cerrar sesión:', json);
+      alert('No se pudo cerrar sesión. Por favor intenta nuevamente.');
+    } catch (err) {
+      console.error('[navigation.js] Error de red al cerrar sesión:', err);
+      alert('Error de conexión al cerrar sesión. Reintenta.');
     }
   }
 

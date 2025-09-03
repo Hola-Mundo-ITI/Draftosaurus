@@ -1,135 +1,218 @@
-#contenido {
-  max-width: 900px;
-  width: 100%;
-  padding: 100px 20px 60px;
-  text-align: center;
-  transition: transform 0.3s ease;
+/* Reset y configuración base */
+* {
+  box-sizing: border-box;
 }
 
-#contenido.desplazado {
-  transform: translateX(220px);
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-
-.form-grid {
-  display: flex;
-  justify-content: center;
-  gap: 60px;
-  margin-bottom: 30px;
-  flex-wrap: wrap;
-}
-
-.columna {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  min-width: 250px;
-}
-
-
-input[type="text"] {
-  padding: 10px;
-  border-radius: 5px;
-  border: 2px solid #ccc;
-  outline: none;
-  transition: border-color 0.3s;
-}
-
-input[type="text"]:focus {
-  border-color: #00cc66;
-}
-
-
-button[type="submit"] {
-  padding: 12px 30px;
-  background-color: #3b351f;
-  color: #fceabb;
-  font-size: 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-button[type="submit"]:hover {
-  background-color: #5c3a21;
-}
-
-
-.footer-prehistorico {
-  background-color: #3b351f;
-  color: #fceabb;
-  text-align: center;
-  padding: 15px 0;
-  font-family: 'Papyrus', fantasy;
-  font-size: 1rem;
+/* Título principal */
+.tracking-section h1 {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #2C1810;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  margin-bottom: 40px;
   letter-spacing: 1px;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
-  position: fixed;
-  width: 100%;
-  bottom: 0;
-  left: 0;
-  z-index: 1050;
+  text-align: center;
 }
 
-/* Estilos adicionales que complementan Bootstrap para fisico.php */
+/* Contenedor principal del formulario */
 .tracking-section {
-  max-width: 980px;
+  max-width: 800px;
   margin: 0 auto;
-  background: rgba(255,255,255,0.95);
-  border-radius: 10px;
-  padding: 24px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  background: transparent;
+  padding: 20px;
 }
 
-/* Ajustes de etiquetas e inputs numéricos para mejor legibilidad */
+/* Layout del formulario - Grid de 2 columnas */
+#form-recintos.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* Estilo de los inputs - Como botones redondeados */
+.form-control {
+  width: 150px;
+  border: 3px solid #8B6914;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #2C1810;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 
+    inset 0 2px 0 rgba(255,255,255,0.3),
+    0 4px 8px rgba(0,0,0,0.2),
+    0 2px 4px rgba(0,0,0,0.1);
+  outline: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.form-control:hover {
+  background: linear-gradient(135deg, #F8E8AA 0%, #EAD59D 50%, #D8C27E 100%);
+  transform: translateY(-2px);
+  box-shadow: 
+    inset 0 2px 0 rgba(255,255,255,0.4),
+    0 6px 12px rgba(0,0,0,0.25),
+    0 3px 6px rgba(0,0,0,0.15);
+}
+
+.form-control:focus {
+  background: linear-gradient(135deg, #F8E8AA 0%, #EAD59D 50%, #D8C27E 100%);
+  border-color: #6B4E0A;
+  transform: translateY(-2px);
+  box-shadow: 
+    inset 0 2px 0 rgba(255,255,255,0.4),
+    0 6px 12px rgba(0,0,0,0.25),
+    0 3px 6px rgba(0,0,0,0.15),
+    0 0 0 3px rgba(139, 105, 20, 0.3);
+}
+
+/* Labels ocultos pero accesibles */
 .form-label {
-  font-weight: 600;
-  color: #2f2f2f;
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
+/* Placeholders como texto en los inputs */
+input[type="number"]::-webkit-input-placeholder {
+  color: #2C1810;
+  font-weight: bold;
+  opacity: 1;
+}
+
+input[type="number"]::-moz-placeholder {
+  color: #2C1810;
+  font-weight: bold;
+  opacity: 1;
+}
+
+input[type="number"]:-ms-input-placeholder {
+  color: #2C1810;
+  font-weight: bold;
+  opacity: 1;
+}
+
+input[type="number"]::placeholder {
+  color: #2C1810;
+  font-weight: bold;
+  opacity: 1;
+}
+
+/* Ocultar spinners de los inputs number */
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
-  appearance: textfield;
   margin: 0;
 }
 
 input[type="number"] {
-  -moz-appearance: textfield; /* Firefox */
+  -moz-appearance: textfield;
   appearance: textfield;
 }
 
-/* Botones con la paleta del proyecto */
+/* Contenedor de botones - span completo */
+.col-12.d-flex {
+  grid-column: 1 / -1;
+  justify-content: center;
+  margin-top: 30px;
+  gap: 15px;
+}
+
 .btn-primary {
-  background-color: #3b351f;
-  border-color: #3b351f;
-  color: #fceabb;
-}
-.btn-primary:hover, .btn-primary:focus {
-  background-color: #5c3a21;
-  border-color: #5c3a21;
-  color: #fff;
+  width: 280px;
+  height: 55px;
+  background: transparent;
+  border: none;
+  border-radius: 27px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #F4E4A6;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: none;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
+.btn-primary:hover {
+  background: transparent;
+  transform: translateY(-3px);
+  box-shadow: 
+    inset 0 2px 0 rgba(255,255,255,0.15),
+    0 6px 12px rgba(0,0,0,0.35),
+    0 3px 6px rgba(0,0,0,0.25);
+  color: #F8E8AA;
+}
+
+.btn-primary:focus {
+  outline: none;
+  box-shadow: 
+    inset 0 2px 0 rgba(255,255,255,0.15),
+    0 6px 12px rgba(0,0,0,0.35),
+    0 3px 6px rgba(0,0,0,0.25),
+    0 0 0 3px rgba(244, 228, 166, 0.4);
+}
+
+/* Botón secundario */
 .btn-secondary {
-  background-color: #6c757d;
-  border-color: #6c757d;
-  color: #fff;
+  width: 150px;
+  background: transparent;
+  border: 2px solid #4A3C2A;
+  border-radius: 22px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #F4E4A6;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-/* Resultado/alert */
+.btn-secondary:hover {
+  background: transparent;
+  transform: translateY(-2px);
+}
+
+
+/* Evitar efectos de hover/active que puedan dibujar fondos o sombras */
+#btn-submit:hover,
+#btn-reset:hover,
+#btn-submit:active,
+#btn-reset:active {
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Ocultar elementos que no necesitamos */
+.form-text,
+#total-dinos-display,
+input[type="hidden"] {
+  display: none;
+}
+
+/* Resultado */
 #resultado-form {
-  word-break: break-word;
+  background: linear-gradient(135deg, #F4E4A6 0%, #E6D199 100%);
+  border: 3px solid #8B6914;
+  border-radius: 15px;
+  padding: 20px;
+  margin: 30px auto;
+  max-width: 600px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  color: #2C1810;
+  font-weight: bold;
 }
-
-/* Mejor separación en mobile */
-@media (max-width: 767px) {
-  .tracking-section { padding: 18px; }
-  .col-12.col-md-6, .col-12.col-md-4 { flex: 0 0 100%; max-width: 100%; }
-}
-
-/* Pequeños refinamientos visuales */
-.form-text { color: #6b6b6b; }
-
-.dinosaurio-disponible { cursor: pointer; }

@@ -1,8 +1,15 @@
 <?php
+declare(strict_types=1);
+/*
+  Protección del endpoint calcularPuntuacion.php: obliga a sesión válida antes de calcular puntuación.
+*/
+require_once __DIR__ . '/session.php';
+if (function_exists('iniciarSesionSegura')) iniciarSesionSegura();
+if (function_exists('exigirLogin')) exigirLogin();
 
 /*
  * Script calcularPuntuacion.php:
- * Endpoint ligero que delega en ScoreCalculator para calcular y devolver
+ * Endpoint que delega en ScoreCalculator para calcular y devolver
  * el informe de puntuación. Mantiene la compatibilidad con la API que
  * espera un POST con los datos necesarios.
  */
@@ -50,7 +57,7 @@ function devolverJsonYSalir(array $response) {
     exit;
 }
 
-// Capturar fallos fatales y asegurar respuesta JSON
+// Capturar fallos y asegurar respuesta JSON
 register_shutdown_function(function() {
     $err = error_get_last();
     if ($err && in_array($err['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
@@ -90,7 +97,6 @@ try {
     }
 
     // Si todo está bien, devolver exactamente lo que el calculador retornó (ya es JSON)
-    // Pero limpiamos cualquier salida previa por seguridad
     if (ob_get_length() !== false) ob_end_clean();
     echo $json;
     exit;

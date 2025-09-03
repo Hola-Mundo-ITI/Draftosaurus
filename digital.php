@@ -1,4 +1,17 @@
 <?php
+// Protección server-side: iniciar sesión segura y exigir autenticación antes de renderizar la página
+declare(strict_types=1);
+require_once __DIR__ . '/backend/session.php';
+if (!function_exists('iniciarSesionSegura') || !function_exists('exigirLogin')) {
+  // Si las funciones no existen por alguna razón, no continuar para evitar exponer la UI
+  error_log('digital.php - funciones de sesión ausentes en backend/session.php');
+  header('Location: logear.php');
+  exit;
+}
+
+iniciarSesionSegura();
+exigirLogin();
+
 $pageTitle = "Partida Virtual - Draftosaurus";
 $pageDescription = "Partida Virtual de Draftosaurus - Juega online con dinosaurios";
 $specificCSS = "digitalPage.css";
@@ -21,9 +34,8 @@ include 'includes/head.php';
 ?>
 
 <body>
-  <?php include 'includes/navigation.php'; ?>
-  
   <header class="encabezado-partida">
+  <?php include 'includes/navigation.php'; ?>
     <div class="ronda-actual" aria-live="polite">Ronda: <span class="valor">1</span></div>
     <h1 class="titulo">Partida Virtual</h1>
     <div class="datos-juego">
@@ -32,6 +44,10 @@ include 'includes/head.php';
         <div class="texto-dado">Lanzar Dado</div>
       </div>
       <div class="cantidad-jugadores" aria-live="polite"><span class="valor">Partida Automática</span> (Tú vs <span id="numero-bots">2</span> Bots)</div>
+      <!-- Botón Exportar para guardar estado vinculado al usuario autenticado -->
+      <div style="margin-left:12px;">
+        <button id="btnExportarSave" class="boton-exportar" title="Exportar estado de partida">Exportar</button>
+      </div>
     </div>
   </header>
   
@@ -206,3 +222,61 @@ include 'includes/head.php';
   </main>
   
 <?php include 'includes/footer.php'; ?>
+
+<script>
+// Listener del botón Exportar - envía estadoJuego al backend para guardarlo vinculado al usuario
+(function(){
+  const btn = document.getElementById('btnExportarSave');
+  if (!btn) return;
+
+  btn.addEventListener('click', async () => {
+    try {
+      if (!window.estadoJuego || typeof window.estadoJuego.obtenerEstado !== 'function') {
+        alert('Estado del juego no disponible para exportar');
+        return;
+      }
+
+      const estado = window.estadoJuego.obtenerEstado();
+      // Añadir campo bots_count si existe la variable global
+      const payload = {
+        nombre: `Partida ${new Date().toLocaleString()}`,
+        bots_count: (typeof window.SELECTED_BOTS_COUNT === 'number') ? window.SELECTED_BOTS_COUNT : (window.INIT_TOTAL_JUGADORES ? (window.INIT_TOTAL_JUGADORES - 1) : 0),
+        gameState: estado
+      };
+
+      btn.disabled = true;
+      btn.textContent = 'Exportando...';
+
+      const resp = await fetch('backend/guardar_partida.php', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const ct = resp.headers.get('content-type') || '';
+      if (!ct.includes('application/json')) {
+        alert('Error: respuesta inesperada del servidor');
+        btn.disabled = false;
+        btn.textContent = 'Exportar';
+        return;
+      }
+
+      const json = await resp.json();
+      if (json && json.success) {
+        alert('Partida exportada correctamente. ID: ' + (json.id || 'unknown'));
+      } else if (json && json.error) {
+        alert('Error exportando partida: ' + json.error);
+      } else {
+        alert('Error desconocido al exportar');
+      }
+
+    } catch (err) {
+      console.error('Error exportando partida:', err);
+      alert('No se pudo exportar la partida. Revisa la consola.');
+    } finally {
+      try { btn.disabled = false; btn.textContent = 'Exportar'; } catch (e) {}
+    }
+  });
+})();
+</script>

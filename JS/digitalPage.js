@@ -425,8 +425,79 @@ function configurarMenuLateral() {
   }
 }
 
+/*
+  verificarSesionYConfigurarUI:
+  Consulta el endpoint /backend/infoSesion.php para validar la sesión actual. Si no hay usuario redirige a logear.php.
+  Si existe usuario, escribe su nombre en #usuario-nombre, muestra elementos con clase .requires-auth y vincula el botón de cierre de sesión.
+*/
+async function verificarSesionYConfigurarUI() {
+  try {
+    const resp = await fetch('backend/infoSesion.php', {
+      method: 'GET',
+      credentials: 'include',
+      headers: { 'Accept': 'application/json' }
+    });
 
-function cuandoDOMListo() {
+    const contentType = resp.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      window.location.href = 'logear.php';
+      return;
+    }
+
+    const json = await resp.json();
+    const usuario = json && json.usuario ? json.usuario : null;
+
+    if (!usuario) {
+      window.location.href = 'logear.php';
+      return;
+    }
+
+    const nombreEl = document.getElementById('usuario-nombre');
+    if (nombreEl) {
+      nombreEl.textContent = usuario.name || usuario.nombre || usuario.email || '';
+    }
+
+    const elementosProtegidos = document.querySelectorAll('.requires-auth');
+    elementosProtegidos.forEach(el => { el.style.display = ''; });
+
+    const btnCerrar = document.getElementById('btnCerrarSesion');
+    if (btnCerrar && !btnCerrar.dataset._handler) {
+      btnCerrar.addEventListener('click', async () => {
+        try {
+          const res = await fetch('backend/cerrarSesion.php', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Accept': 'application/json' }
+          });
+          const ct = res.headers.get('content-type') || '';
+          if (!ct.includes('application/json')) {
+            window.location.href = 'logear.php';
+            return;
+          }
+          const j = await res.json();
+          if (j && j.success === true) {
+            window.location.href = 'index.php';
+          } else {
+            window.location.href = 'logear.php';
+          }
+        } catch (err) {
+          window.location.href = 'logear.php';
+        }
+      });
+      btnCerrar.dataset._handler = '1';
+    }
+
+  } catch (err) {
+    window.location.href = 'logear.php';
+  }
+}
+
+/*
+  cuandoDOMListo:
+  Inicializa subsistemas del frontend. Ahora espera la verificación de sesión antes de continuar.
+*/
+async function cuandoDOMListo() {
+  await verificarSesionYConfigurarUI();
 
   configurarMenuLateral();
 
@@ -450,21 +521,22 @@ function cuandoDOMListo() {
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     try {
-      cuandoDOMListo();
+      await cuandoDOMListo();
     } catch (e) {
       console.error('Error en DOMContentLoaded handler:', e);
     }
   });
 } else {
-  try {
-    cuandoDOMListo();
-  } catch (e) {
-    console.error('Error al ejecutar cuandoDOMListo:', e);
-  }
+  (async () => {
+    try {
+      await cuandoDOMListo();
+    } catch (e) {
+      console.error('Error al ejecutar cuandoDOMListo:', e);
+    }
+  })();
 }
-
 
 function inicializarJuego() {
   /*

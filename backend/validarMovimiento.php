@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * Script validarMovimiento.php:
@@ -11,6 +12,12 @@
 
 ini_set('display_errors', '0');
 error_reporting(E_ALL);
+
+// Incluir manejo de sesión y exigir autenticación antes de devolver cualquier JSON
+require_once __DIR__ . '/session.php';
+if (function_exists('iniciarSesionSegura')) iniciarSesionSegura();
+// Para endpoints AJAX exigimos sesión activa; exigirLogin enviará la respuesta adecuada (redirect o 401)
+if (function_exists('exigirLogin')) exigirLogin();
 
 header('Content-Type: application/json; charset=utf-8');
 

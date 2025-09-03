@@ -16,10 +16,10 @@ include 'includes/head.php';
       <p class="lead question">¿Cómo querés jugar?</p>
       <div class="button-group" role="group" aria-label="Opciones de modo de juego">
         <a href="fisico.php" class="btn-image-button" role="button">
-          <img src="Recursos/img/botonModoFisico.png" alt="Modo Físico" class="button-image" width="150px" height="50px">
+          <img src="Recursos/img/botonModoFisico.png" alt="Modo Físico" class="button-image" width="150px">
         </a>
         <a href="seleccionarBots.php" class="btn-image-button" role="button">
-          <img src="Recursos/img/botonMododDigital.png" alt="Modo Digital" class="button-image" width="150px" height="50px">
+          <img src="Recursos/img/botonMododDigital.png" alt="Modo Digital" class="button-image" >
         </a>
       </div>
     </section>

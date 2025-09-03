@@ -1,5 +1,3 @@
-
-
 :root {
   --nav-width: 250px;
   --nav-bg: #e8dcb1; 
@@ -15,16 +13,15 @@
 
 
 .menu-toggle {
-  border-radius: 25px;
-  background: none;
-  border: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
   font-size: 26px;
   cursor: pointer;
   color: var(--nav-foreground);
   padding: 10px;
   z-index: 1200;
   display: inline-flex;
-  align-items: center;
   justify-content: center;
 }
 

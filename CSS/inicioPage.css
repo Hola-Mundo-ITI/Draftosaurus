@@ -27,7 +27,6 @@
 .btn-image-button {
   border: none;
   width: 150px;
-  height: 50px;
   background: transparent;
   display: flex;
   align-items: center;
@@ -48,7 +47,6 @@
 
 .button-image {
   width: 150px;
-  height: 50px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   transition: box-shadow 0.2s ease;
   object-fit: cover;

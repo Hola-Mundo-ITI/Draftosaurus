@@ -8,15 +8,16 @@ include 'includes/head.php';
 ?>
 
 <body>
+<?php include 'includes/navigation.php'; ?>
   <main role="main">
     <section class="pantalla" id="seccion-login">
       <div class="caja-formulario">
         <header class="form-header">
-          <img src="logo.png" alt="Logo de Draftosaurus - Juego de mesa de dinosaurios" class="imagen-logo">
+          <img src="Recursos/img/logo.png" alt="Logo de Draftosaurus - Juego de mesa de dinosaurios" class="imagen-logo" width="150px">
           <h1>Iniciar Sesión</h1>
         </header>
         
-        <form aria-label="Formulario de inicio de sesión">
+        <form id="form-iniciarSesion" aria-label="Formulario de inicio de sesión" method="post">
           <fieldset>
             <legend class="visually-hidden">Datos de acceso</legend>
             <div class="grupo-campo">
@@ -31,8 +32,10 @@ include 'includes/head.php';
             </div>
           </fieldset>
           
+          <div id="login-mensaje" role="status" aria-live="polite" class="mensaje"></div>
+
           <div class="contenedor-botones">
-            <a href="index.php" class="boton-accion" role="button">Ingresar</a>
+            <button type="submit" class="boton-accion">Ingresar</button>
           </div>
           
           <nav class="form-navigation">
@@ -48,11 +51,11 @@ include 'includes/head.php';
     <section class="pantalla" id="seccion-registro" style="display: none;" aria-hidden="true">
       <div class="caja-formulario">
         <header class="form-header">
-          <img src="logo.png" alt="Logo de Draftosaurus - Juego de mesa de dinosaurios" class="imagen-logo">
+          <img src="Recursos/img/logo.png" alt="Logo de Draftosaurus - Juego de mesa de dinosaurios" class="imagen-logo" width="150px">
           <h1>Crear Cuenta</h1>
         </header>
         
-        <form aria-label="Formulario de registro">
+        <form id="form-registro" aria-label="Formulario de registro" method="post">
           <fieldset>
             <legend class="visually-hidden">Datos para nueva cuenta</legend>
             <div class="grupo-campo">
@@ -62,12 +65,12 @@ include 'includes/head.php';
             </div>
             <div class="grupo-campo">
               <label for="emailRegistro">Correo electrónico</label>
-              <input type="email" id="emailRegistro" name="emailRegistro" required aria-describedby="email-registro-help" />
+              <input type="email" id="emailRegistro" name="email" required aria-describedby="email-registro-help" />
               <small id="email-registro-help" class="form-text">Tu correo para acceder</small>
             </div>
             <div class="grupo-campo">
               <label for="passwordRegistro">Contraseña</label>
-              <input type="password" id="passwordRegistro" name="passwordRegistro" required aria-describedby="password-registro-help" />
+              <input type="password" id="passwordRegistro" name="password" required aria-describedby="password-registro-help" />
               <small id="password-registro-help" class="form-text">Mínimo 8 caracteres</small>
             </div>
             <div class="grupo-campo">
@@ -77,8 +80,10 @@ include 'includes/head.php';
             </div>
           </fieldset>
           
+          <div id="registro-mensaje" role="status" aria-live="polite" class="mensaje"></div>
+
           <div class="contenedor-botones">
-            <a href="index.php" class="boton-accion boton-verde" role="button">Crear cuenta</a>
+            <button type="submit" class="boton-accion">Crear cuenta</button>
           </div>
           
           <nav class="form-navigation">

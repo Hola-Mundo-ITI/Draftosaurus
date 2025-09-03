@@ -1,4 +1,10 @@
 <?php
+declare(strict_types=1);
+// Protección del endpoint: obliga a sesión válida antes de calcular movimiento del bot
+require_once __DIR__ . '/session.php';
+if (function_exists('iniciarSesionSegura')) iniciarSesionSegura();
+if (function_exists('exigirLogin')) exigirLogin();
+
 // Configuración detallada de errores y logging
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);

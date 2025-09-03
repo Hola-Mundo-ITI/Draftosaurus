@@ -1,4 +1,5 @@
-<?php
+<?php
+
 $baseUrl = '';
 $resourcesPath = 'Recursos/img/';
 ?>
@@ -40,4 +41,9 @@ $resourcesPath = 'Recursos/img/';
       pointer-events: none;
     }
   </style>
+
+  <!-- Script global de navegación: maneja menú y cierre de sesión -->
+  <script src="JS/navigation.js" defer></script>
+  <!-- Script para verificar estado de sesión y configurar logout global -->
+  <script src="JS/session_check.js" defer></script>
 </head>

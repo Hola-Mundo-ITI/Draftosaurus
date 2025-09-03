@@ -4,6 +4,10 @@
  * Implementa la lógica de cálculo de puntuaciones integrada directamente en fisico.php
  * para evitar dependencias externas del backend y problemas de conectividad JSON.
  */
+require_once __DIR__ . '/backend/session.php';
+if (function_exists('iniciarSesionSegura')) iniciarSesionSegura();
+if (function_exists('exigirLogin')) exigirLogin();
+
 class CalculadorPuntuacionLocal {
     private $sistemasPuntuacion;
 
@@ -291,7 +295,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['action']) && $_POST[
         }
 
         // Instanciar calculadora local y generar reporte
-        // Preferir la implementación canónica en backend/ScoreCalculator.php
         require_once __DIR__ . '/backend/ScoreCalculator.php';
         $sc = new ScoreCalculator();
         // Asegurar tipos: ScoreCalculator espera object para fullBoard y array para allPlayerBoards
@@ -326,54 +329,60 @@ include 'includes/head.php';
   
   <main id="mainContent" role="main" data-player-id="1">
     <section class="tracking-section container py-4">
-      <h1 class="mb-4">Registrar cantidad de dinosaurios por recinto</h1>
+      <h1>Registra lo que pasa en tu tablero:</h1>
 
-      <!-- Formulario Bootstrap simple -->
+      <!-- Formulario con el diseño de la imagen -->
       <form id="form-recintos" class="row g-3" method="POST">
         <input type="hidden" name="action" value="calcular-puntuacion">
 
         <div class="col-12 col-md-6">
-          <label for="bosque-semejanza" class="form-label">Bosque de la Semejanza (máx 6)</label>
-          <input type="number" class="form-control" id="bosque-semejanza" name="bosque-semejanza" min="0" max="6" value="0" aria-describedby="helpBosque">
-          <div id="helpBosque" class="form-text">Solo cuenta la cantidad de dinosaurios colocados en este recinto.</div>
+          <label for="bosque-semejanza" class="form-label">Bosque de la Semejanza</label>
+          <input type="number" class="form-control" id="bosque-semejanza" name="bosque-semejanza" 
+                 min="0" max="6" value="0" placeholder="Bosque de la Semejanza">
         </div>
 
         <div class="col-12 col-md-6">
-          <label for="trio-frondoso" class="form-label">El Trío Frondoso (máx 3)</label>
-          <input type="number" class="form-control" id="trio-frondoso" name="trio-frondoso" min="0" max="3" value="0">
+          <label for="prado-diferencia" class="form-label">Prado de la Diferencia</label>
+          <input type="number" class="form-control" id="prado-diferencia" name="prado-diferencia" 
+                 min="0" max="6" value="0" placeholder="Prado de la Diferencia">
         </div>
 
         <div class="col-12 col-md-6">
-          <label for="prado-diferencia" class="form-label">Prado de la Diferencia (máx 6)</label>
-          <input type="number" class="form-control" id="prado-diferencia" name="prado-diferencia" min="0" max="6" value="0">
+          <label for="trio-frondoso" class="form-label">El Trío Frondoso</label>
+          <input type="number" class="form-control" id="trio-frondoso" name="trio-frondoso" 
+                 min="0" max="3" value="0" placeholder="El Trío Frondoso">
         </div>
 
         <div class="col-12 col-md-6">
-          <label for="pradera-amor" class="form-label">La Pradera del Amor (máx 6)</label>
-          <input type="number" class="form-control" id="pradera-amor" name="pradera-amor" min="0" max="6" value="0">
+          <label for="pradera-amor" class="form-label">La Pradera del Amor</label>
+          <input type="number" class="form-control" id="pradera-amor" name="pradera-amor" 
+                 min="0" max="6" value="0" placeholder="La Pradera del Amor">
         </div>
 
-        <div class="col-12 col-md-4">
-          <label for="isla-solitaria" class="form-label">La Isla Solitaria (máx 1)</label>
-          <input type="number" class="form-control" id="isla-solitaria" name="isla-solitaria" min="0" max="1" value="0">
+        <div class="col-12 col-md-6">
+          <label for="isla-solitaria" class="form-label">La Isla Solitaria</label>
+          <input type="number" class="form-control" id="isla-solitaria" name="isla-solitaria" 
+                 min="0" max="1" value="0" placeholder="La Isla Solitaria">
         </div>
 
-        <div class="col-12 col-md-4">
-          <label for="rey-selva" class="form-label">El Rey de la Selva (máx 1)</label>
-          <input type="number" class="form-control" id="rey-selva" name="rey-selva" min="0" max="1" value="0">
+        <div class="col-12 col-md-6">
+          <label for="rey-selva" class="form-label">El Rey de la Selva</label>
+          <input type="number" class="form-control" id="rey-selva" name="rey-selva" 
+                 min="0" max="1" value="0" placeholder="El Rey de la Selva">
         </div>
 
-        <div class="col-12 col-md-4">
-          <label for="dinos-rio" class="form-label">Dinosaurios en el Río (máx 7)</label>
-          <input type="number" class="form-control" id="dinos-rio" name="dinos-rio" min="0" max="7" value="0">
+        <div class="col-12 col-md-6">
+          <label for="dinos-rio" class="form-label">Dinosaurios en el Río</label>
+          <input type="number" class="form-control" id="dinos-rio" name="dinos-rio" 
+                 min="0" max="7" value="0" placeholder="Dinosaurios en el Río">
         </div>
 
         <div class="col-12 d-flex gap-2 mt-3">
-          <button type="submit" class="btn btn-primary" id="btn-submit">Enviar</button>
-          <button type="button" class="btn btn-secondary" id="btn-reset">Limpiar</button>
+          <button type="submit" class="btn btn-primary" id="btn-submit"><img src="Recursos/img/btnCalcular.png" width="150px"></button>
+          <button type="button" class="btn btn-secondary" id="btn-reset"><img src="Recursos/img/btnLimpiar.png" width="150px"></button>
         </div>
 
-        <!-- Total de dinosaurios colocados (se actualiza en tiempo real) -->
+        <!-- Total de dinosaurios colocados (oculto pero funcional) -->
         <div class="col-12 mt-2">
           <div id="total-dinos-display" class="small text-muted">Total de dinosaurios colocados: <strong id="total-dinos-valor">0</strong></div>
         </div>
@@ -521,3 +530,6 @@ include 'includes/head.php';
 
   })();
 </script>
+
+</body>
+</html>
