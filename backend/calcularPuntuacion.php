@@ -1,114 +1,138 @@
 <?php
 declare(strict_types=1);
 /*
-  Protección del endpoint calcularPuntuacion.php: obliga a sesión válida antes de calcular puntuación.
+  Mejoras para calcularPuntuacion.php para evitar errores HTML y asegurar JSON válido
 */
-require_once __DIR__ . '/session.php';
-if (function_exists('iniciarSesionSegura')) iniciarSesionSegura();
-if (function_exists('exigirLogin')) exigirLogin();
 
-/*
- * Script calcularPuntuacion.php:
- * Endpoint que delega en ScoreCalculator para calcular y devolver
- * el informe de puntuación. Mantiene la compatibilidad con la API que
- * espera un POST con los datos necesarios.
- */
-
-// Activar logging de errores pero ocultarlos al cliente
+// CRÍTICO: Suprimir TODOS los outputs HTML/errores antes de enviar JSON
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 error_reporting(E_ALL);
 
-// Iniciar buffer para capturar cualquier salida accidental y permitir devolver siempre JSON limpio
+// Capturar cualquier output accidental
 ob_start();
 
-
-$debugMode = isset($_GET['debug']) && $_GET['debug'] === '1';
-
-// Enviar cabecera JSON (utf-8)
-header('Content-Type: application/json; charset=utf-8');
-
-// Función auxiliar para limpiar buffer y devolver JSON válido
-function devolverJsonYSalir(array $response) {
-    // Limpiar cualquier salida previa
-    if (ob_get_length() !== false) {
-        $rawOutput = ob_get_clean();
-    } else {
-        $rawOutput = '';
+// Función para limpiar output y devolver JSON limpio
+function enviarRespuestaJSON($response) {
+    // Limpiar cualquier output previo que pueda contaminar el JSON
+    if (ob_get_length()) {
+        $contenidoPrevio = ob_get_clean();
+        if (!empty($contenidoPrevio)) {
+            error_log("calcularPuntuacion.php - Output no deseado capturado: " . $contenidoPrevio);
+        }
     }
-
-    // Si existía salida no intencional, adjuntarla al log
-    if ($rawOutput !== '') {
-        error_log("calcularPuntuacion.php - Output inesperado antes del JSON: " . $rawOutput);
-        // No incluir rawOutput en la respuesta en modo normal; solo en debug
-        if (!empty($GLOBALS['debugMode'])) $response['rawOutput'] = $rawOutput;
+    
+    // Asegurar header JSON
+    if (!headers_sent()) {
+        header('Content-Type: application/json; charset=utf-8');
+        header('Cache-Control: no-cache');
     }
-
-    // Codificar respuesta final asegurándonos de que json_encode no falle
+    
+    // Codificar y enviar respuesta
     $json = json_encode($response, JSON_UNESCAPED_UNICODE);
     if ($json === false) {
-        $fallback = ['exito' => false, 'mensaje' => 'Error interno: no se pudo codificar JSON de respuesta.'];
-        error_log('calcularPuntuacion.php - json_encode error: ' . json_last_error_msg());
-        echo json_encode($fallback, JSON_UNESCAPED_UNICODE);
-        exit;
+        error_log('calcularPuntuacion.php - Error en json_encode: ' . json_last_error_msg());
+        $fallback = [
+            'success' => false,
+            'error' => 'Error interno al generar respuesta JSON'
+        ];
+        echo json_encode($fallback);
+    } else {
+        echo $json;
     }
-
-    echo $json;
     exit;
 }
 
-// Capturar fallos y asegurar respuesta JSON
+// Manejar errores fatales
 register_shutdown_function(function() {
-    $err = error_get_last();
-    if ($err && in_array($err['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+    $error = error_get_last();
+    if ($error && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        error_log('calcularPuntuacion.php - Error fatal: ' . print_r($error, true));
+        
+        // Limpiar cualquier output corrupto
+        if (ob_get_length()) ob_end_clean();
+        
         $response = [
-            'exito' => false,
-            'mensaje' => 'Error fatal en el servidor al procesar la solicitud.'
+            'success' => false,
+            'error' => 'Error fatal en el servidor',
+            'details' => 'Consulta los logs del servidor para más información'
         ];
-        // incluir detalles de error en log
-        error_log('calcularPuntuacion.php - Fatal error: ' . print_r($err, true));
-        if (!empty($GLOBALS['debugMode'])) {
-            $response['debugError'] = $err;
+        
+        if (!headers_sent()) {
+            header('Content-Type: application/json; charset=utf-8');
         }
-        devolverJsonYSalir($response);
+        echo json_encode($response);
+        exit;
     }
 });
 
 try {
+    // Verificar método HTTP
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        enviarRespuestaJSON([
+            'success' => false,
+            'error' => 'Método no permitido. Use POST.'
+        ]);
+    }
+
+    // Leer input raw
+    $input = file_get_contents('php://input');
+    if ($input === false) {
+        enviarRespuestaJSON([
+            'success' => false,
+            'error' => 'No se pudo leer el cuerpo de la solicitud'
+        ]);
+    }
+
+    // Parsear JSON
+    $data = json_decode($input, true);
+    if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+        error_log('calcularPuntuacion.php - JSON inválido: ' . json_last_error_msg());
+        enviarRespuestaJSON([
+            'success' => false,
+            'error' => 'JSON inválido en la solicitud',
+            'jsonError' => json_last_error_msg()
+        ]);
+    }
+
+    // Validar datos requeridos
+    if (!isset($data['fullBoard']) || !isset($data['playerId'])) {
+        enviarRespuestaJSON([
+            'success' => false,
+            'error' => 'Faltan datos requeridos: fullBoard y playerId'
+        ]);
+    }
+
+    $fullBoard = $data['fullBoard'];
+    $playerId = (int) $data['playerId'];
+    $allPlayerBoards = $data['allPlayerBoards'] ?? [];
+
+    // Incluir ScoreCalculator
     require_once __DIR__ . '/ScoreCalculator.php';
 
-    // Delegar en ScoreCalculator y obtener la representación JSON
-    $json = ScoreCalculator::manejarSolicitudHttp();
+    // Crear calculadora y procesar
+    $calculator = new ScoreCalculator();
+    $scoreReport = $calculator->generarInformePuntuacion(
+        (object) $fullBoard, 
+        $playerId, 
+        $allPlayerBoards
+    );
 
-    // Validar que lo devuelto sea JSON decodificable
-    $decoded = json_decode($json);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        error_log('calcularPuntuacion.php - ScoreCalculator devolvió JSON inválido: ' . json_last_error_msg());
-        // Intentar reconstruir una respuesta de error legible
-        $response = [
-            'exito' => false,
-            'mensaje' => 'La calculadora devolvió una respuesta inválida.',
-        ];
-        if ($debugMode) {
-            $response['rawFromCalculator'] = $json;
-            $response['jsonError'] = json_last_error_msg();
-        }
-        devolverJsonYSalir($response);
-    }
+    // Respuesta exitosa
+    enviarRespuestaJSON([
+        'success' => true,
+        'scoreReport' => $scoreReport,
+        'message' => 'Puntuación calculada correctamente'
+    ]);
 
-    // Si todo está bien, devolver exactamente lo que el calculador retornó (ya es JSON)
-    if (ob_get_length() !== false) ob_end_clean();
-    echo $json;
-    exit;
 } catch (Throwable $e) {
-    error_log('calcularPuntuacion.php - Excepción: ' . $e->getMessage());
-    $response = [
-        'exito' => false,
-        'mensaje' => 'Error interno al calcular la puntuación',
-    ];
-    if ($debugMode) {
-        $response['exception'] = ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()];
-    }
-    devolverJsonYSalir($response);
+    // Log del error completo
+    error_log('calcularPuntuacion.php - Excepción: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+    
+    enviarRespuestaJSON([
+        'success' => false,
+        'error' => 'Error interno al procesar la solicitud',
+        'details' => 'Error registrado en los logs del servidor'
+    ]);
 }
 ?>

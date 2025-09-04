@@ -1,10 +1,8 @@
 <?php
 
 /*
- * Clase CalculadorPuntuacionLocal:
- * Implementa la lógica de cálculo de puntuaciones usada por la página física.
- * Este archivo contiene únicamente la clase y sus métodos; el procesamiento de
- * solicitudes y la interfaz de usuario quedan en fisico.php.
+ * Clase CalculadorPuntuacionLocal: Basicamente calcula la puntuacion puesta por el jugador dentro
+ * de la calculadora.
  */
 
 class CalculadorPuntuacionLocal {
@@ -233,5 +231,123 @@ class CalculadorPuntuacionLocal {
             'dinos-rio' => 'Puntos por dinosaurios en secuencia'
         ];
         return $descriptions[$zoneId] ?? 'Puntuación especial';
+    }
+}
+
+/**
+ * Funcion que procesa la solicitud medienta un post y devuelve la puntuacion procesada por la clase anterior
+ * @return array ['success' => bool, 'data' => mixed, 'message' => string]
+ */
+function procesarSolicitudPuntuacion(): array {
+    try {
+        // Variables de entrada
+        $inputFullBoard = null;
+        $playerId = 1;
+        $allPlayerBoards = [];
+
+        // Determinar tipo de entrada: JSON o FormData
+        if (strpos($_SERVER['CONTENT_TYPE'] ?? '', 'application/json') !== false) {
+            // Procesamiento JSON
+            $raw = file_get_contents('php://input');
+            $data = json_decode($raw, true);
+            if (!is_array($data)) {
+                throw new Exception('JSON de entrada inválido.');
+            }
+
+            $fullBoard = $data['fullBoard'] ?? $data['board'] ?? null;
+            $playerId = isset($data['playerId']) ? (int)$data['playerId'] : $playerId;
+            $allPlayerBoards = $data['allPlayerBoards'] ?? ($data['allBoards'] ?? []);
+            
+            if ($fullBoard === null) {
+                throw new Exception('fullBoard ausente en payload JSON.');
+            }
+            
+            // Normalizar a objeto
+            $inputFullBoard = (object)$fullBoard;
+
+        } else {
+            // Procesamiento FormData - reconstruir fullBoard según conteos
+            $campos = [
+                'bosque-semejanza','trio-frondoso','prado-diferencia',
+                'pradera-amor','isla-solitaria','rey-selva','dinos-rio'
+            ];
+            $especies = ['dino1','dino2','dino3','dino4','dino5','dino6'];
+            $fullBoard = [];
+
+            foreach ($campos as $campo) {
+                $count = isset($_POST[$campo]) ? max(0, min(intval($_POST[$campo]), 100)) : 0;
+                $arr = [];
+                
+                // Para FormData sólo tenemos la cantidad; deducimos una distribución de especies
+                if ($count > 0) {
+                    if ($campo === 'bosque-semejanza') {
+                        // Todos del mismo tipo para maximizar puntuación
+                        $tipoUnico = $especies[0];
+                        for ($i = 1; $i <= $count; $i++) {
+                            $arr[] = (object)[
+                                'type' => $tipoUnico, 
+                                'slot' => $i, 
+                                'imagen' => "Recursos/img/{$tipoUnico}.png", 
+                                'playerPlaced' => $playerId
+                            ];
+                        }
+                    } elseif ($campo === 'prado-diferencia') {
+                        // Distribuir entre diferentes tipos para maximizar variedad
+                        for ($i = 1; $i <= $count; $i++) {
+                            $tipo = $especies[($i - 1) % count($especies)];
+                            $arr[] = (object)[
+                                'type' => $tipo, 
+                                'slot' => $i, 
+                                'imagen' => "Recursos/img/{$tipo}.png", 
+                                'playerPlaced' => $playerId
+                            ];
+                        }
+                    } else {
+                        // Distribución genérica para otras zonas
+                        for ($i = 1; $i <= $count; $i++) {
+                            $tipo = $especies[($i - 1) % count($especies)];
+                            $arr[] = (object)[
+                                'type' => $tipo, 
+                                'slot' => $i, 
+                                'imagen' => "Recursos/img/{$tipo}.png", 
+                                'playerPlaced' => $playerId
+                            ];
+                        }
+                    }
+                }
+                $fullBoard[$campo] = $arr;
+            }
+
+            $inputFullBoard = (object)$fullBoard;
+            $allPlayerBoards = [$playerId => $inputFullBoard];
+        }
+
+        // Instanciar calculadora y generar reporte
+        $calculadora = new CalculadorPuntuacionLocal();
+        
+        // Asegurar tipos correctos: objeto para fullBoard, array para allPlayerBoards
+        $fullBoardObj = is_object($inputFullBoard) ? $inputFullBoard : (object)$inputFullBoard;
+        
+        // Normalizar allPlayerBoards: convertir subtableros a objetos si vienen como arrays
+        $normalizedAllBoards = [];
+        foreach ($allPlayerBoards as $k => $tablero) {
+            $normalizedAllBoards[$k] = is_object($tablero) ? $tablero : (object)$tablero;
+        }
+
+        $report = $calculadora->generarInformePuntuacion($fullBoardObj, $playerId, $normalizedAllBoards);
+
+        return [
+            'success' => true,
+            'data' => $report,
+            'message' => 'Puntuación calculada exitosamente.'
+        ];
+
+    } catch (Throwable $e) {
+        error_log('[procesarSolicitudPuntuacion] Error: ' . $e->getMessage());
+        return [
+            'success' => false,
+            'data' => null,
+            'message' => 'Error al calcular la puntuación: ' . $e->getMessage()
+        ];
     }
 }

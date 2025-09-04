@@ -11,7 +11,7 @@ if ($u === null) {
     echo json_encode(['success' => false, 'error' => 'Unauthorized']);
     exit;
 }
-
+// lista las partidas guardadas con el usuario (actual)
 try {
     $pdo = obtenerPdo();
     $stmt = $pdo->prepare('SELECT id, nombre, cantidad_bots AS bots_count, creado_en AS created_at FROM partidas_guardadas WHERE usuario_id = :uid ORDER BY creado_en DESC LIMIT 100');

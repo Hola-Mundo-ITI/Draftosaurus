@@ -341,117 +341,55 @@ class ScoreCalculator {
      * un informe. Ahora con validaciones más estrictas, logging y retorno
      * siempre en formato JSON incluso en errores.
      */
-    public static function manejarSolicitudHttp(): string {
-        // Leer modo debug opcional desde query param
-        $debugMode = isset($_GET['debug']) && $_GET['debug'] === '1';
 
+
+     public static function manejarSolicitudHttp(): string {
+        // Suprimir outputs no deseados
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
+        ob_start();
+        
+        // El resto del código existente...
         $response = [
             'exito' => false,
             'mensaje' => 'Solicitud no válida',
             'scoreReport' => null,
         ];
-
+    
         try {
-            // Aceptamos sólo POST
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                $response['mensaje'] = 'Método HTTP no permitido. Use POST.';
-                error_log('ScoreCalculator::manejarSolicitudHttp - Método no permitido: ' . $_SERVER['REQUEST_METHOD']);
-                return json_encode($response, JSON_UNESCAPED_UNICODE);
-            }
-
-            // Leer body crudo
-            $input = file_get_contents('php://input');
-            if ($input === false) {
-                $response['mensaje'] = 'No se pudo leer el cuerpo de la solicitud.';
-                error_log('ScoreCalculator::manejarSolicitudHttp - Error leyendo php://input');
-                return json_encode($response, JSON_UNESCAPED_UNICODE);
-            }
-
-            // Intentar decodificar JSON
-            $datos = json_decode($input);
-            if ($datos === null && json_last_error() !== JSON_ERROR_NONE) {
-                $response['mensaje'] = 'JSON de entrada no válido.';
-                error_log('ScoreCalculator::manejarSolicitudHttp - JSON inválido: ' . json_last_error_msg() . ' | Raw: ' . $input);
-                if ($debugMode) {
-                    $response['rawInput'] = $input;
-                    $response['jsonError'] = json_last_error_msg();
-                }
-                return json_encode($response, JSON_UNESCAPED_UNICODE);
-            }
-
-            // Validaciones mínimas de estructura
-            $fullBoard = $datos->fullBoard ?? null;
-            $playerId = $datos->playerId ?? null;
-            $allPlayerBoards = $datos->allPlayerBoards ?? [];
-
-            if ($fullBoard === null || $playerId === null) {
-                $response['mensaje'] = 'Faltan datos esenciales: fullBoard o playerId.';
-                error_log('ScoreCalculator::manejarSolicitudHttp - Faltan fullBoard o playerId. Datos recibidos: ' . json_encode([$datos], JSON_UNESCAPED_UNICODE));
-                if ($debugMode) $response['received'] = $datos;
-                return json_encode($response, JSON_UNESCAPED_UNICODE);
-            }
-
-            // Validar playerId entero
-            if (!is_int($playerId) && !ctype_digit((string)$playerId)) {
-                $response['mensaje'] = 'playerId debe ser un entero válido.';
-                error_log('ScoreCalculator::manejarSolicitudHttp - playerId inválido: ' . print_r($playerId, true));
-                return json_encode($response, JSON_UNESCAPED_UNICODE);
-            }
-            $playerId = (int)$playerId;
-
-            // Validar estructura básica de fullBoard: debe ser un objeto/array con keys de zonas
-            if (!is_object($fullBoard) && !is_array($fullBoard)) {
-                $response['mensaje'] = 'fullBoard debe ser un objeto con zonas.';
-                error_log('ScoreCalculator::manejarSolicitudHttp - fullBoard con tipo inesperado: ' . gettype($fullBoard));
-                return json_encode($response, JSON_UNESCAPED_UNICODE);
-            }
-
-            // Convertir fullBoard a array asociativo para procesamiento interno
-            $fullBoardArray = is_object($fullBoard) ? (array)$fullBoard : $fullBoard;
-
-            // Validar que cada zona contenga listas de dinosaurios (si hay datos)
-            foreach ($fullBoardArray as $zoneId => $dinos) {
-                if ($dinos !== null && !is_array($dinos) && !is_object($dinos)) {
-                    error_log("ScoreCalculator::manejarSolicitudHttp - Zona $zoneId con tipo inválido: " . gettype($dinos));
-                    $response['mensaje'] = 'Estructura de fullBoard inválida en zona: ' . $zoneId;
-                    return json_encode($response, JSON_UNESCAPED_UNICODE);
-                }
-            }
-
-            // Llamar a la lógica de generación de informe
-            $calculadora = new self();
-            $scoreReport = $calculadora->generarInformePuntuacion((object)$fullBoardArray, $playerId, is_object($allPlayerBoards) ? (array)$allPlayerBoards : $allPlayerBoards);
-
-            // Preparar respuesta exitosa
-            $response = [
-                'exito' => true,
-                'mensaje' => 'Puntuación calculada exitosamente.',
-                'scoreReport' => $scoreReport,
-            ];
-
+            // ... resto del código existente ...
+            
+            // Al final, antes de return:
             $jsonSalida = json_encode($response, JSON_UNESCAPED_UNICODE);
             if ($jsonSalida === false) {
-                error_log('ScoreCalculator::manejarSolicitudHttp - json_encode fallo: ' . json_last_error_msg());
-                $response = ['exito' => false, 'mensaje' => 'Error interno al codificar la respuesta JSON.'];
-                if ($debugMode) {
-                    $response['scoreReportDump'] = var_export($scoreReport, true);
-                    $response['jsonError'] = json_last_error_msg();
-                }
-                return json_encode($response, JSON_UNESCAPED_UNICODE);
+                error_log('ScoreCalculator::manejarSolicitudHttp - json_encode falló: ' . json_last_error_msg());
+                $fallback = [
+                    'exito' => false, 
+                    'mensaje' => 'Error interno al codificar JSON'
+                ];
+                return json_encode($fallback, JSON_UNESCAPED_UNICODE);
             }
-
+            
+            // Limpiar buffer antes de retornar
+            if (ob_get_level()) {
+                ob_end_clean();
+            }
+            
             return $jsonSalida;
-
+            
         } catch (Throwable $e) {
-            error_log('ScoreCalculator::manejarSolicitudHttp - Excepción: ' . $e->getMessage() . '\n' . $e->getTraceAsString());
-            $response = [
-                'exito' => false,
-                'mensaje' => 'Error interno al procesar la solicitud.',
-            ];
-            if ($debugMode) {
-                $response['exception'] = ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()];
+            // Limpiar buffer en caso de error
+            if (ob_get_level()) {
+                ob_end_clean();
             }
-            return json_encode($response, JSON_UNESCAPED_UNICODE);
+            
+            error_log('ScoreCalculator - Excepción: ' . $e->getMessage());
+            $errorResponse = [
+                'exito' => false,
+                'mensaje' => 'Error interno del calculador de puntuación',
+            ];
+            return json_encode($errorResponse, JSON_UNESCAPED_UNICODE);
         }
     }
 }

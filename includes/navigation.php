@@ -31,7 +31,7 @@ $overlayId =
           aria-label="Abrir menú de navegación"
           aria-controls="<?php echo $menuId; ?>"
           aria-expanded="false"
-          style="background-color: #552A0A; color: #FFFFFF; border: none;">
+          style="color: #552A0A; border: none; background: transparent;">
     ☰
   </button>
 </header>

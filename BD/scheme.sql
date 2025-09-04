@@ -83,12 +83,7 @@ JOIN `roles` r ON r.`clave` = u.rol
 LEFT JOIN `roles_usuarios` ur ON ur.usuario_id = u.id AND ur.rol_id = r.id
 WHERE u.rol IS NOT NULL AND ur.usuario_id IS NULL;
 
--- Nota: mantenemos la columna usuarios.rol para compatibilidad con el código existente.
--- Recomendación posterior (pasos sugeridos):
--- 1) Actualizar backend/session.php, backend/users.php y demás endpoints para leer/gestionar roles usando roles_usuarios (o usar usuarios.rol hasta migrar completamente).
--- 2) Opcional: añadir columna usuarios.rol_principal INT UNSIGNED y poblarla desde roles si se desea una columna primaria de rol.
--- 3) Tras probar y actualizar el código, eliminar la columna usuarios.rol para normalizar el esquema:
---    ALTER TABLE usuarios DROP COLUMN rol;
+-- aun no esta colocado el sistema de roles con los endpoints (session.php, etc etc)
 
 -- Índices adicionales si se requiere consulta frecuente por es_por_defecto
 CREATE INDEX `idx_roles_es_por_defecto` ON `roles` (`es_por_defecto`);

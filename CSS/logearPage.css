@@ -78,9 +78,7 @@ body {
 
 
 .boton-accion {
-  mask-image: url('../Recursos/img/btnLimpiar.png');
-  background-color: #8A6731; /* botón principal: tono medio */
-  color: #FFF8EB; /* texto claro sobre botón */
+  background-image: url('../Recursos/img/btnLimpiar.png');
   padding: 12px;
   border: none;
   border-radius: 6px;

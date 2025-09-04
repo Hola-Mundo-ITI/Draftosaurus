@@ -351,7 +351,7 @@ class SlotsInitializer {
 // Inicializar inmediatamente la instancia global para evitar errores por orden de carga
 window.slotsInitializer = window.slotsInitializer || new SlotsInitializer();
 
-// NUEVO: Quitar cualquier texto accidental dentro de los elementos .slot (nodos de texto)
+// quita cualquier texto accidental dentro de los elementos .slot (nodos de texto)
 function quitarTextoCasilleros() {
   try {
     document.querySelectorAll('.slot').forEach(slot => {
@@ -892,22 +892,17 @@ function confirmarReinicio() {
   }
 }
 
-
 async function mostrarPuntuacionActual() {
-  /*
-    mostrarPuntuacionActual:
-    - Recupera el estado actual del juego y construye fullBoard combinado.
-    - Determina dinámicamente el número total de jugadores usando window.INIT_TOTAL_JUGADORES o el estado del juego.
-    - Consulta al backend la puntuación para cada jugador del 1..totalJugadores usando fetch a backend/calcularPuntuacion.php.
-    - Muestra la modal de puntuación pasando un array con las puntuaciones en orden de jugador.
-  */
+  // Mostrar indicador de carga
+  if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+    tableroJuego.mostrarMensaje('Calculando puntuaciones...', 'info');
+  }
+
   const estado = estadoJuego.obtenerEstado();
-
-  // Normalizar origen de tableros: preferir estado.tableros (estructura por jugador)
   const tablerosPorJugador = estado.tableros || estado.tablero || {};
-
-  // Construir allPlayerBoards como map<string, boardObject> donde cada board tiene zonas -> array de dinos
   const allPlayerBoards = {};
+
+  // Construir allPlayerBoards
   Object.keys(tablerosPorJugador).forEach(playerKey => {
     const board = tablerosPorJugador[playerKey] || {};
     const normalizedBoard = {};
@@ -923,7 +918,7 @@ async function mostrarPuntuacionActual() {
     allPlayerBoards[String(playerKey)] = normalizedBoard;
   });
 
-  // Asegurar que tenemos la lista de zonas (usar zonasDefault si está disponible)
+  // Construir fullBoard
   const zonasDefault = (window.slotsInitializer && window.slotsInitializer.zonasDefault) || {
     'bosque-semejanza': 6,
     'prado-diferencia': 6,
@@ -934,19 +929,20 @@ async function mostrarPuntuacionActual() {
     'dinos-rio': 7
   };
 
-  // Construir fullBoard: para cada zona, agregar todos los dinosaurios de todos los jugadores
   const fullBoard = {};
   Object.keys(zonasDefault).forEach(zoneId => {
     fullBoard[zoneId] = [];
     Object.keys(allPlayerBoards).forEach(playerKey => {
       const arr = (allPlayerBoards[playerKey] && allPlayerBoards[playerKey][zoneId]) || [];
       arr.forEach(d => {
-        fullBoard[zoneId].push(Object.assign({}, d, { playerPlaced: d.playerPlaced ?? parseInt(playerKey, 10) }));
+        fullBoard[zoneId].push(Object.assign({}, d, { 
+          playerPlaced: d.playerPlaced ?? parseInt(playerKey, 10) 
+        }));
       });
     });
   });
 
-  // Determinar total de jugadores dinámicamente
+  // Determinar total de jugadores
   let totalJugadores = typeof window.INIT_TOTAL_JUGADORES === 'number' ? window.INIT_TOTAL_JUGADORES : null;
   try {
     if (!totalJugadores && window.estadoJuego && typeof window.estadoJuego.obtenerEstado === 'function') {
@@ -958,28 +954,84 @@ async function mostrarPuntuacionActual() {
   }
   if (!totalJugadores || typeof totalJugadores !== 'number') totalJugadores = 3;
 
-  // Función para pedir puntuación de un jugador
+  // Función mejorada para pedir puntuación
   const fetchScore = async (playerId) => {
     try {
+      console.log(`Calculando puntuación para jugador ${playerId}...`);
+      
       const response = await fetch('backend/calcularPuntuacion.php', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body: JSON.stringify({
           fullBoard: fullBoard,
           playerId: playerId,
           allPlayerBoards: allPlayerBoards
         }),
       });
-      const result = await response.json();
+
+      if (!response.ok) {
+        console.error(`Error HTTP ${response.status} para jugador ${playerId}`);
+        return { puntuacionTotal: 0, detallesBase: {} };
+      }
+
+      // Verificar Content-Type
+      const contentType = response.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        const responseText = await response.text();
+        console.error(`Respuesta no JSON para jugador ${playerId}:`, responseText.substring(0, 500));
+        
+        // Mostrar más detalles del error HTML
+        if (responseText.includes('Fatal error') || responseText.includes('Parse error')) {
+          console.error('Error fatal de PHP detectado en el backend');
+          if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+            tableroJuego.mostrarMensaje('Error del servidor. Revisa los logs de PHP.', 'error');
+          }
+        }
+        
+        return { puntuacionTotal: 0, detallesBase: {} };
+      }
+
+      let result;
+      try {
+        result = await response.json();
+      } catch (jsonError) {
+        const responseText = await response.text();
+        console.error(`JSON inválido para jugador ${playerId}:`, jsonError);
+        console.error('Respuesta raw:', responseText.substring(0, 500));
+        return { puntuacionTotal: 0, detallesBase: {} };
+      }
+
+      if (!result || typeof result !== 'object') {
+        console.error(`Respuesta inválida para jugador ${playerId}:`, result);
+        return { puntuacionTotal: 0, detallesBase: {} };
+      }
+
+      // Manejar ambos formatos de respuesta (success y exito)
       if (result.success || result.exito) {
         const report = result.scoreReport || {};
-        return { puntuacionTotal: (report.totalScore ?? report.total ?? 0), detallesBase: (report.baseDetails ?? {}) };
+        console.log(`Puntuación obtenida para jugador ${playerId}:`, report);
+        return { 
+          puntuacionTotal: (report.totalScore ?? report.total ?? 0), 
+          detallesBase: (report.baseDetails ?? {}) 
+        };
       } else {
-        console.error(`Error al obtener puntuación para jugador ${playerId}:`, result.message || result.mensaje);
+        const mensaje = result.message || result.mensaje || result.error || 'Error desconocido';
+        console.error(`Error al obtener puntuación para jugador ${playerId}:`, mensaje);
+        
+        if (result.rawInput || result.exception) {
+          console.error('Info de debug:', { 
+            rawInput: result.rawInput, 
+            exception: result.exception 
+          });
+        }
+        
         return { puntuacionTotal: 0, detallesBase: {} };
       }
     } catch (err) {
-      console.error(`Error comunicándose con backend para jugador ${playerId}:`, err);
+      console.error(`Error de comunicación para jugador ${playerId}:`, err);
       return { puntuacionTotal: 0, detallesBase: {} };
     }
   };
@@ -990,15 +1042,32 @@ async function mostrarPuntuacionActual() {
       promises.push(fetchScore(p));
     }
 
+    console.log(`Calculando puntuaciones para ${totalJugadores} jugadores...`);
     const resultados = await Promise.all(promises);
 
-    // Mostrar modal pasando array de puntuaciones en orden
+    // Verificar si al menos una puntuación se calculó correctamente
+    const puntuacionesValidas = resultados.filter(r => r.puntuacionTotal > 0 || Object.keys(r.detallesBase).length > 0);
+    
+    if (puntuacionesValidas.length === 0) {
+      if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+        tableroJuego.mostrarMensaje('No se pudieron calcular las puntuaciones. Revisa los logs.', 'error');
+      }
+      console.error('Todas las puntuaciones fallaron. Posible problema con el backend.');
+      return;
+    }
+
+    console.log('Puntuaciones calculadas:', resultados);
     mostrarModalPuntuacion(resultados);
 
+    if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+      tableroJuego.mostrarMensaje('Puntuaciones calculadas correctamente', 'exito');
+    }
+
   } catch (error) {
-    console.error('Error al calcular puntuaciones con el backend:', error);
-    if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') tableroJuego.mostrarMensaje('Error al cargar puntuaciones.', 'error');
-    return;
+    console.error('Error general al calcular puntuaciones:', error);
+    if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+      tableroJuego.mostrarMensaje('Error al calcular puntuaciones. Intenta de nuevo.', 'error');
+    }
   }
 }
 
@@ -1208,8 +1277,25 @@ function avanzarTurno() {
     const estadoAntes = estadoJuego.obtenerEstado();
     console.log('[digitalPage] Estado antes de avanzarTurno:', estadoAntes);
 
+    // *** VERIFICAR FIN DE JUEGO ANTES DE AVANZAR EL TURNO ***
+    if (estadoJuego.verificarFinJuego()) {
+      console.log('[digitalPage] Fin de juego detectado, no se avanza más turnos');
+      return; // El juego ha terminado, no continuar
+    }
+
     // Llamar a la función central que avanza el turno en el estado
-    try { estadoJuego.avanzarTurno(); } catch (e) { console.error('[digitalPage] Error interno en estadoJuego.avanzarTurno:', e); }
+    try { 
+      estadoJuego.avanzarTurno(); 
+    } catch (e) { 
+      console.error('[digitalPage] Error interno en estadoJuego.avanzarTurno:', e); 
+      return; // No continuar si hay error
+    }
+
+    // *** VERIFICAR FIN DE JUEGO DESPUÉS DE AVANZAR EL TURNO ***
+    if (estadoJuego.verificarFinJuego()) {
+      console.log('[digitalPage] Fin de juego detectado después de avanzar turno');
+      return; // El juego ha terminado tras el avance
+    }
 
     // Actualizar interfaz de jugador y mazo inmediatamente
     try { actualizarInterfazJugador(); } catch (e) { console.warn('[digitalPage] Error actualizando interfaz jugador tras avanzarTurno:', e); }
@@ -1240,6 +1326,12 @@ function avanzarTurno() {
       // Delay para simular tiempo de pensamiento del bot y permitir que la UI actualice
       setTimeout(() => {
         try {
+          // *** VERIFICAR NUEVAMENTE ANTES DE EJECUTAR BOT ***
+          if (estadoJuego.verificarFinJuego()) {
+            console.log('[digitalPage] Fin de juego detectado antes de ejecutar bot, cancelando');
+            return;
+          }
+
           console.log(`[digitalPage] Iniciando ejecución del bot ${jugadorActual}`);
           if (window.sistemaBots && typeof window.sistemaBots.ejecutarTurnoBot === 'function') {
             window.sistemaBots.ejecutarTurnoBot(jugadorActual);
@@ -1248,8 +1340,10 @@ function avanzarTurno() {
           }
         } catch (err) {
           console.error('[digitalPage] Error iniciando turno de bot tras avanzarTurno:', err);
-          // Asegurar que el juego no se quede bloqueado: avanzar el turno como fallback
-          try { avanzarTurno(); } catch (e2) { console.error('[digitalPage] Error avanzando turno en fallback:', e2); }
+          // Verificar fin de juego antes del fallback
+          if (!estadoJuego.verificarFinJuego()) {
+            try { avanzarTurno(); } catch (e2) { console.error('[digitalPage] Error avanzando turno en fallback:', e2); }
+          }
         }
       }, 1500);
     }
@@ -1259,12 +1353,18 @@ function avanzarTurno() {
   }
 }
 
-
 async function ejecutarTurnoBotRemoto(jugadorId) {
   /*
     Ejecuta el turno remoto del bot: valida turno, construye payload y delega
     la petición al backend. Maneja errores y en caso de fallo avanza el turno.
+    INCLUYE VERIFICACIONES DE FIN DE JUEGO para evitar bucles infinitos.
   */
+
+  // *** VERIFICAR FIN DE JUEGO ANTES DE PROCEDER ***
+  if (estadoJuego.verificarFinJuego()) {
+    console.log(`[ejecutarTurnoBotRemoto] Fin de juego detectado antes de ejecutar bot ${jugadorId}`);
+    return;
+  }
 
   // Validaciones iniciales y obtención del estado
   const estadoActual = estadoJuego.obtenerEstado();
@@ -1280,18 +1380,35 @@ async function ejecutarTurnoBotRemoto(jugadorId) {
   }
 
   const mazoBot = (estadoActual.mazos && estadoActual.mazos[jugadorId]) || [];
-  const availableDinosaurs = mazoBot.filter(d => d.disponible).map(d => ({ id: d.id ?? d.ID ?? null, type: d.tipo ?? d.type ?? null, image: d.imagen ?? d.image ?? null }));
+  const availableDinosaurs = mazoBot.filter(d => d.disponible).map(d => ({ 
+    id: d.id ?? d.ID ?? null, 
+    type: d.tipo ?? d.type ?? null, 
+    image: d.imagen ?? d.image ?? null 
+  }));
 
+  // Si el bot no tiene dinosaurios disponibles, verificar fin de juego
   if (!availableDinosaurs || availableDinosaurs.length === 0) {
-    if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') tableroJuego.mostrarMensaje(`Bot ${jugadorId} no tiene dinosaurios. Pasa turno.`, 'advertencia');
-    avanzarTurno();
-    return;
+    if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+      tableroJuego.mostrarMensaje(`Bot ${jugadorId} no tiene dinosaurios. Verificando fin de juego...`, 'advertencia');
+    }
+    
+    // Verificar si el juego debe terminar
+    if (estadoJuego.verificarFinJuego()) {
+      console.log(`[ejecutarTurnoBotRemoto] Fin de juego detectado: bot ${jugadorId} sin dinosaurios`);
+      return;
+    } else {
+      // Si el juego no termina, pasar turno
+      avanzarTurno();
+      return;
+    }
   }
 
   const botInfo = (window.INIT_BOT_MAP && window.INIT_BOT_MAP[jugadorId]) ? window.INIT_BOT_MAP[jugadorId] : { nombre: `Bot ${jugadorId}` };
   const botNombre = botInfo.nombre || `Bot ${jugadorId}`;
 
-  if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') tableroJuego.mostrarMensaje(`Bot ${botNombre} está pensando...`, 'info');
+  if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+    tableroJuego.mostrarMensaje(`Bot ${botNombre} está pensando...`, 'info');
+  }
 
   try {
     const controller = new AbortController();
@@ -1313,11 +1430,23 @@ async function ejecutarTurnoBotRemoto(jugadorId) {
 
     clearTimeout(timeoutId);
 
+    // *** VERIFICAR FIN DE JUEGO DESPUÉS DE LA RESPUESTA ***
+    if (estadoJuego.verificarFinJuego()) {
+      console.log(`[ejecutarTurnoBotRemoto] Fin de juego detectado después de obtener respuesta del backend`);
+      return;
+    }
+
     if (!response.ok) {
       const texto = await response.text().catch(() => '');
       console.error(`Backend devolvió estado ${response.status} para movimiento del bot:`, texto);
-      if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') tableroJuego.mostrarMensaje(`Bot ${botNombre} no pudo obtener movimiento (error servidor). Pasa turno.`, 'advertencia');
-      avanzarTurno();
+      if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+        tableroJuego.mostrarMensaje(`Bot ${botNombre} no pudo obtener movimiento (error servidor). Verificando fin de juego...`, 'advertencia');
+      }
+      
+      // Verificar fin de juego antes de avanzar turno por error
+      if (!estadoJuego.verificarFinJuego()) {
+        avanzarTurno();
+      }
       return;
     }
 
@@ -1327,8 +1456,13 @@ async function ejecutarTurnoBotRemoto(jugadorId) {
     if (!contentType.includes('application/json')) {
       const texto = await response.text().catch(() => '');
       console.error('Respuesta no JSON del backend para movimiento del bot:', texto.slice(0, 500));
-      if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') tableroJuego.mostrarMensaje(`Bot ${botNombre} retornó respuesta no válida. Pasa turno.`, 'advertencia');
-      avanzarTurno();
+      if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+        tableroJuego.mostrarMensaje(`Bot ${botNombre} retornó respuesta no válida. Verificando fin de juego...`, 'advertencia');
+      }
+      
+      if (!estadoJuego.verificarFinJuego()) {
+        avanzarTurno();
+      }
       return;
     }
 
@@ -1337,23 +1471,38 @@ async function ejecutarTurnoBotRemoto(jugadorId) {
     } catch (parseErr) {
       const texto = await response.text().catch(() => '');
       console.error('Respuesta JSON inválida del backend para movimiento del bot:', parseErr, texto.slice(0, 500));
-      if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') tableroJuego.mostrarMensaje(`Bot ${botNombre} retornó respuesta inválida. Pasa turno.`, 'advertencia');
-      avanzarTurno();
+      if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+        tableroJuego.mostrarMensaje(`Bot ${botNombre} retornó respuesta inválida. Verificando fin de juego...`, 'advertencia');
+      }
+      
+      if (!estadoJuego.verificarFinJuego()) {
+        avanzarTurno();
+      }
       return;
     }
 
     if (!result || typeof result !== 'object') {
       console.error('JSON de respuesta inválido o vacío', result);
-      if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') tableroJuego.mostrarMensaje(`Bot ${botNombre} retornó respuesta vacía. Pasa turno.`, 'advertencia');
-      avanzarTurno();
+      if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+        tableroJuego.mostrarMensaje(`Bot ${botNombre} retornó respuesta vacía. Verificando fin de juego...`, 'advertencia');
+      }
+      
+      if (!estadoJuego.verificarFinJuego()) {
+        avanzarTurno();
+      }
       return;
     }
 
     if (!result.success) {
       const mensaje = result.error || result.mensaje || result.message || 'El bot no pudo generar un movimiento';
       console.warn(`Backend devolvió success=false para bot ${botNombre}: ${mensaje}`);
-      if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') tableroJuego.mostrarMensaje(`Bot ${botNombre}: ${mensaje}. Pasa turno.`, 'advertencia');
-      avanzarTurno();
+      if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+        tableroJuego.mostrarMensaje(`Bot ${botNombre}: ${mensaje}. Verificando fin de juego...`, 'advertencia');
+      }
+      
+      if (!estadoJuego.verificarFinJuego()) {
+        avanzarTurno();
+      }
       return;
     }
 
@@ -1362,8 +1511,13 @@ async function ejecutarTurnoBotRemoto(jugadorId) {
     if (!botMove) {
       const mensaje = result.message ?? result.mensaje ?? 'El bot no pudo encontrar un movimiento válido.';
       console.warn(`Bot ${botNombre} no pudo obtener un movimiento válido del backend: ${mensaje}`);
-      if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') tableroJuego.mostrarMensaje(`Bot ${botNombre} no pudo jugar. Pasa turno.`, 'advertencia');
-      avanzarTurno();
+      if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+        tableroJuego.mostrarMensaje(`Bot ${botNombre} no pudo jugar. Verificando fin de juego...`, 'advertencia');
+      }
+      
+      if (!estadoJuego.verificarFinJuego()) {
+        avanzarTurno();
+      }
       return;
     }
 
@@ -1373,14 +1527,25 @@ async function ejecutarTurnoBotRemoto(jugadorId) {
 
     if (!dinosaur || !zoneId || slot == null) {
       console.warn('Respuesta del bot incompleta:', result);
-      if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') tableroJuego.mostrarMensaje(`Bot ${botNombre} retornó movimiento incompleto. Pasa turno.`, 'advertencia');
-      avanzarTurno();
+      if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+        tableroJuego.mostrarMensaje(`Bot ${botNombre} retornó movimiento incompleto. Verificando fin de juego...`, 'advertencia');
+      }
+      
+      if (!estadoJuego.verificarFinJuego()) {
+        avanzarTurno();
+      }
       return;
     }
 
     // Esperar un poco para animación y aplicar movimiento en estado
     setTimeout(async () => {
       try {
+        // *** VERIFICAR FIN DE JUEGO ANTES DE APLICAR MOVIMIENTO ***
+        if (estadoJuego.verificarFinJuego()) {
+          console.log(`[ejecutarTurnoBotRemoto] Fin de juego detectado antes de aplicar movimiento del bot ${jugadorId}`);
+          return;
+        }
+
         // Aplicar el movimiento únicamente sobre el estado virtual del bot.
         const dinosaurioParaEstado = {
           id: dinosaur.id,
@@ -1390,7 +1555,7 @@ async function ejecutarTurnoBotRemoto(jugadorId) {
           jugadorColocado: jugadorId
         };
 
-       // prevenir colocaciones en slots ya ocupados en el tablero del bot
+        // prevenir colocaciones en slots ya ocupados en el tablero del bot
         try {
           const estadoAntes = (estadoJuego && typeof estadoJuego.obtenerEstado === 'function') ? estadoJuego.obtenerEstado() : null;
           let tableroJugador = null;
@@ -1402,8 +1567,13 @@ async function ejecutarTurnoBotRemoto(jugadorId) {
           if (dinosEnZona.some(d => Number(d.slot) === Number(slot))) {
             // Slot ya ocupado en el tablero virtual del bot
             console.error(`Slot ${zoneId}#${slot} ya ocupado en tablero virtual del bot ${botNombre}`);
-            if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') tableroJuego.mostrarMensaje(`Bot ${botNombre} intentó un slot ya ocupado. Pasa turno.`, 'advertencia');
-            avanzarTurno();
+            if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+              tableroJuego.mostrarMensaje(`Bot ${botNombre} intentó un slot ya ocupado. Verificando fin de juego...`, 'advertencia');
+            }
+            
+            if (!estadoJuego.verificarFinJuego()) {
+              avanzarTurno();
+            }
             return;
           }
 
@@ -1412,8 +1582,13 @@ async function ejecutarTurnoBotRemoto(jugadorId) {
             estadoJuego.colocarDinosaurio(jugadorId, zoneId, dinosaurioParaEstado, slot);
           } catch (e) {
             console.error('Error al aplicar movimiento del bot en estadoJuego:', e);
-            if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') tableroJuego.mostrarMensaje(`Error al aplicar movimiento del bot ${botNombre}. Pasa turno.`, 'error');
-            avanzarTurno();
+            if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+              tableroJuego.mostrarMensaje(`Error al aplicar movimiento del bot ${botNombre}. Verificando fin de juego...`, 'error');
+            }
+            
+            if (!estadoJuego.verificarFinJuego()) {
+              avanzarTurno();
+            }
             return;
           }
 
@@ -1427,27 +1602,44 @@ async function ejecutarTurnoBotRemoto(jugadorId) {
 
           // Actualizar mazo y notificar breve mensaje
           try { actualizarInterfazMazo(); } catch (e) { /* no crítico */ }
-          if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') tableroJuego.mostrarMensaje(`Bot ${botNombre} colocó ${dinosaur.type || dinosaur.tipo} en ${zoneId}`, 'exito');
+          if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+            tableroJuego.mostrarMensaje(`Bot ${botNombre} colocó ${dinosaur.type || dinosaur.tipo} en ${zoneId}`, 'exito');
+          }
 
         } catch (errApply) {
           console.error('Error aplicando movimiento del bot en estado:', errApply);
-          if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') tableroJuego.mostrarMensaje(`Error aplicando movimiento del bot ${botNombre}. Pasa turno.`, 'error');
-          avanzarTurno();
+          if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+            tableroJuego.mostrarMensaje(`Error aplicando movimiento del bot ${botNombre}. Verificando fin de juego...`, 'error');
+          }
+          
+          if (!estadoJuego.verificarFinJuego()) {
+            avanzarTurno();
+          }
           return;
         }
 
       } catch (errApply) {
         console.error('Error aplicando movimiento del bot en DOM/estado:', errApply);
-        if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') tableroJuego.mostrarMensaje(`Error aplicando movimiento del bot ${botNombre}. Pasa turno.`, 'error');
+        if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+          tableroJuego.mostrarMensaje(`Error aplicando movimiento del bot ${botNombre}. Verificando fin de juego...`, 'error');
+        }
       } finally {
-        avanzarTurno();
+        // *** VERIFICAR FIN DE JUEGO ANTES DE AVANZAR TURNO ***
+        if (!estadoJuego.verificarFinJuego()) {
+          avanzarTurno();
+        }
       }
     }, 600);
 
   } catch (error) {
     console.error(`Error al ejecutar turno del bot ${jugadorId} con el backend:`, error);
-    if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') tableroJuego.mostrarMensaje(`Error del bot ${botNombre}. Pasa turno.`, 'error');
-    avanzarTurno();
+    if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
+      tableroJuego.mostrarMensaje(`Error del bot ${botNombre}. Verificando fin de juego...`, 'error');
+    }
+    
+    if (!estadoJuego.verificarFinJuego()) {
+      avanzarTurno();
+    }
   }
 }
 

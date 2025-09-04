@@ -450,45 +450,65 @@ class EstadoJuego {
 
   
   verificarFinJuego() {
-
     try {
+      // Verificar primero si todos los mazos están vacíos de dinosaurios disponibles
+      let todosMazosVacios = true;
+      let totalDinosauriosDisponibles = 0;
+      
+      // Contar dinosaurios disponibles en todos los mazos
       for (let jugadorId = 1; jugadorId <= this.estado.totalJugadores; jugadorId++) {
         const mazo = (this.estado.mazos && this.estado.mazos[jugadorId]) || [];
-        const tiene = mazo.some(d => d.disponible);
-        if (tiene) return false; // Aún hay dinosaurios en algún mazo
+        const disponiblesEnMazo = mazo.filter(d => d && d.disponible === true).length;
+        
+        if (disponiblesEnMazo > 0) {
+          todosMazosVacios = false;
+        }
+        
+        totalDinosauriosDisponibles += disponiblesEnMazo;
       }
-
-      console.log('Fin del juego: Todos los mazos están vacíos');
-      this.finalizarJuego();
-      return true;
-    } catch (e) {
-      console.warn('[EstadoJuego] Error verificando fin de juego por mazos, cayendo al chequeo anterior', e);
-    }
-
-    const dinosauriosDisponibles = this.estado.dinosauriosDisponibles.filter(d => d.disponible);
-
-    if (dinosauriosDisponibles.length === 0) {
-
-      const jugadoresQueHanJugadoEnRonda = (this.estado.turnoActual - 1) % this.estado.totalJugadores;
-      
-      if (jugadoresQueHanJugadoEnRonda === 0) {
-        console.log('Fin del juego: No hay más dinosaurios disponibles y ronda completa');
+  
+      // Si todos los mazos están vacíos, el juego termina inmediatamente
+      if (todosMazosVacios || totalDinosauriosDisponibles === 0) {
+        console.log('Fin del juego: Todos los mazos están vacíos de dinosaurios disponibles');
         this.finalizarJuego();
         return true;
-      } else {
-        console.log(`Esperando que terminen los turnos restantes de la ronda. Faltan ${this.estado.totalJugadores - jugadoresQueHanJugadoEnRonda} jugadores`);
-        return false;
       }
-    }
-
-    const rondasMaximas = 10;
-    if (this.estado.rondaActual > rondasMaximas) {
-      console.log('Fin del juego: Máximo de rondas alcanzado');
+  
+      // Verificación adicional con el pool global (fallback)
+      const dinosauriosGlobalesDisponibles = this.estado.dinosauriosDisponibles.filter(d => d && d.disponible === true);
+      
+      if (dinosauriosGlobalesDisponibles.length === 0 && totalDinosauriosDisponibles === 0) {
+        console.log('Fin del juego: No hay más dinosaurios disponibles en ningún lugar');
+        this.finalizarJuego();
+        return true;
+      }
+  
+      // Verificar límite máximo de rondas
+      const rondasMaximas = 15; // Aumentado para permitir partidas más largas
+      if (this.estado.rondaActual > rondasMaximas) {
+        console.log('Fin del juego: Máximo de rondas alcanzado');
+        this.finalizarJuego();
+        return true;
+      }
+  
+      // Verificación de seguridad: si hay más de 50 turnos, algo está mal
+      if (this.estado.turnoActual > 50) {
+        console.warn('Fin del juego forzado: Demasiados turnos ejecutados, posible bucle infinito');
+        this.finalizarJuego();
+        return true;
+      }
+  
+      // El juego continúa
+      console.log(`Juego continúa - Dinosaurios disponibles: ${totalDinosauriosDisponibles}, Ronda: ${this.estado.rondaActual}, Turno: ${this.estado.turnoActual}`);
+      return false;
+  
+    } catch (error) {
+      console.error('Error en verificarFinJuego:', error);
+      // En caso de error, mejor finalizar el juego que quedar en bucle infinito
+      console.warn('Finalizando juego por error en verificación');
       this.finalizarJuego();
       return true;
     }
-
-    return false;
   }
 
   
