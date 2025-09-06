@@ -57,10 +57,10 @@ $overlayId =
       <li><a href="index.php" <?php echo ($currentPage == 'index') ? 'aria-current="page"' : ''; ?> role="menuitem" tabindex="0">Inicio</a></li>
       <li><a href="fisico.php" <?php echo ($currentPage == 'fisico') ? 'aria-current="page"' : ''; ?> role="menuitem" tabindex="0">Modo Fisico</a></li>
       <?php if ($usuario): ?>
-        <li><a href="digital.php" class="requires-auth" <?php echo ($currentPage == 'digital') ? 'aria-current="page"' : ''; ?> role="menuitem" tabindex="0">Modo Digital</a></li>
+        <li><a href="seleccionarBots.php" class="requires-auth" <?php echo ($currentPage == 'digital') ? 'aria-current="page"' : ''; ?> role="menuitem" tabindex="0">Modo Digital</a></li>
       <?php endif; ?>
 
-      <?php // Enlace al panel de administración, visible solo para administradores ?>
+      <?php // panel de admins ?>
       <?php if ($usuario && !empty($usuario['role']) && $usuario['role'] === 'admin'): ?>
         <li><a href="admin.php" class="requires-auth" <?php echo ($currentPage == 'admin') ? 'aria-current="page"' : ''; ?> role="menuitem" tabindex="0">Panel Admin</a></li>
       <?php endif; ?>

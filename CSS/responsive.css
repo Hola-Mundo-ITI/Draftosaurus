@@ -1,6 +1,3 @@
-
-
-
 @media (max-width: 768px) {
   
   .main-content,
@@ -266,5 +263,406 @@
   #contenido {
     padding: 20px !important;
     transform: none !important;
+  }
+}
+
+/* Reglas responsive específicas para fisico.php */
+
+/* Tablets: entre 769px y 1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Hacer el formulario más compacto y adaptar grid */
+  .tracking-section {
+    padding: 18px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  #form-recintos.row {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 680px;
+  }
+
+  .col-12.col-md-6 {
+    width: 100%;
+  }
+
+  .form-control {
+    width: 100%;
+    height: 42px;
+    font-size: 1rem;
+  }
+
+  .btn-primary img {
+    width: 110px;
+  }
+
+  .btn-secondary img {
+    width: 95px;
+  }
+
+  /* Resultado y tablero */
+  #resultado-form {
+    max-width: 540px;
+    padding: 18px;
+  }
+
+  .tablero-juego {
+    width: 560px;
+    height: 560px;
+    max-width: 88vw;
+    max-height: 88vw;
+  }
+}
+
+/* Teléfonos grandes (phablets): <= 425px */
+@media (max-width: 425px) {
+  .tracking-section {
+    padding: 14px;
+    max-width: 420px;
+  }
+
+  /* Forzar formulario a una sola columna para legibilidad */
+  #form-recintos.row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .col-12.col-md-6 {
+    width: 100%;
+  }
+
+  .form-control {
+    width: 100%;
+    height: 40px;
+    font-size: 0.98rem;
+    padding: 6px 10px;
+  }
+
+  .btn-primary img {
+    width: 90px;
+  }
+
+  .btn-secondary img {
+    width: 80px;
+  }
+
+  /* Ajustes para resultado y mensajes */
+  #resultado-form {
+    width: 94vw;
+    padding: 14px;
+    margin: 18px auto;
+    font-size: 0.95rem;
+  }
+
+  /* Tablero más pequeño y responsivo */
+  .tablero-juego {
+    width: 88vw;
+    height: 88vw;
+    max-width: 360px;
+    max-height: 360px;
+  }
+
+  /* Botones principales más cómodos de tocar */
+  .btn-primary, .btn-secondary {
+    min-height: 44px;
+  }
+}
+
+/* Teléfonos pequeños: <= 360px (pequeñas pantallas) */
+@media (max-width: 360px) {
+  .tracking-section {
+    padding: 10px 8px 60px;
+  }
+
+  #form-recintos.row {
+    gap: 10px;
+  }
+
+  .form-control {
+    height: 36px;
+    font-size: 0.9rem;
+    padding: 6px 8px;
+  }
+
+  .btn-primary img {
+    width: 78px;
+  }
+
+  .btn-secondary img {
+    width: 70px;
+  }
+
+  #resultado-form {
+    width: 96vw;
+    padding: 10px;
+    font-size: 0.88rem;
+  }
+
+  .tablero-juego {
+    width: 95vw;
+    height: 95vw;
+    max-width: 320px;
+    max-height: 320px;
+  }
+
+  /* Reducir márgenes y espaciado de zona-juego para pantallas muy pequeñas */
+  .zona-juego {
+    gap: 12px;
+    padding: 12px 8px 80px;
+  }
+}
+
+/* Reglas responsive específicas para index.php  */
+
+/* Tablets: entre 769px y 1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hero-section {
+    padding: 48px 20px;
+  }
+
+  .logo-image {
+    max-width: 240px;
+  }
+
+  .question {
+    font-size: 1.25rem;
+  }
+
+  .button-group {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .btn-image-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-image-button .button-image,
+  .btn-image-button img {
+    width: 160px;
+    height: auto;
+  }
+}
+
+/* Teléfonos grandes (phablets): <= 425px */
+@media (max-width: 425px) {
+  .hero-section {
+    padding: 28px 14px;
+    text-align: center;
+  }
+
+  .logo-image {
+    max-width: 200px;
+    margin: 0 auto 8px;
+  }
+
+  .question {
+    font-size: 1.05rem;
+    margin-bottom: 12px;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .btn-image-button .button-image,
+  .btn-image-button img {
+    width: 140px;
+    max-width: 70%;
+  }
+
+  .button-group .btn-image-button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+/* Teléfonos pequeños: <= 360px */
+@media (max-width: 360px) {
+  .hero-section {
+    padding: 22px 10px 60px;
+  }
+
+  .logo-image {
+    max-width: 160px;
+  }
+
+  .question {
+    font-size: 0.95rem;
+  }
+
+  .button-group {
+    gap: 10px;
+    padding: 0 6px;
+  }
+
+  .btn-image-button .button-image,
+  .btn-image-button img {
+    width: 120px;
+    max-width: 80%;
+  }
+
+  /* Asegurar que los botones no ocupen más espacio del necesario */
+  .btn-image-button {
+    padding: 6px 0;
+  }
+}
+
+/* Reglas responsive específicas para seleccionarBots.php */
+
+/* Tablets: entre 769px y 1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .prepantalla-seleccion {
+    padding: 40px 24px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .caja-seleccion-bots {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  .boton-opcion {
+    display: inline-block;
+    text-decoration: none;
+    width: calc(50% - 24px);
+    max-width: 320px;
+  }
+
+  .boton-seleccion {
+    padding: 20px 26px;
+    font-size: 18px;
+    border-radius: 12px;
+  }
+
+  #savesContainer {
+    max-width: 720px;
+    margin: 20px auto 0;
+  }
+
+  #savesList {
+    padding: 14px;
+  }
+}
+
+/* Teléfonos grandes (phablets): <= 425px */
+@media (max-width: 425px) {
+  .prepantalla-seleccion {
+    padding: 22px 12px 80px;
+    text-align: center;
+  }
+
+  .titulo {
+    font-size: 1.35rem;
+  }
+
+  .lead {
+    font-size: 0.98rem;
+    margin-bottom: 12px;
+  }
+
+  .caja-seleccion-bots {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    padding: 0 10px;
+  }
+
+  .boton-opcion {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .boton-seleccion {
+    padding: 14px 18px;
+    font-size: 16px;
+    border-radius: 10px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.10);
+  }
+
+  #savesContainer {
+    display: block;
+    max-width: 94vw;
+    margin: 16px auto 0;
+  }
+
+  #savesList {
+    padding: 10px;
+    max-height: 48vh;
+    overflow-y: auto;
+  }
+
+  #savesList > div[style] {
+    /* filas generadas dinámicamente en JS */
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #btnMostrarSaves {
+    width: auto;
+  }
+}
+
+/* Teléfonos pequeños: <= 360px */
+@media (max-width: 360px) {
+  .prepantalla-seleccion {
+    padding: 18px 8px 80px;
+  }
+
+  .titulo {
+    font-size: 1.2rem;
+  }
+
+  .lead {
+    font-size: 0.92rem;
+  }
+
+  .boton-seleccion {
+    padding: 12px 14px;
+    font-size: 15px;
+    border-radius: 8px;
+  }
+
+  .caja-seleccion-bots {
+    gap: 10px;
+  }
+
+  #savesContainer {
+    max-width: 98vw;
+    margin: 12px auto 0;
+  }
+
+  #savesList {
+    padding: 8px;
+    font-size: 0.92rem;
+  }
+
+  /* Ajustes para el listado de partidas guardadas para evitar desbordes */
+  #savesList .row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  #savesList button {
+    width: 100%;
   }
 }
