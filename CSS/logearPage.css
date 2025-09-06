@@ -78,7 +78,8 @@ body {
 
 
 .boton-accion {
-  background-image: url('../Recursos/img/btnLimpiar.png');
+  background: transparent;
+  background-color: transparent;
   padding: 12px;
   border: none;
   border-radius: 6px;
@@ -91,12 +92,11 @@ body {
 }
 
 .boton-accion:hover {
-  background-color: #764826; /* más oscuro al pasar el mouse */
   transform: translateY(-1px);
 }
 
 .enlace-texto {
-  background: none;
+  background: transparent;
   border: none;
   color: #764826; /* enlace con color oscuro de paleta */
   cursor: pointer;

@@ -35,7 +35,7 @@ include 'includes/head.php';
           <div id="login-mensaje" role="status" aria-live="polite" class="mensaje"></div>
 
           <div class="contenedor-botones">
-            <button type="submit" class="boton-accion">Ingresar</button>
+            <button type="submit" class="boton-accion"><img src="Recursos/img/btnIniciarSesion.png" width="150px"></button>
           </div>
           
           <nav class="form-navigation">
@@ -83,7 +83,7 @@ include 'includes/head.php';
           <div id="registro-mensaje" role="status" aria-live="polite" class="mensaje"></div>
 
           <div class="contenedor-botones">
-            <button type="submit" class="boton-accion">Crear cuenta</button>
+            <button type="submit" class="boton-accion"><img src="Recursos/img/btnRegistrarse.png" width="150px"></button>
           </div>
           
           <nav class="form-navigation">

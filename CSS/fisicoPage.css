@@ -61,7 +61,8 @@ body {
 }
 
 .form-control {
-  width: 180px;
+  flex-direction: row;
+  width: 234px;
   height: 40px;
   border: 2px solid #764826;
   border-radius: 8px;
@@ -119,8 +120,6 @@ input[type="number"] {
 
 /* Botón principal - Calcular */
 .btn-primary {
-  width: auto;
-  height: auto;
   background: transparent;
   border: none;
   padding: 0;
@@ -147,8 +146,6 @@ input[type="number"] {
 
 /* Botón secundario - Limpiar */
 .btn-secondary {
-  width: auto;
-  height: auto;
   background: transparent;
   border: none;
   padding: 0;

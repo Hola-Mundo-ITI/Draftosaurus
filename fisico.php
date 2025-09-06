@@ -101,7 +101,7 @@ include 'includes/head.php';
           </button>
         </div>
 
-        <!-- Total de dinosaurios colocados (oculto pero funcional) -->
+        <!-- Total de dinosaurios colocados (oculto) -->
         <div class="col-12 mt-2">
           <div id="total-dinos-display" class="small text-muted">
             Total de dinosaurios colocados: <strong id="total-dinos-valor">0</strong>

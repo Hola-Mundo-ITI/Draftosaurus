@@ -396,7 +396,7 @@ class FisicoFormManager {
       footer.className = 'd-flex justify-content-end gap-2';
   
       const btnClose = document.createElement('button');
-      btnClose.className = 'btn btn-secondary';
+      btnClose.className = 'btn-secondary';
       btnClose.textContent = 'Cerrar';
       btnClose.addEventListener('click', () => {
         const overlay = document.querySelector('.position-fixed');
@@ -404,9 +404,9 @@ class FisicoFormManager {
       });
   
       const btnGoPuntaje = document.createElement('a');
-      btnGoPuntaje.className = 'btn btn-primary';
-      btnGoPuntaje.textContent = 'Ver Página de Puntajes';
-      btnGoPuntaje.href = 'puntaje.php';
+      btnGoPuntaje.className = 'btn-primary';
+      btnGoPuntaje.textContent = 'Jugar Digital';
+      btnGoPuntaje.href = 'seleccionarBots.php';
   
       footer.appendChild(btnGoPuntaje);
       footer.appendChild(btnClose);
