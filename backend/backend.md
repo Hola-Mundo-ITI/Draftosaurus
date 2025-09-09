@@ -1,4 +1,4 @@
-# Documentación: backend/
+git # Documentación: backend/
 
 Resumen rápido
 - Lenguaje: PHP (7+). API REST estilo ligero con scripts que devuelven JSON.
