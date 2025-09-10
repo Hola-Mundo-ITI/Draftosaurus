@@ -238,3 +238,34 @@ Accesible mediante `window.draftosaurusDebug` en la consola del navegador:
 - Sistema de respaldo básico para casos edge
 - No maneja validación exhaustiva de tipos
 
+
+
+### Cómo ejecutar el proyecto:
+
+Para poder andar el proyecto, sigue los pasos a continuación:
+
+1. **Instalar XAMPP**:
+    - Asegúrate de tener XAMPP instalado en tu sistema. Puedes descargarlo desde [https://www.apachefriends.org/](https://www.apachefriends.org/).
+    - Una vez instalado, abre el panel de control de XAMPP y activa los módulos **Apache** y **MySQL**.
+
+2. **Configurar la base de datos**:
+    - Localiza el archivo `scheme.sql` dentro de la carpeta `BD` del proyecto.
+    - En el panel de control de XAMPP, haz clic en el botón **Admin** del módulo MySQL para abrir **phpMyAdmin**.
+    - En phpMyAdmin:
+      1. Crea una nueva base de datos con el nombre deseado (por ejemplo, `draftosaurus`).
+      2. Haz clic en la pestaña **Importar** en la barra superior.
+      3. Selecciona el archivo `scheme.sql` desde tu sistema.
+      4. Haz clic en el botón **Continuar** para cargar el esquema de la base de datos.
+
+3. **Configurar el servidor web**:
+    - Asegurate de que los archivos del proyecto estén ubicados en el directorio raiz de tu servidor local. Por defecto, este directorio es `C:/xampp/htdocs/`.
+    - La estructura del proyecto debería quedar como: `C:/xampp/htdocs/proyecto/Draftosaurus`.
+
+4. **Iniciar el proyecto**:
+    - Abre tu navegador web.
+    - Ingresa la siguiente dirección en la barra de busqueda: `http://localhost/proyecto/Draftosaurus`.
+    - Esto cargará la página principal del proyecto.
+
+5. **Probar el proyecto**:
+    - Navega por las diferentes funcionalidades para asegurarte de que todo funciona correctamente.
+    - Si encuentras algún problema, revisa los logs de errores en `backend/php_errors.log` o en el panel de control de XAMPP.
