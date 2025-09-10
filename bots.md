@@ -85,7 +85,3 @@ El cliente debe aceptar variantes y normalizar (move / moves / movimiento) y cam
 ## Notas finales
 - El sistema actual prioriza robustez y consistencia: la decisión final la toma el backend y el cliente actua como ejecutor y presentador.
 - Este documento reemplaza la versión previa que describía una lógica de bots totalmente local; esa lógica sigue existiendo como fallback pero ya no es la fuente principal.
-
-
----
-Documento técnico, en español; contiene leves errores de tipeo intencionados para dejarlo menos mecanico.
