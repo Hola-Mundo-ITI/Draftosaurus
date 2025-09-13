@@ -1380,6 +1380,8 @@ async function ejecutarTurnoBotRemoto(jugadorId) {
   }
 
   const mazoBot = (estadoActual.mazos && estadoActual.mazos[jugadorId]) || [];
+  // se declara la variable, que es igual al mazoBot y se pasa por la propiedad filtro(siendo d el dinosaurio) y se mapea a un objeto con las propiedades id, type e image
+  // d es dinosaurios
   const availableDinosaurs = mazoBot.filter(d => d.disponible).map(d => ({ 
     id: d.id ?? d.ID ?? null, 
     type: d.tipo ?? d.type ?? null, 
@@ -1402,14 +1404,14 @@ async function ejecutarTurnoBotRemoto(jugadorId) {
       return;
     }
   }
-
+  // Obtiene el nombre del bot en base a su ID dentro del mapa de bots inicializados
   const botInfo = (window.INIT_BOT_MAP && window.INIT_BOT_MAP[jugadorId]) ? window.INIT_BOT_MAP[jugadorId] : { nombre: `Bot ${jugadorId}` };
   const botNombre = botInfo.nombre || `Bot ${jugadorId}`;
 
   if (tableroJuego && typeof tableroJuego.mostrarMensaje === 'function') {
     tableroJuego.mostrarMensaje(`Bot ${botNombre} está pensando...`, 'info');
   }
-
+//
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 8000);
@@ -1559,6 +1561,7 @@ async function ejecutarTurnoBotRemoto(jugadorId) {
         try {
           const estadoAntes = (estadoJuego && typeof estadoJuego.obtenerEstado === 'function') ? estadoJuego.obtenerEstado() : null;
           let tableroJugador = null;
+          // obtiene el tablero del jugador bot del estado antes de la jugada
           if (estadoAntes && estadoAntes.tableros) {
             tableroJugador = estadoAntes.tableros[jugadorId] || estadoAntes.tableros[String(jugadorId)] || null;
           }

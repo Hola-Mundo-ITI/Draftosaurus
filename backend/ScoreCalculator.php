@@ -350,7 +350,7 @@ class ScoreCalculator {
         }
         ob_start();
         
-        // El resto del código existente...
+
         $response = [
             'exito' => false,
             'mensaje' => 'Solicitud no válida',
@@ -358,7 +358,6 @@ class ScoreCalculator {
         ];
     
         try {
-            // ... resto del código existente ...
             
             // Al final, antes de return:
             $jsonSalida = json_encode($response, JSON_UNESCAPED_UNICODE);
