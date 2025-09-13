@@ -199,13 +199,6 @@ Accesible mediante `window.draftosaurusDebug` en la consola del navegador:
 - `Espacio`: Ver puntuación
 - `Escape`: Limpiar selección
 
-## Documentación Técnica
-
-- `clases.md` - Resumen de clases backend y su responsabilidad (ActiveRestrictions, PassiveRestrictions, ScoreCalculator, ValidadorTablero, SistemaBots)
-- `bots.md` - Documentación completa del sistema de bots
-- `dado.md` - Documentación del sistema de dados y restricciones
-- `INSTRUCCIONES_JUEGO.md` - Manual de usuario completo
-- `PRUEBA_MANUAL_RESTRICCIONES.md` - Guía de testing manual
 
 ## Arquitectura del Código
 
