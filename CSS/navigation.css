@@ -1,0 +1,97 @@
+:root {
+    --nav-width: 250px;
+    --nav-bg: #e8dcb1; 
+    --nav-accent: #6b4f28; 
+    --nav-foreground: #3b2d15; 
+    --overlay-bg: rgba(0,0,0,0.45);
+    --transition-fast: 0.26s;
+    --transition-slow: 0.36s;
+  }
+  
+  /* Botón del menú */
+.menu-toggle {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  font-size: 30px;
+  background-color: #e8dcb1;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  z-index: 1200;
+  border-radius: 5px;
+}
+
+/* Menú lateral */
+.offcanvas-menu {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100%;
+  background-color: #e8dcb1;
+  padding: 80px 20px 20px 20px;
+  z-index: 1100;
+  transition: left 0.3s;
+}
+
+.offcanvas-menu.open {
+  left: 0;
+}
+
+/* Área de usuario */
+.user-area {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.user-area a {
+  color: #6b4f28;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Lista del menú */
+.menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-list li {
+  margin-bottom: 10px;
+}
+
+.menu-list a {
+  display: block;
+  padding: 12px;
+  color: #3b2d15;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.menu-list a:hover {
+  background-color: #d4c298;
+}
+
+.menu-list a.active {
+  background-color: #6b4f28;
+  color: white;
+}
+
+/* Overlay oscuro */
+.nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: none;
+}
+
+.nav-overlay.active {
+  display: block;
+}

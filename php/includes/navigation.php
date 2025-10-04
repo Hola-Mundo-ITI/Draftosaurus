@@ -1,6 +1,9 @@
 <?php
 // Obtener la página actual
 $currentPage = basename($_SERVER['PHP_SELF'], '.php');
+
+$specificCSS = "navigation.css";
+$specificJS = "navigation.js";
 ?>
 
 <header>
