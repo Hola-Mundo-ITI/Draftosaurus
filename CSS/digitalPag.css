@@ -1,0 +1,176 @@
+.zona-juego {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 20px;
+  }
+  
+  /* Zonas de dinosaurios */
+  .zona-dinos {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+.parent {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    width: 500px;
+    height: 500px;
+    margin: 20px auto;
+  }
+  
+  .contenedor-tablero{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+  }
+
+  /* Posiciones de cada div en el grid principal */
+  .div1 { grid-area: 1 / 1 / 2 / 2; }
+  .div2 { grid-area: 1 / 2 / 2 / 3; }
+  .div3 { grid-area: 1 / 3 / 2 / 4; }
+  .div4 { grid-area: 2 / 1 / 3 / 2; }
+  .div5 { grid-area: 2 / 2 / 3 / 3; }
+  .div6 { grid-area: 2 / 3 / 3 / 4; }
+  .div7 { grid-area: 3 / 1 / 4 / 2; }
+  .div8 { grid-area: 3 / 2 / 4 / 3; }
+  .div9 { grid-area: 3 / 3 / 4 / 4; }
+  
+  /* Estilos para casillas */
+  .casilla {
+    border: 2px solid #333;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  .clickeable {
+    cursor: pointer;
+    background-color: #e8f4f8;
+  }
+  
+  .clickeable:hover {
+    background-color: #d0e8f0;
+    border-color: #007bff;
+  }
+  
+  /* Grid interno para casillerosBosqueSemejanza (6 columnas) */
+  .casillerosBosqueSemejanza {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 5px;
+    grid-row-gap: 0px;
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+  }
+  .casillerosPradoDiferencia {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 5px;
+    grid-row-gap: 0px;
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+  }
+  .casillerosAgua {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 5px;
+    grid-row-gap: 0px;
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+  }
+  /* Grid interno para casillerosTrioFrondoso (3 columnas) */
+  .casillerosTrioFrondoso {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 5px;
+    grid-row-gap: 0px;
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+  }
+  
+  /* Grid interno para praderaDelAmor (2 columnas) */
+  .praderaDelAmor {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 5px;
+    grid-row-gap: 0px;
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+  }
+  
+  .reySelva {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+  }
+
+  .casillerosIslaSolitaria {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+  }
+
+  /* Estilos para casilleros internos */
+  .casillero-item {
+    border: 1px solid #666;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .casillero-item.clickeable {
+    cursor: pointer;
+    background-color: #e8f4f8;
+  }
+  
+  .casillero-item.clickeable:hover {
+    background-color: #d0e8f0;
+    border-color: #007bff;
+  }
+  
+  /* Estilos para dinosaurios */
+  .dinosaurio {
+    cursor: pointer;
+    padding: 10px;
+    border: 2px solid transparent;
+  }
+  
+  .dinosaurio.seleccionado {
+    border: 2px solid #00ff00;
+    background-color: #e0ffe0;
+  }
+  
+  .dinosaurio img {
+    width: 80px;
+    height: 80px;
+  }
