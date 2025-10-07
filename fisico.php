@@ -1,5 +1,4 @@
 <?php
-// Incluir el archivo que calcula la puntuación
 require_once 'php/procesamiento/puntosFisico.php';
 
 // Si el formulario fue enviado, procesar y devolver JSON
@@ -23,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// Configuración de la página
 $pageTitle = "Registro del Tablero - Draftosaurus";
 $specificCSS = "fisicoPag.css";
 $specificJS = "fisicoPag.js";
