@@ -18,7 +18,7 @@ if (!isset($specificJS)) {
 
 <aside id="mainMenu" class="offcanvas-menu">
   <div class="user-area">
-    <a href="logear.php" id="link-iniciar-sesion">Iniciar sesión</a>
+    <a href="sesion.php" id="link-iniciar-sesion">Iniciar sesión</a>
   </div>
 
   <nav>
@@ -36,7 +36,7 @@ if (!isset($specificJS)) {
       </li>
       
       <li>
-        <a href="seleccionarBots.php" <?php if($currentPage == 'seleccionarBots') echo 'class="active"'; ?>>
+        <a href="digital.php" <?php if($currentPage == 'seleccionarBots') echo 'class="active"'; ?>>
           Modo Digital
         </a>
       </li>

@@ -26,7 +26,97 @@ document.addEventListener('DOMContentLoaded', function() {
     inputs.forEach(input => {
         input.addEventListener('input', actualizarTotal);
     });
-    
+
+   
+    let currentPicker = null;
+
+    function closePicker() {
+        if (currentPicker && currentPicker.parentNode) {
+            currentPicker.parentNode.removeChild(currentPicker);
+        }
+        currentPicker = null;
+        document.removeEventListener('click', docClickHandler);
+    }
+
+    function docClickHandler(e) {
+        if (!currentPicker) return;
+        if (e.target.closest('.number-picker')) return;
+        // si hacemos click en un input del formulario, no cerrar (permite reabrir)
+        if (e.target.tagName === 'INPUT' && e.target.closest('#form-recintos')) return;
+        closePicker();
+    }
+
+    function openPickerFor(input) {
+        closePicker();
+        const min = parseInt(input.min) || 0;
+        const max = parseInt(input.max) || 0;
+        const picker = document.createElement('div');
+        picker.className = 'number-picker';
+
+        // Crear opciones desde min hasta max
+        for (let v = min; v <= max; v++) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'picker-option';
+            btn.textContent = v;
+            btn.addEventListener('click', function () {
+                input.value = v;
+                actualizarTotal();
+                closePicker();
+                // devolver foco al input para accesibilidad
+                input.focus();
+            });
+            picker.appendChild(btn);
+        }
+
+        // Posicionar el picker debajo del input, evitando overflow horizontal
+        const rect = input.getBoundingClientRect();
+        picker.style.position = 'absolute';
+        picker.style.left = Math.max(window.scrollX + rect.left, 8) + 'px';
+        picker.style.top = (window.scrollY + rect.bottom + 8) + 'px';
+        picker.style.zIndex = '20000';
+
+        document.body.appendChild(picker);
+        currentPicker = picker;
+
+        // Cerrar al clicar fuera
+        setTimeout(() => {
+            document.addEventListener('click', docClickHandler);
+        }, 0);
+    }
+
+    // Asociar eventos a cada input (focus / click / teclado)
+    inputs.forEach(input => {
+        input.addEventListener('focus', function () {
+            openPickerFor(input);
+        });
+        input.addEventListener('click', function (e) {
+            // evitar que el click en el input cierre inmediatamente por el docClickHandler
+            e.stopPropagation();
+            openPickerFor(input);
+        });
+        input.addEventListener('keydown', function (e) {
+            // permitir cambiar con flechas y cerrar con Escape
+            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                let val = parseInt(input.value) || 0;
+                const min = parseInt(input.min) || 0;
+                const max = parseInt(input.max) || 0;
+                if (e.key === 'ArrowUp') val = Math.min(val + 1, max);
+                else val = Math.max(val - 1, min);
+                input.value = val;
+                actualizarTotal();
+            }
+            if (e.key === 'Escape') {
+                closePicker();
+            }
+        });
+    });
+
+    // Cerrar picker si se hace scroll o resize para evitar desalineado
+    window.addEventListener('scroll', function () { if (currentPicker) closePicker(); }, true);
+    window.addEventListener('resize', function () { if (currentPicker) closePicker(); });
+
     // Calcular total de dinosaurios
     function actualizarTotal() {
         let total = 0;
@@ -138,8 +228,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         html += '</ul>';
         html += '<div class="d-flex justify-content-end gap-2 mt-3">';
-        html += '<a href="seleccionarBots.php" class="btn btn-primary">Jugar Digital</a>';
-        html += '<button class="btn btn-secondary" id="btn-cerrar-modal">Cerrar</button>';
+        html += '<a href="seleccionarBots.php" class="btn btn-primary modal-btn-primary">Jugar Digital</a>';
+        html += '<button class="btn btn-secondary modal-btn-secondary" id="btn-cerrar-modal">Cerrar</button>';
         html += '</div>';
         html += '</div>';
         

@@ -124,13 +124,13 @@ function seleccionarDino(numeroDino) {
   }
 }
 
-function colocarDino(numeroCasilla) {
+async function colocarDino(numeroCasilla) {
   if (!dinoSeleccionado) {
     alert('Por favor selecciona un dinosaurio primero');
     return;
   }
 
-
+  // Validación rápida en cliente por restricción visual (mensaje inmediato)
   if (restriccionActual) {
     const zona = obtenerZonaDeCasilla(numeroCasilla);
     if (!restriccionActual.zonasPermitidas.includes(zona)) {
@@ -146,21 +146,82 @@ function colocarDino(numeroCasilla) {
       } else if (restriccionActual.caraDado === 'recintoVacio') {
         mensajeRestriccion = 'Solo recintos vacíos';
       }
-      
+
       alert(`No puedes colocar aquí\n\nRestricción del dado: ${mensajeRestriccion}`);
       return;
     }
   }
 
   const casilla = document.querySelector(`[data-casilla="${numeroCasilla}"]`);
-  
-  // Verificar si la casilla ya tiene un dinosaurio
+  if (!casilla) {
+    alert('Casilla no encontrada en el DOM');
+    return;
+  }
+
+  // Verificar si la casilla ya tiene un dinosaurio (visual)
   if (casilla.querySelector('img')) {
     alert('Esta casilla ya está ocupada');
     return;
   }
 
-  // Crear imagen del dinosaurio
+  // Confirmar con el servidor que la colocación es válida según todas las reglas (restricciones pasivas)
+  try {
+    // Crear snapshot del estado real del tablero a partir del DOM
+    const snapshot = { casillas: {} };
+    document.querySelectorAll('.casillero-item').forEach(ci => {
+      const id = ci.getAttribute('data-casilla');
+      const img = ci.querySelector('img');
+      if (img) {
+        let species = null;
+        // Intentar extraer desde src (case-insensitive, puede ser png/jpg)
+        let m = img.src.match(/dino(\d+)(?:\.png|\.jpg|\.jpeg)?$/i);
+        if (m) species = parseInt(m[1], 10);
+        // Fallback: usar alt (ej: 'Dinosaurio 3')
+        if (!species && img.alt) {
+          let m2 = img.alt.match(/(\d+)/);
+          if (m2) species = parseInt(m2[1], 10);
+        }
+        if (species) snapshot.casillas[id] = species;
+      }
+    });
+
+    const payload = {
+      casillaId: numeroCasilla,
+      species: dinoSeleccionado,
+      tableroEstado: snapshot,
+      restriccionActiva: restriccionActual
+    };
+
+    console.log('Enviando validación al servidor:', payload);
+
+    const resp = await fetch('php/utilidades/validarMovimiento.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await resp.json();
+
+    console.log('Respuesta del servidor para validarMovimiento:', data);
+
+    // Mostrar debug del servidor en pantalla si viene
+    if (data && data.debug) {
+      mostrarDebugServidor(data.debug, data.reason || null);
+    }
+
+    if (!data.valid) {
+      alert('Movimiento inválido:\n' + (data.reason || 'Restricción del servidor'));
+      return;
+    }
+  } catch (err) {
+    console.error('Error validando movimiento en servidor:', err);
+    alert('No se pudo validar la colocación en el servidor. Intenta de nuevo.');
+    return;
+  }
+
+  // Si llegó hasta acá, la colocación está permitida: insertar imagen y actualizar estado
   const imgDino = document.createElement('img');
   imgDino.src = `Recursos/img/dino${dinoSeleccionado}.png`;
   imgDino.alt = `Dinosaurio ${dinoSeleccionado}`;
@@ -184,6 +245,7 @@ function colocarDino(numeroCasilla) {
   console.log('Dinosaurio colocado en casilla', numeroCasilla);
   console.log('Estado actual:', tableroEstado);
 }
+
 
 function exportarPartida() {
   const boton = document.getElementById('botonExportar');

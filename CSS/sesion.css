@@ -1,0 +1,111 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  
+  .pantalla {
+    max-width: 400px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  
+  .caja-formulario {
+    background-image: url('../Recursos/img/fondoPantalla.png');
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    text-align: center;
+  }
+  
+  
+  .imagen-logo {
+    width: 90px;
+    margin-bottom: 20px;
+  }
+  
+  
+  .contenedor-botones {
+    margin-top: 20px;
+  }
+  
+  
+  .grupo-campo {
+    margin-bottom: 16px;
+    text-align: left;
+  }
+  
+  .grupo-campo label {
+    display: block;
+    margin-bottom: 5px;
+    color: #444;
+    font-weight: bold;
+  }
+  
+  .grupo-campo input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #8A6731; /* marco */
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #FFD490; /* fondo */
+    color: #764826; /* texto */
+    box-shadow: inset 0 1px 0 rgba(0,0,0,0.03);
+  }
+  
+  .grupo-campo input::placeholder {
+    color: rgba(118,72,38,0.7);
+  }
+  
+  .grupo-campo input:focus {
+    border-color: #764826; 
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(138,103,49,0.12);
+  }
+  
+  .grupo-campo input:disabled {
+    background-color: #FFE9B8;
+    color: rgba(118,72,38,0.6);
+    border-color: rgba(138,103,49,0.5);
+  }
+  
+  
+  .boton-accion {
+    background: transparent;
+    background-color: transparent;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    transition: background-color 0.18s ease, transform 0.08s ease;
+  }
+  
+  .boton-accion:hover {
+    transform: translateY(-1px);
+  }
+  
+  .enlace-texto {
+    background: transparent;
+    border: none;
+    color: #764826; 
+    cursor: pointer;
+    font-size: 1rem;
+    text-decoration: underline;
+    margin-top: 10px;
+    transition: color 0.3s;
+  }
+  
+  .enlace-texto:hover {
+    color: #8A6731;
+  }

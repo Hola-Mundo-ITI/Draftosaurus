@@ -1,0 +1,24 @@
+/* filepath: c:\xampp\htdocs\proyecto\DraftosaurusVersionFinal\CSS\restricciones.css */
+
+/* Zona restringida: visual y funcionalmente deshabilitada */
+.casillero-item.restringido {
+  opacity: 0.45;
+  filter: grayscale(30%);
+  pointer-events: none; /* impide clicks */
+  cursor: not-allowed;
+  transition: opacity 0.18s ease, transform 0.12s ease;
+}
+
+/* Zona permitida: resaltar */
+.casillero-item.permitido {
+  opacity: 1;
+  outline: 3px solid rgba(13, 110, 253, 0.18);
+  box-shadow: 0 0 0 4px rgba(13,110,253,0.06) inset;
+}
+
+/* En caso de querer forzar que un casillero clickeable siga teniendo pointer-events
+   incluso cuando el padre está restringido, usar esta clase adicional en JS. */
+.casillero-item.restringido.force-clickable {
+  pointer-events: auto;
+  opacity: 0.8;
+}

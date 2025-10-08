@@ -193,4 +193,89 @@
     font-weight: bold;
     text-align: center;
   }
-  
+
+  /* Estilos específicos para botones del modal generado por JS (aseguran visibilidad) */
+  .card .modal-btn-primary {
+    display: inline-block;
+    padding: 8px 14px;
+    background-color: #552A0A; /* oscuro */
+    color: #FFD490; /* claro */
+    border: 2px solid rgba(0,0,0,0.12);
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  .card .modal-btn-primary:hover,
+  .card .modal-btn-primary:focus {
+    background-color: #6a3610;
+    color: #FFD490;
+    text-decoration: none;
+    outline: none;
+  }
+
+  .card .modal-btn-secondary {
+    display: inline-block;
+    padding: 8px 14px;
+    background-color: #FFD490; /* claro */
+    color: #552A0A; /* oscuro */
+    border: 2px solid #552A0A;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  .card .modal-btn-secondary:hover,
+  .card .modal-btn-secondary:focus {
+    background-color: #ffdf9f;
+    color: #552A0A;
+    outline: none;
+  }
+
+  /* Asegurar que los badges dentro del modal mantengan contraste legible */
+  .card .list-group .badge.bg-primary {
+    background-color: #552A0A !important;
+    color: #FFD490 !important;
+  }
+
+  /* Estilos para el number picker (selector de cantidad que se abre al enfocar inputs) */
+  .number-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    background: #FFD490;
+    border: 2px solid #552A0A;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    max-width: calc(100vw - 32px);
+    min-width: 120px;
+  }
+
+  .number-picker .picker-option {
+    background: #552A0A;
+    color: #FFD490;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    min-width: 36px;
+    text-align: center;
+  }
+
+  .number-picker .picker-option:hover,
+  .number-picker .picker-option:focus {
+    background: #6a3610;
+    outline: none;
+    transform: translateY(-1px);
+  }
+
+  /* Mejorar accesibilidad en pantallas pequeñas: opciones en columna */
+  @media (max-width: 420px) {
+    .number-picker {
+      flex-direction: column;
+      max-width: 90vw;
+    }
+    .number-picker .picker-option {
+      min-width: 100%;
+    }
+  }

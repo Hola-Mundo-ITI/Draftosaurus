@@ -25,6 +25,7 @@
   <link rel="stylesheet" href="CSS/styles.css">
   <link rel="stylesheet" href="CSS/navigation.css">
   <link rel="stylesheet" href="CSS/responsive.css">
+  <link rel="stylesheet" href="CSS/restricciones.css">
   
   <?php
   // CSS específico de la página
