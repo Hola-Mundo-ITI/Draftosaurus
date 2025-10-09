@@ -5,7 +5,8 @@ $specificJS = ["digitalPag.js"];
 
 include 'php/includes/head.php';
 ?>
-
+<base href="/proyecto/DraftosaurusVersionFinal/">
+ 
 <body>
   <header class="encabezado-partida">
     <?php include 'php/includes/navigation.php'; ?>

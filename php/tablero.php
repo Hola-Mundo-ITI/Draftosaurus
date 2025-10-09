@@ -146,17 +146,15 @@ class Tablero {
         return ['valido' => true];
     }
     
-    // Validar que se llene de izquierda a derecha
     private function validarOrdenIzquierdaDerecha($zona, $casillaId) {
-        // Encontrar cuál es la primera casilla vacía
-        foreach ($zona['casillas'] as $casilla) {
-            if (!isset($zona['dinos'][$casilla])) {
-                // Esta es la primera vacía
-                if ($casilla !== $casillaId) {
-                    return ['valido' => false, 'razon' => "Debes llenar de izquierda a derecha (siguiente: $casilla)"];
-                }
-                break;
-            }
+        $cantidadDinos = count($zona['dinos']);
+        $casillaNecesaria = $zona['casillas'][$cantidadDinos];
+        
+        if ($casillaId !== $casillaNecesaria) {
+            return [
+                'valido' => false, 
+                'razon' => "Debes llenar de izquierda a derecha. La próxima casilla disponible es: $casillaNecesaria"
+            ];
         }
         return ['valido' => true];
     }
