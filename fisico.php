@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $pageTitle = "Registro del Tablero - Draftosaurus";
+$specificCSS = "utilidades/responsive.css";
 $specificCSS = "fisicoPag.css";
 $specificJS = "fisicoPag.js";
 
@@ -101,5 +102,4 @@ include 'php/includes/navigation.php';
     <div id="resultado-form" style="display:none;" class="alert alert-info"></div>
   </section>
 </main>
-
 <?php include 'php/includes/footer.php'; ?>

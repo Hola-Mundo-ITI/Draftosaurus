@@ -1,12 +1,12 @@
 <?php
 $pageTitle = "Iniciar Sesión - Draftosaurus";
 $pageDescription = "Iniciar sesión o crear cuenta en Draftosaurus";
+$specificCSS = "utilidades/responsive.css";
 $specificCSS = "sesion.css";
 $specificJS = "auth/sesion.js";
 
 include 'php/includes/head.php';
 ?>
-
 <?php include __DIR__ . '/php/includes/navigation.php'; ?>
   <main role="main">
     <section class="pantalla" id="seccion-login">

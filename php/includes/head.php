@@ -22,9 +22,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Passero+One&display=swap" rel="stylesheet">
   
   <!-- CSS principal -->
-  <link rel="stylesheet" href="CSS/styles.css">
-  <link rel="stylesheet" href="CSS/navigation.css">
-  <link rel="stylesheet" href="CSS/responsive.css">
+  <link rel="stylesheet" href="CSS/utilidades/navigation.css">
+  <link rel="stylesheet" href="CSS/utilidades/responsive.css">
   <link rel="stylesheet" href="CSS/restricciones.css">
   
   <?php
@@ -57,7 +56,6 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(247, 231, 204, 0.85);
       z-index: -1;
     }
   </style>

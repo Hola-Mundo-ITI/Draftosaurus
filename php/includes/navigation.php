@@ -3,7 +3,7 @@
 $currentPage = basename($_SERVER['PHP_SELF'], '.php');
 
 if (!isset($specificCSS)) {
-    $specificCSS = "navigation.css";
+    $specificCSS = "utilidades/navigation.css";
 }
 if (!isset($specificJS)) {
     $specificJS = "navigation.js";

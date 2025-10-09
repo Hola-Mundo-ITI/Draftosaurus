@@ -1,281 +1,240 @@
-/* Reset y configuración base */
 * {
-    box-sizing: border-box;
-  }
-  
-  body {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    font-family: 'Arial', sans-serif;
-    overflow-x: hidden;
-  }
-  
-  /* Título principal */
-  .tracking-section h1 {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #764826;
-    text-align: center;
-    margin: 20px 0 30px 0;
-    letter-spacing: 0.5px;
-  }
-  
-  /* Contenedor principal del formulario */
-  .tracking-section {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  /* Layout del formulario - Grid de 2 columnas */
-  #form-recintos.row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 0;
-  }
-  
-  /* Contenedor de cada campo */
-  .col-12.col-md-6 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  /* Labels visibles */
-  .form-label {
-    position: relative;
-    left: auto;
-    width: auto;
-    height: auto;
-    overflow: visible;
-    font-size: 0.9rem;
-    font-weight: bold;
-    color: #514132;
-    text-align: center;
-    margin-bottom: 8px;
-    display: block;
-  }
-  
-  .form-control {
-    flex-direction: row;
-    width: 234px;
-    height: 40px;
-    border: 2px solid #764826;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #514132;
-    padding: 8px 12px;
-    text-align: center;
-    background: #FFD490;
-    outline: none;
-    transition: all 0.2s ease;
-    cursor: pointer;
-  }
-  
-  .form-control:hover {
-    background: #FFDF9F;
-    border-color: #5A3219;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(118, 72, 38, 0.3);
-  }
-  
-  .form-control:focus {
-    background: #FFDF9F;
-    border-color: #5A3219;
-    box-shadow: 0 0 0 2px rgba(118, 72, 38, 0.2);
-  }
-  
-  /* Placeholders */
-  input[type="number"]::placeholder {
-    color: #514132;
-    font-weight: normal;
-    opacity: 0.7;
-  }
-  
-  /* Ocultar spinners de los inputs number */
-  input[type="number"]::-webkit-outer-spin-button,
-  input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-  
-  input[type="number"] {
-    -moz-appearance: textfield;
-    appearance: textfield;
-  }
-  
-  /* Contenedor de botones - span completo */
-  .col-12.d-flex {
-    grid-column: 1 / -1;
-    justify-content: center;
-    align-items: center;
-    margin-top: 25px;
-    gap: 20px;
-  }
-  
-  /* Botón principal - Calcular */
-  .btn-primary {
-    background: transparent;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .btn-primary img {
-    width: 120px;
-    height: auto;
-    transition: all 0.2s ease;
-  }
-  
-  .btn-primary:hover img {
-    transform: scale(1.05);
-    filter: brightness(1.1);
-  }
-  
-  .btn-primary:focus {
-    outline: 2px solid #764826;
-    outline-offset: 2px;
-    border-radius: 4px;
-  }
-  
-  /* Botón secundario - Limpiar */
-  .btn-secondary {
-    background: transparent;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .btn-secondary img {
-    width: 100px;
-    height: auto;
-    transition: all 0.2s ease;
-  }
-  
-  .btn-secondary:hover img {
-    transform: scale(1.05);
-    filter: brightness(1.1);
-  }
-  
-  .btn-secondary:focus {
-    outline: 2px solid #764826;
-    outline-offset: 2px;
-    border-radius: 4px;
-  }
-  
-  /* Ajuste específico para el campo de "Dinosaurios en el Río" */
-  .col-12.col-md-6:nth-child(7) {
-    grid-column: 1 / 2;
-  }
-  
-  /* Ocultar elementos que no necesitamos */
-  #total-dinos-display,
-  input[type="hidden"] {
-    display: none;
-  }
-  
-  /* Resultado */
-  #resultado-form {
-    background: #FFD490;
-    border: 2px solid #764826;
-    border-radius: 8px;
-    padding: 20px;
-    margin: 30px auto;
-    max-width: 500px;
-    color: #514132;
-    font-weight: bold;
-    text-align: center;
-  }
+  box-sizing: border-box;
+}
 
-  /* Estilos específicos para botones del modal generado por JS (aseguran visibilidad) */
-  .card .modal-btn-primary {
-    display: inline-block;
-    padding: 8px 14px;
-    background-color: #552A0A; /* oscuro */
-    color: #FFD490; /* claro */
-    border: 2px solid rgba(0,0,0,0.12);
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  .card .modal-btn-primary:hover,
-  .card .modal-btn-primary:focus {
-    background-color: #6a3610;
-    color: #FFD490;
-    text-decoration: none;
-    outline: none;
-  }
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Arial', sans-serif;
+  overflow-x: hidden;
+}
 
-  .card .modal-btn-secondary {
-    display: inline-block;
-    padding: 8px 14px;
-    background-color: #FFD490; /* claro */
-    color: #552A0A; /* oscuro */
-    border: 2px solid #552A0A;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  .card .modal-btn-secondary:hover,
-  .card .modal-btn-secondary:focus {
-    background-color: #ffdf9f;
-    color: #552A0A;
-    outline: none;
-  }
+.tracking-section h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #764826;
+  text-align: center;
+  margin: 20px 0 30px 0;
+  letter-spacing: 0.5px;
+}
 
-  /* Asegurar que los badges dentro del modal mantengan contraste legible */
-  .card .list-group .badge.bg-primary {
-    background-color: #552A0A !important;
-    color: #FFD490 !important;
-  }
+.tracking-section {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+}
 
-  /* Estilos para el number picker (selector de cantidad que se abre al enfocar inputs) */
-  .number-picker {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    background: #FFD490;
-    border: 2px solid #552A0A;
-    padding: 8px;
-    border-radius: 8px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-    max-width: calc(100vw - 32px);
-    min-width: 120px;
-  }
+#form-recintos.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: #FFD490;
+  border: 3px solid #764826;
+}
 
-  .number-picker .picker-option {
-    background: #552A0A;
-    color: #FFD490;
-    border: none;
-    padding: 6px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    min-width: 36px;
-    text-align: center;
-  }
+.col-12.col-md-6 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
 
-  .number-picker .picker-option:hover,
-  .number-picker .picker-option:focus {
-    background: #6a3610;
-    outline: none;
-    transform: translateY(-1px);
-  }
+.form-label {
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #552A0A;
+  text-align: center;
+  margin-bottom: 8px;
+  display: block;
+  width: 100%;
+}
 
-  /* Mejorar accesibilidad en pantallas pequeñas: opciones en columna */
-  @media (max-width: 420px) {
-    .number-picker {
-      flex-direction: column;
-      max-width: 90vw;
-    }
-    .number-picker .picker-option {
-      min-width: 100%;
-    }
-  }
+.form-control {
+  width: 100%;
+  max-width: 220px;
+  height: 45px;
+  border: 2px solid #764826;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #514132;
+  padding: 8px 12px;
+  text-align: center;
+  background: #FFEBCC;
+  outline: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.form-control:hover {
+  background: #FFF0D6;
+  border-color: #5A3219;
+  transform: translateY(-1px);
+}
+
+.form-control:focus {
+  background: #FFF5E0;
+  border-color: #5A3219;
+}
+
+input[type="number"]::placeholder {
+  color: #514132;
+  font-weight: normal;
+  opacity: 0.7;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.col-12.d-flex {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  gap: 20px;
+}
+
+.btn-primary {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary img {
+  width: 150px;
+  height: auto;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover img {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+.btn-primary:focus {
+  outline: 2px solid #764826;
+  outline-offset: 2px;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary img {
+  width: 120px;
+  height: auto;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover img {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+.btn-secondary:focus {
+  outline: 2px solid #764826;
+  outline-offset: 2px;
+}
+
+#total-dinos-display,
+input[type="hidden"] {
+  display: none;
+}
+
+#resultado-form {
+  background: #FFD490;
+  border: 3px solid #764826;
+  padding: 20px;
+  margin: 30px auto;
+  max-width: 600px;
+  color: #514132;
+  font-weight: bold;
+  text-align: center;
+}
+
+.card .modal-btn-primary {
+  display: inline-block;
+  padding: 10px 16px;
+  background-color: #552A0A;
+  color: #FFD490;
+  border: 2px solid rgba(0,0,0,0.12);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.card .modal-btn-primary:hover,
+.card .modal-btn-primary:focus {
+  background-color: #6a3610;
+  color: #FFD490;
+  text-decoration: none;
+  outline: none;
+}
+
+.card .modal-btn-secondary {
+  display: inline-block;
+  padding: 10px 16px;
+  background-color: #FFD490;
+  color: #552A0A;
+  border: 2px solid #552A0A;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.card .modal-btn-secondary:hover,
+.card .modal-btn-secondary:focus {
+  background-color: #ffdf9f;
+  color: #552A0A;
+  outline: none;
+}
+
+.card .list-group .badge.bg-primary {
+  background-color: #552A0A !important;
+  color: #FFD490 !important;
+}
+
+.number-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  background: #FFD490;
+  border: 2px solid #552A0A;
+  padding: 8px;
+  max-width: calc(100vw - 32px);
+  min-width: 120px;
+}
+
+.number-picker .picker-option {
+  background: #552A0A;
+  color: #FFD490;
+  border: none;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-weight: bold;
+  min-width: 36px;
+  text-align: center;
+}
+
+.number-picker .picker-option:hover,
+.number-picker .picker-option:focus {
+  background: #6a3610;
+  outline: none;
+  transform: translateY(-1px);
+}

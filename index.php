@@ -1,11 +1,11 @@
 <?php
 $pageTitle = "Inicio - Draftosaurus";
 $pageDescription = "Página de inicio de Draftosaurus - Elige tu modo de juego favorito";
+$specificCSS = "utilidades/responsive.css";
 $specificCSS = "indexPag.css";
 $specificJS = "indexPag.js";
 include 'php/includes/head.php';
 ?>
-
 <body class="bg-light">
   <?php include 'php/includes/navigation.php'; ?>
 
@@ -24,4 +24,6 @@ include 'php/includes/head.php';
       </div>
     </section>
   </main>
+
+
   <?php include 'php/includes/footer.php'; ?>
