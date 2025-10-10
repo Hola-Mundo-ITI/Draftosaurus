@@ -1,4 +1,4 @@
-// Variables globales simples
+
 let dinoSeleccionado = null;
 let rondaActual = 1;
 let numeroBots = 2;
@@ -7,6 +7,17 @@ let tableroEstado = {
   casillas: {},
   dinosaurios: []
 };
+
+//cada jugador tiene 1 de cada tipo
+let dinosUsados = {
+  1: false,
+  2: false,
+  3: false,
+  4: false,
+  5: false,
+  6: false
+};
+let debetirarDado = true;
 
 function mostrarDebugServidor(respuesta) {
   try {
@@ -66,8 +77,35 @@ function obtenerZonasVacias() {
 }
 
 function lanzarDado() {
+  // Marcar que ya se tiro el dado
+  debetirarDado = false;
+  
   const caras = ['bosque', 'llanura', 'banos', 'cafeteria', 'recintoVacio'];
   const caraAleatoria = caras[Math.floor(Math.random() * caras.length)];
+  
+  // CAMBIAR LA IMAGEN DEL DADO
+  const imagenDado = document.getElementById('imagenDado');
+  if (imagenDado) {
+    let rutaImagen = '';
+    
+    if (caraAleatoria === 'bosque') {
+      rutaImagen = 'Recursos/img/dado/Bosque.png';
+    } else if (caraAleatoria === 'llanura') {
+      rutaImagen = 'Recursos/img/dado/Llanura.png';
+    } else if (caraAleatoria === 'banos') {
+      rutaImagen = 'Recursos/img/dado/Baños.png';
+    } else if (caraAleatoria === 'cafeteria') {
+      rutaImagen = 'Recursos/img/dado/Cafeteria.png';
+    } else if (caraAleatoria === 'recintoVacio') {
+      rutaImagen = 'Recursos/img/dado/RecintoVacio.png';
+    }
+    
+    // Actualiza la imagen
+    imagenDado.src = rutaImagen;
+    imagenDado.alt = 'Dado - ' + caraAleatoria;
+    
+    console.log('Imagen del dado actualizada a:', rutaImagen);
+  }
   
   let zonasPermitidas = [];
   
@@ -124,6 +162,18 @@ function aplicarRestriccionesVisuales(zonasPermitidas, caraDado) {
 }
 
 function seleccionarDino(numeroDino) {
+  // Verificar si debe tirar el dado primero
+  if (debetirarDado) {
+    alert('Debes tirar el dado antes de seleccionar un dinosaurio');
+    return;
+  }
+  
+  // Verificar si este dino ya fue usado
+  if (dinosUsados[numeroDino]) {
+    alert('Ya usaste este dinosaurio. Solo tienes 1 de cada tipo.');
+    return;
+  }
+  
   // Quitar seleccion anterior
   document.querySelectorAll('.dinosaurio').forEach(dino => {
     dino.classList.remove('seleccionado');
@@ -142,6 +192,12 @@ async function colocarDino(numeroCasilla) {
   console.log('=== INICIO colocarDino ===');
   console.log('Casilla objetivo:', numeroCasilla);
   console.log('Dino seleccionado:', dinoSeleccionado);
+  
+  // Verificar si debe tirar el dado primero
+  if (debetirarDado) {
+    alert('Debes tirar el dado antes de colocar un dinosaurio');
+    return;
+  }
   
   if (!dinoSeleccionado) {
     alert('Por favor selecciona un dinosaurio primero');
@@ -223,7 +279,6 @@ async function colocarDino(numeroCasilla) {
 
     console.log('Enviando al servidor:', datosParaEnviar);
 
-    // CAMBIO IMPORTANTE AQUI: Ruta correcta al archivo PHP
     const respuesta = await fetch('php/utilidades/validarMovimiento.php', {
       method: 'POST',
       headers: {
@@ -234,11 +289,9 @@ async function colocarDino(numeroCasilla) {
 
     console.log('Respuesta recibida. Status:', respuesta.status, respuesta.statusText);
 
-    // Primero leer como texto para ver que llega
     const textoRespuesta = await respuesta.text();
     console.log('Texto de respuesta:', textoRespuesta);
 
-    // Intentar convertir a JSON
     let datos;
     try {
       datos = JSON.parse(textoRespuesta);
@@ -252,7 +305,6 @@ async function colocarDino(numeroCasilla) {
       return;
     }
 
-    // Verificar si el movimiento es valido
     if (!datos.valid) {
       console.log('Movimiento rechazado');
       console.log('Razon:', datos.reason);
@@ -280,14 +332,36 @@ async function colocarDino(numeroCasilla) {
       casilla: numeroCasilla
     });
 
+    // MARCAR QUE ESTE DINO YA FUE USADO
+    dinosUsados[dinoSeleccionado] = true;
+    
+    const dinoElemento = document.querySelector(`[data-dino="${dinoSeleccionado}"]`);
+    if (dinoElemento) {
+      //  Oculta el dino usado
+      dinoElemento.style.opacity = '0.3';
+      dinoElemento.style.pointerEvents = 'none';
+    }
+
     // Quitar seleccion
     document.querySelectorAll('.dinosaurio').forEach(dino => {
       dino.classList.remove('seleccionado');
     });
     dinoSeleccionado = null;
 
+    // FORZAR A TIRAR EL DADO DE NUEVO
+    debetirarDado = true;
+    restriccionActual = null;
+    
+    // Quitar las clases visuales de restriccion
+    document.querySelectorAll('.casillero-item').forEach(casilla => {
+      casilla.classList.remove('restringido', 'permitido');
+    });
+    
+    alert('Dinosaurio colocado correctamente.\n\nAhora debes tirar el dado de nuevo.');
+
     console.log('Dinosaurio colocado en:', numeroCasilla);
     console.log('Estado actualizado:', tableroEstado);
+    console.log('Dinos usados:', dinosUsados);
 
   } catch (error) {
     console.error('ERROR COMPLETO:');
@@ -357,4 +431,5 @@ window.addEventListener('DOMContentLoaded', function() {
   
   console.log('Draftosaurus cargado - Sistema de restricciones activo');
   console.log('Jugando con', cantidadBots, 'bots');
+  console.log('IMPORTANTE: Debes tirar el dado antes de cada movimiento');
 });

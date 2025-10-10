@@ -1,12 +1,11 @@
 <?php
-// php/modelos/Carta.php
-// Representa una carta del juego (dinosaurio o especial)
+// Representa una carta del juego (dinosaurio)
 
 class Carta {
     public $id;         // Identificador único de la carta (ej: "c1", "c2")
-    public $tipo;       // "dino" o "especial"
-    public $especie;    // Número del dinosaurio (1-6) o null si es especial
-    public $nombre;     // Nombre descriptivo (ej: "Dino 1", "Carta Especial")
+    public $tipo;       // "dino"
+    public $especie;    // Número del dinosaurio (1-6)
+    public $nombre;     // Nombre descriptivo 
     
     // Constructor: crear carta desde array
     public function __construct($datos) {
