@@ -2,7 +2,7 @@
 $pageTitle = "Partida Virtual - Draftosaurus";
 $specificCSS = "utilidades/responsive.css";
 $specificCSS = "digitalPag.css";
-$specificJS = ["digitalPag.js"];
+$specificJS = ["digitalPag.js" , "puntuacionDigital.js"];
 
 include 'php/includes/head.php';
 ?>

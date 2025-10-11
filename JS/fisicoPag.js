@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function mostrarResultado(report) {
         const total = report.totalScore || 0;
         const detalles = report.baseDetails || {};
-        
+
         // Crear overlay oscuro
         const overlay = document.createElement('div');
         overlay.style.position = 'fixed';
@@ -197,26 +197,26 @@ document.addEventListener('DOMContentLoaded', function() {
         overlay.style.display = 'flex';
         overlay.style.alignItems = 'center';
         overlay.style.justifyContent = 'center';
-        
+
         // Crear tarjeta de resultado
         const card = document.createElement('div');
         card.className = 'card shadow-lg';
         card.style.maxWidth = '760px';
         card.style.width = '90%';
-        
+
         // Contenido de la tarjeta
         let html = '<div class="card-body">';
         html += '<h3 class="card-title mb-3">Resultado de Puntuación</h3>';
         html += `<div class="mb-3 lead"><strong>Puntuación Total:</strong> <span class="fs-4">${total} pts</span></div>`;
         html += '<h5>Desglose por Zona:</h5>';
         html += '<ul class="list-group list-group-flush">';
-        
+
         // Agregar cada zona
         for (let zonaId in zonas) {
             const det = detalles[zonaId] || {};
             const puntos = det.points || 0;
             const cantidad = det.dinosaurCount || 0;
-            
+
             html += '<li class="list-group-item d-flex justify-content-between align-items-center">';
             html += `<div><strong>${zonas[zonaId]}:</strong> ${det.description || ''}</div>`;
             html += '<div>';
@@ -225,23 +225,26 @@ document.addEventListener('DOMContentLoaded', function() {
             html += '</div>';
             html += '</li>';
         }
-        
+
         html += '</ul>';
         html += '<div class="d-flex justify-content-end gap-2 mt-3">';
-        html += '<a href="seleccionarBots.php" class="btn btn-primary modal-btn-primary">Jugar Digital</a>';
         html += '<button class="btn btn-secondary modal-btn-secondary" id="btn-cerrar-modal">Cerrar</button>';
         html += '</div>';
         html += '</div>';
-        
+
         card.innerHTML = html;
+
+        const primaryButtons = card.querySelectorAll('.modal-btn-primary');
+        primaryButtons.forEach(btn => btn.remove());
+
         overlay.appendChild(card);
         document.body.appendChild(overlay);
-        
+
         // Botón cerrar
         document.getElementById('btn-cerrar-modal').addEventListener('click', function() {
             document.body.removeChild(overlay);
         });
-        
+
         // Cerrar al hacer clic fuera
         overlay.addEventListener('click', function(e) {
             if (e.target === overlay) {
@@ -249,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Inicializar total
     actualizarTotal();
 });

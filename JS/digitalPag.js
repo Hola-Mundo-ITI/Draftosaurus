@@ -363,6 +363,12 @@ async function colocarDino(numeroCasilla) {
     console.log('Estado actualizado:', tableroEstado);
     console.log('Dinos usados:', dinosUsados);
 
+    if (window.actualizarPuntos) {
+      setTimeout(() => {
+          window.actualizarPuntos();
+      }, 100);
+  }
+
   } catch (error) {
     console.error('ERROR COMPLETO:');
     console.error('Tipo:', error.name);
