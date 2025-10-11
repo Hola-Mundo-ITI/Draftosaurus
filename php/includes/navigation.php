@@ -6,7 +6,7 @@ if (!isset($specificCSS)) {
     $specificCSS = "utilidades/navigation.css";
 }
 if (!isset($specificJS)) {
-    $specificJS = "navigation.js";
+    $specificJS = "utilidades/navigation.js";
 }
 ?>
 
