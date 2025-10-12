@@ -1,5 +1,4 @@
 <?php
-// Obtener la página actual
 $currentPage = basename($_SERVER['PHP_SELF'], '.php');
 
 if (!isset($specificCSS)) {
@@ -8,17 +7,31 @@ if (!isset($specificCSS)) {
 if (!isset($specificJS)) {
     $specificJS = "utilidades/navigation.js";
 }
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$sesionActiva = isset($_SESSION['usuario_id']);
+$nombreUsuario = $sesionActiva ? $_SESSION['usuario_nombre'] : '';
 ?>
 
 <header>
-  <button id="menuToggle" class="menu-toggle" aria-label="Abrir menú">
+  <button id="menuToggle" class="menu-toggle" aria-label="Abrir menu">
     ☰
   </button>
 </header>
 
 <aside id="mainMenu" class="offcanvas-menu">
   <div class="user-area">
-    <a href="sesion.php" id="link-iniciar-sesion">Iniciar sesión</a>
+    <?php if ($sesionActiva): ?>
+      <div class="user-info">
+        <p class="user-name">s<?php echo htmlspecialchars($nombreUsuario); ?></p>
+        <button id="btn-cerrar-sesion" class="btn-logout">Cerrar sesion</button>
+      </div>
+    <?php else: ?>
+      <a href="sesion.php" id="link-iniciar-sesion">Iniciar sesion</a>
+    <?php endif; ?>
   </div>
 
   <nav>
@@ -31,7 +44,7 @@ if (!isset($specificJS)) {
       
       <li>
         <a href="fisico.php" <?php if($currentPage == 'fisico') echo 'class="active"'; ?>>
-          Modo Físico
+          Modo Fisico
         </a>
       </li>
       
@@ -55,7 +68,7 @@ if (!isset($specificJS)) {
       
       <li>
         <a href="configuracion.php" <?php if($currentPage == 'configuracion') echo 'class="active"'; ?>>
-          Configuración
+          Configuracion
         </a>
       </li>
     </ul>
