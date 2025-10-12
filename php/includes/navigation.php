@@ -8,12 +8,11 @@ if (!isset($specificJS)) {
     $specificJS = "utilidades/navigation.js";
 }
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-$sesionActiva = isset($_SESSION['usuario_id']);
-$nombreUsuario = $sesionActiva ? $_SESSION['usuario_nombre'] : '';
+require_once __DIR__ . '/../auth/Sesion.php';
+$sesion = new Sesion();
+$verificacion = $sesion->verificarSesion();
+$sesionActiva = $verificacion['activa'];
+$nombreUsuario = $sesionActiva ? $verificacion['usuario']['nombre'] : '';
 ?>
 
 <header>
@@ -26,7 +25,7 @@ $nombreUsuario = $sesionActiva ? $_SESSION['usuario_nombre'] : '';
   <div class="user-area">
     <?php if ($sesionActiva): ?>
       <div class="user-info">
-        <p class="user-name">s<?php echo htmlspecialchars($nombreUsuario); ?></p>
+        <p class="user-name"><?php echo htmlspecialchars($nombreUsuario); ?></p>
         <button id="btn-cerrar-sesion" class="btn-logout">Cerrar sesion</button>
       </div>
     <?php else: ?>
@@ -43,15 +42,27 @@ $nombreUsuario = $sesionActiva ? $_SESSION['usuario_nombre'] : '';
       </li>
       
       <li>
-        <a href="fisico.php" <?php if($currentPage == 'fisico') echo 'class="active"'; ?>>
-          Modo Fisico
-        </a>
+        <?php if ($sesionActiva): ?>
+          <a href="fisico.php" <?php if($currentPage == 'fisico') echo 'class="active"'; ?>>
+            Modo Fisico
+          </a>
+        <?php else: ?>
+          <a href="sesion.php">
+            Modo Fisico
+          </a>
+        <?php endif; ?>
       </li>
       
       <li>
-        <a href="digital.php" <?php if($currentPage == 'seleccionarBots') echo 'class="active"'; ?>>
-          Modo Digital
-        </a>
+        <?php if ($sesionActiva): ?>
+          <a href="digital.php" <?php if($currentPage == 'seleccionarBots') echo 'class="active"'; ?>>
+            Modo Digital
+          </a>
+        <?php else: ?>
+          <a href="sesion.php">
+            Modo Digital
+          </a>
+        <?php endif; ?>
       </li>
       
       <li>

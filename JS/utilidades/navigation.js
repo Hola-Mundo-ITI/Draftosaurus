@@ -1,4 +1,3 @@
-
 document.getElementById('menuToggle').addEventListener('click', function() {
   var menu = document.getElementById('mainMenu');
   var overlay = document.getElementById('menuOverlay');
@@ -24,10 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 async function cerrarSesion() {
-  if (!confirm('Estas seguro de que quieres cerrar sesion?')) {
-    return;
-  }
-  
   try {
     const respuesta = await fetch('php/auth/borrarSesion.php', {
       method: 'POST',
@@ -45,10 +40,10 @@ async function cerrarSesion() {
     if (datos.success) {
       window.location.href = 'sesion.php';
     } else {
-      alert('Error al cerrar sesion: ' + (datos.error || 'Desconocido'));
+      console.log('Error al cerrar sesion: ' + (datos.error || 'Desconocido'));
     }
   } catch (error) {
     console.error('Error:', error);
-    alert('Error de red al cerrar sesion');
+    console.log('Error de red al cerrar sesion');
   }
 }

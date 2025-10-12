@@ -1,6 +1,6 @@
 <?php
 class Mano {
-    private $cartas; // Array de objetos Carta
+    private $cartas; 
     
     public function __construct() {
         $this->cartas = [];
