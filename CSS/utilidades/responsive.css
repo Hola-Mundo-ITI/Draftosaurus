@@ -2,102 +2,91 @@
   box-sizing: border-box;
 }
 
-
-/* MÓVIL (320px - 576px) */
-
 body {
-    font-size: 14px;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .container {
-    width: 100%;
-    padding-left: 15px;
-    padding-right: 15px;
-  }
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 576px) {
   
   .main-content {
-    padding-top: 80px;
-    padding-bottom: 60px;
+    padding-top: 60px;
+    padding-bottom: 40px;
   }
   
   .hero-section h1 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
+    font-size: 1.3rem;
   }
   
-  .hero-section .logo-image {
-    max-width: 180px;
-    margin-bottom: 20px;
+  .logo-image {
+    max-width: 150px !important;
   }
   
-  .hero-section .question {
+  .question {
     font-size: 1rem;
-    margin-bottom: 15px;
   }
   
   .button-group {
     flex-direction: column;
     gap: 15px;
-    width: 100%;
   }
   
   .btn-image-button {
     width: 100%;
-    max-width: 200px;
+    max-width: 150px;
   }
   
   .button-image {
     width: 100%;
-    max-width: 200px;
   }
   
   .encabezado-partida {
     flex-direction: column;
-    padding: 15px;
+    padding: 10px;
     gap: 10px;
-    position: relative;
   }
   
   .encabezado-partida .titulo {
-    font-size: 1.3rem;
-    text-align: center;
-    width: 100%;
+    font-size: 1.2rem;
   }
   
   .encabezado-partida .ronda-actual {
     font-size: 0.9rem;
-    text-align: center;
-    width: 100%;
   }
   
   .datos-juego {
     flex-direction: column;
-    width: 100%;
     gap: 10px;
     align-items: center;
+    width: 100%;
   }
   
   .cantidad-jugadores {
     font-size: 0.85rem;
-    text-align: center;
   }
   
   .boton-exportar {
     width: 100%;
-    max-width: 200px;
-    padding: 10px;
-    font-size: 0.9rem;
+    max-width: 150px;
+    padding: 8px 12px;
+    font-size: 0.85rem;
   }
   
   .dado-virtual {
-    width: 100%;
-    text-align: center;
+    justify-content: center;
   }
   
   .dado-virtual img {
-    width: 40px;
+    width: 35px;
+    height: 35px;
   }
   
   .texto-dado {
@@ -106,17 +95,15 @@ body {
   
   .zona-juego {
     flex-direction: column;
-    padding: 15px 10px;
-    gap: 20px;
-    align-items: center;
+    padding: 10px;
+    gap: 15px;
   }
   
   .zona-dinos,
   .zona-dinosDerecha {
     flex-direction: row;
-    gap: 10px;
+    gap: 8px;
     justify-content: center;
-    width: 100%;
   }
   
   .dinosaurio {
@@ -131,46 +118,44 @@ body {
   .contenedor-tablero {
     width: 100%;
     height: auto;
-    padding: 10px;
   }
   
   .parent {
     width: 100%;
-    max-width: 320px;
-    height: auto;
-    aspect-ratio: 1;
+    max-width: 300px;
+    height: 300px;
     grid-column-gap: 5px;
     grid-row-gap: 5px;
-    margin: 0 auto;
+    margin: 10px auto;
   }
   
   .casillerosBosqueSemejanza,
   .casillerosPradoDiferencia,
   .casillerosAgua {
     grid-column-gap: 2px;
-    padding: 3px;
+    padding: 2px;
   }
   
   .casillerosTrioFrondoso,
-  .praderaDelAmor {
-    grid-column-gap: 3px;
-    padding: 3px;
+  .praderaDelAmor,
+  .reySelva,
+  .casillerosIslaSolitaria {
+    grid-column-gap: 2px;
+    padding: 2px;
   }
   
   .tracking-section {
     padding: 15px;
-    width: 100%;
   }
   
   .tracking-section h1 {
-    font-size: 1.4rem;
-    margin-bottom: 20px;
+    font-size: 1.3rem;
   }
   
   #form-recintos.row {
     grid-template-columns: 1fr;
-    gap: 12px;
-    padding: 0 10px;
+    gap: 15px;
+    padding: 15px;
   }
   
   .form-label {
@@ -178,68 +163,40 @@ body {
   }
   
   .form-control {
-    width: 100%;
-    max-width: 280px;
-    height: 45px;
+    max-width: 100%;
+    height: 40px;
     font-size: 1rem;
   }
   
   .col-12.d-flex {
     flex-direction: column;
-    gap: 15px;
-    margin-top: 20px;
+    gap: 10px;
   }
   
   .btn-primary img,
   .btn-secondary img {
-    width: 100%;
-    max-width: 140px;
+    width: 120px;
   }
   
   #resultado-form {
     padding: 15px;
     font-size: 0.9rem;
-    max-width: 100%;
-  }
-  
-  .pantalla {
-    width: 100%;
-    padding: 0 15px;
   }
   
   .caja-formulario {
-    width: 100%;
     padding: 20px;
   }
   
   .imagen-logo {
     width: 80px;
-    margin-bottom: 15px;
-  }
-  
-  .form-header h1 {
-    font-size: 1.3rem;
   }
   
   .grupo-campo {
     margin-bottom: 12px;
   }
   
-  .grupo-campo label {
-    font-size: 0.85rem;
-  }
-  
   .grupo-campo input {
     padding: 8px;
-    font-size: 0.9rem;
-  }
-  
-  .grupo-campo small {
-    font-size: 0.75rem;
-  }
-  
-  .boton-accion {
-    padding: 10px;
     font-size: 0.9rem;
   }
   
@@ -251,30 +208,19 @@ body {
     font-size: 0.85rem;
   }
   
-  .form-navigation p {
-    font-size: 0.85rem;
-  }
-  
   .menu-toggle {
     font-size: 24px;
     padding: 8px 12px;
-    top: 8px;
-    left: 8px;
   }
   
   .offcanvas-menu {
-    width: 220px;
-    left: -220px;
-    padding: 70px 15px 15px 15px;
-  }
-  
-  .offcanvas-menu.open {
-    left: 0;
+    width: 200px;
+    left: -200px;
+    padding: 60px 15px 15px 15px;
   }
   
   .user-area {
     margin-bottom: 20px;
-    font-size: 0.9rem;
   }
   
   .menu-list a {
@@ -282,428 +228,263 @@ body {
     font-size: 0.9rem;
   }
   
-  .site-footer {
+  .boton-puntos {
+    top: 60px;
+    right: 5px;
+    padding: 8px 15px;
     font-size: 0.85rem;
-    padding: 12px 10px;
-    position: relative;
   }
   
-  /* TABLETAS (577px - 992px) */
-  
-  @media (min-width: 577px) {
-    body {
-      font-size: 15px;
-    }
-  
-    .hero-section h1 {
-      font-size: 1.8rem;
-    }
-  
-    .hero-section .logo-image {
-      max-width: 220px;
-    }
-  
-    .hero-section .question {
-      font-size: 1.1rem;
-    }
-  
-    .button-group {
-      flex-direction: row;
-      gap: 25px;
-    }
-  
-    .btn-image-button,
-    .button-image {
-      max-width: 180px;
-    }
-  
-    .encabezado-partida {
-      flex-direction: row;
-      justify-content: space-between;
-      padding: 18px 25px;
-      flex-wrap: wrap;
-    }
-  
-    .encabezado-partida .titulo {
-      font-size: 1.5rem;
-      width: auto;
-    }
-  
-    .encabezado-partida .ronda-actual {
-      font-size: 1rem;
-      width: auto;
-    }
-  
-    .datos-juego {
-      flex-direction: row;
-      gap: 20px;
-      width: auto;
-    }
-  
-    .cantidad-jugadores {
-      font-size: 0.95rem;
-    }
-  
-    .boton-exportar {
-      width: auto;
-      padding: 10px 18px;
-      font-size: 0.95rem;
-    }
-  
-    .dado-virtual img {
-      width: 45px;
-    }
-  
-    .texto-dado {
-      font-size: 0.85rem;
-    }
-  
-    .zona-juego {
-      flex-direction: row;
-      flex-wrap: wrap;
-      padding: 20px 15px;
-      gap: 25px;
-      justify-content: center;
-    }
-  
-    .zona-dinos,
-    .zona-dinosDerecha {
-      flex-direction: column;
-      gap: 12px;
-    }
-  
-    .dinosaurio img {
-      width: 65px;
-      height: 65px;
-    }
-  
-    .contenedor-tablero {
-      width: 100%;
-      max-width: 500px;
-      order: 2;
-    }
-  
-    .zona-dinos {
-      order: 1;
-    }
-  
-    .zona-dinosDerecha {
-      order: 3;
-    }
-  
-    .parent {
-      max-width: 420px;
-      grid-column-gap: 8px;
-      grid-row-gap: 8px;
-    }
-  
-    .casillerosBosqueSemejanza,
-    .casillerosPradoDiferencia,
-    .casillerosAgua {
-      grid-column-gap: 4px;
-      padding: 4px;
-    }
-  
-    .casillerosTrioFrondoso,
-    .praderaDelAmor {
-      grid-column-gap: 4px;
-      padding: 4px;
-    }
-  
-    .tracking-section {
-      padding: 20px;
-      max-width: 700px;
-    }
-  
-    .tracking-section h1 {
-      font-size: 1.6rem;
-    }
-  
-    #form-recintos.row {
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      max-width: 600px;
-    }
-  
-    .form-label {
-      font-size: 0.9rem;
-    }
-  
-    .form-control {
-      max-width: 240px;
-      height: 42px;
-    }
-  
-    .col-12.d-flex {
-      flex-direction: row;
-      gap: 18px;
-    }
-  
-    .btn-primary img {
-      width: 130px;
-    }
-  
-    .btn-secondary img {
-      width: 110px;
-    }
-  
-    #resultado-form {
-      padding: 18px;
-      font-size: 1rem;
-    }
-  
-    .pantalla {
-      max-width: 500px;
-      margin: 0 auto;
-    }
-  
-    .caja-formulario {
-      padding: 25px;
-    }
-  
-    .imagen-logo {
-      width: 100px;
-    }
-  
-    .form-header h1 {
-      font-size: 1.5rem;
-    }
-  
-    .grupo-campo label {
-      font-size: 0.9rem;
-    }
-  
-    .grupo-campo input {
-      padding: 9px;
-      font-size: 0.95rem;
-    }
-  
-    .boton-accion img {
-      width: 140px;
-    }
-  
-    .menu-toggle {
-      font-size: 28px;
-      padding: 10px 14px;
-    }
-  
-    .offcanvas-menu {
-      width: 240px;
-      left: -240px;
-    }
-  
-    .user-area {
-      font-size: 1rem;
-    }
-  
-    .menu-list a {
-      font-size: 0.95rem;
-    }
+  .panel-puntos {
+    width: 280px;
+    right: -280px;
+    padding: 15px;
   }
   
-  /* ESCRITORIO (>993px) */
-  
-  @media (min-width: 993px) {
-    body {
-      font-size: 16px;
-    }
-  
-    .main-content {
-      padding-top: 100px;
-    }
-  
-    .hero-section h1 {
-      font-size: 2rem;
-    }
-  
-    .hero-section .logo-image {
-      max-width: 250px;
-    }
-  
-    .hero-section .question {
-      font-size: 1.2rem;
-    }
-  
-    .button-group {
-      gap: 30px;
-    }
-  
-    .btn-image-button,
-    .button-image {
-      max-width: 200px;
-    }
-  
-    .encabezado-partida {
-      padding: 20px 30px;
-      flex-wrap: nowrap;
-    }
-  
-    .encabezado-partida .titulo {
-      font-size: 1.7rem;
-    }
-  
-    .encabezado-partida .ronda-actual {
-      font-size: 1.1rem;
-    }
-  
-    .datos-juego {
-      gap: 25px;
-    }
-  
-    .cantidad-jugadores {
-      font-size: 1rem;
-    }
-  
-    .boton-exportar {
-      padding: 10px 20px;
-      font-size: 1rem;
-    }
-  
-    .dado-virtual img {
-      width: 50px;
-    }
-  
-    .texto-dado {
-      font-size: 0.9rem;
-    }
-  
-    .zona-juego {
-      flex-direction: row;
-      flex-wrap: nowrap;
-      padding: 20px;
-      gap: 30px;
-      align-items: center;
-      justify-content: center;
-    }
-  
-    .zona-dinos,
-    .zona-dinosDerecha {
-      flex-direction: column;
-      gap: 15px;
-    }
-  
-    .dinosaurio img {
-      width: 80px;
-      height: 80px;
-    }
-  
-    .contenedor-tablero {
-      max-width: 600px;
-      height: 50vh;
-      order: 0;
-    }
-  
-    .zona-dinos {
-      order: 0;
-    }
-  
-    .zona-dinosDerecha {
-      order: 0;
-    }
-  
-    .parent {
-      width: 500px;
-      height: 500px;
-      max-width: none;
-      grid-column-gap: 10px;
-      grid-row-gap: 10px;
-    }
-  
-    .casillerosBosqueSemejanza,
-    .casillerosPradoDiferencia,
-    .casillerosAgua {
-      grid-column-gap: 5px;
-      padding: 5px;
-    }
-  
-    .casillerosTrioFrondoso,
-    .praderaDelAmor {
-      grid-column-gap: 5px;
-      padding: 5px;
-    }
-  
-    .tracking-section {
-      padding: 25px;
-      max-width: 700px;
-    }
-  
-    .tracking-section h1 {
-      font-size: 1.8rem;
-    }
-  
-    #form-recintos.row {
-      max-width: 600px;
-    }
-  
-    .form-control {
-      max-width: 234px;
-    }
-  
-    .btn-primary img {
-      width: 150px;
-    }
-  
-    .btn-secondary img {
-      width: 120px;
-    }
-  
-    #resultado-form {
-      max-width: 600px;
-    }
-  
-    .caja-formulario {
-      padding: 30px;
-    }
-  
-    .imagen-logo {
-      width: 110px;
-    }
-  
-    .form-header h1 {
-      font-size: 1.7rem;
-    }
-  
-    .grupo-campo input {
-      padding: 10px;
-      font-size: 1rem;
-    }
-  
-    .boton-accion {
-      padding: 12px;
-      font-size: 1rem;
-    }
-  
-    .boton-accion img {
-      width: 150px;
-    }
-  
-    .menu-toggle {
-      font-size: 30px;
-      padding: 10px 15px;
-    }
-  
-    .offcanvas-menu {
-      width: 250px;
-      left: -250px;
-      padding: 80px 20px 20px 20px;
-    }
-  
-    .user-area {
-      margin-bottom: 30px;
-      font-size: 1rem;
-    }
-  
-    .menu-list li {
-      margin-bottom: 10px;
-    }
-  
-    .menu-list a {
-      padding: 12px;
-      font-size: 1rem;
-    }
-  
-    .site-footer {
-      font-size: 1rem;
-      padding: 15px 0;
-    }
+  .tabla-puntos table {
+    font-size: 0.85rem;
   }
+  
+  .tabla-puntos th,
+  .tabla-puntos td {
+    padding: 6px;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 992px) {
+  
+  .main-content {
+    padding-top: 80px;
+    padding-bottom: 40px;
+  }
+  
+  .hero-section h1 {
+    font-size: 1.6rem;
+  }
+  
+  .logo-image {
+    max-width: 200px !important;
+  }
+  
+  .question {
+    font-size: 1.1rem;
+  }
+  
+  .button-group {
+    flex-direction: row;
+    gap: 20px;
+  }
+  
+  .btn-image-button {
+    width: auto;
+  }
+  
+  .button-image {
+    width: 150px;
+  }
+  
+  .encabezado-partida {
+    flex-wrap: wrap;
+    padding: 15px 20px;
+    gap: 15px;
+  }
+  
+  .encabezado-partida .titulo {
+    font-size: 1.4rem;
+  }
+  
+  .encabezado-partida .ronda-actual {
+    font-size: 1rem;
+  }
+  
+  .datos-juego {
+    flex-direction: row;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  
+  .cantidad-jugadores {
+    font-size: 0.9rem;
+  }
+  
+  .boton-exportar {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
+  
+  .dado-virtual img {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .texto-dado {
+    font-size: 0.85rem;
+  }
+  
+  .zona-juego {
+    flex-direction: row;
+    padding: 15px;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .zona-dinos,
+  .zona-dinosDerecha {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .dinosaurio {
+    padding: 8px;
+  }
+  
+  .dinosaurio img {
+    width: 65px;
+    height: 65px;
+  }
+  
+  .contenedor-tablero {
+    width: 100%;
+    max-width: 450px;
+    height: auto;
+  }
+  
+  .parent {
+    width: 100%;
+    max-width: 400px;
+    height: 400px;
+    grid-column-gap: 8px;
+    grid-row-gap: 8px;
+    margin: 15px auto;
+  }
+  
+  .casillerosBosqueSemejanza,
+  .casillerosPradoDiferencia,
+  .casillerosAgua {
+    grid-column-gap: 4px;
+    padding: 4px;
+  }
+  
+  .casillerosTrioFrondoso,
+  .praderaDelAmor,
+  .reySelva,
+  .casillerosIslaSolitaria {
+    grid-column-gap: 4px;
+    padding: 4px;
+  }
+  
+  .tracking-section {
+    padding: 20px;
+    max-width: 700px;
+  }
+  
+  .tracking-section h1 {
+    font-size: 1.6rem;
+  }
+  
+  #form-recintos.row {
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    padding: 25px;
+  }
+  
+  .form-label {
+    font-size: 0.9rem;
+  }
+  
+  .form-control {
+    max-width: 220px;
+    height: 43px;
+  }
+  
+  .col-12.d-flex {
+    flex-direction: row;
+    gap: 15px;
+  }
+  
+  .btn-primary img {
+    width: 140px;
+  }
+  
+  .btn-secondary img {
+    width: 110px;
+  }
+  
+  #resultado-form {
+    padding: 18px;
+  }
+  
+  .caja-formulario {
+    padding: 25px;
+  }
+  
+  .imagen-logo {
+    width: 90px;
+  }
+  
+  .grupo-campo {
+    margin-bottom: 15px;
+  }
+  
+  .grupo-campo input {
+    padding: 9px;
+    font-size: 0.95rem;
+  }
+  
+  .boton-accion img {
+    width: 140px;
+  }
+  
+  .menu-toggle {
+    font-size: 28px;
+    padding: 10px 14px;
+  }
+  
+  .offcanvas-menu {
+    width: 230px;
+    left: -230px;
+    padding: 70px 18px 18px 18px;
+  }
+  
+  .user-area {
+    margin-bottom: 25px;
+  }
+  
+  .menu-list a {
+    padding: 11px;
+    font-size: 0.95rem;
+  }
+  
+  .boton-puntos {
+    top: 65px;
+    padding: 9px 18px;
+  }
+  
+  .panel-puntos {
+    width: 320px;
+    right: -320px;
+    padding: 18px;
+  }
+}
+
+@media (min-width: 993px) {
+  
+  .encabezado-partida {
+    flex-wrap: nowrap;
+  }
+  
+  .zona-juego {
+    flex-wrap: nowrap;
+  }
+  
+  .parent {
+    width: 500px;
+    height: 500px;
+    max-width: 500px;
+  }
+  
+  .contenedor-tablero {
+    max-width: 600px;
+  }
+}

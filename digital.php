@@ -12,24 +12,9 @@ include 'php/includes/head.php';
 
 
 <body>
-  <header class="encabezado-partida">
-    <?php include 'php/includes/navigation.php'; ?>
-    <div class="ronda-actual">Ronda: <span id="numRonda">1</span></div>
-    <h1 class="titulo">Partida Virtual</h1>
-    <div class="datos-juego">
-      <div class="dado-virtual" onclick="lanzarDado()">
-        <img id="imagenDado" src="Recursos/img/dado.png" alt="Dado" />
-        <div class="texto-dado">Lanzar Dado</div>
-      </div>
-      <div class="cantidad-jugadores">
-        Partida AutomÃ¡tica (TÃº vs <span id="numeroBots">2</span> Bots)
-      </div>
-      <button id="botonExportar" class="boton-exportar">Exportar</button>
-    </div>
-  </header>
-
+  <?php include 'php/includes/navigation.php'; ?>
+  
   <main id="mainContent" class="zona-juego">
-    <!-- Zona izquierda de dinosaurios -->
     <section class="zona-dinos izquierda">
       <div class="dinosaurio" onclick="seleccionarDino(1)" data-dino="1">
         <img src="Recursos/img/dino1.png" alt="Dino 1" />
@@ -42,8 +27,18 @@ include 'php/includes/head.php';
       </div>
     </section>
 
- <!-- Tablero central -->
  <section class="contenedor-tablero">
+      <div class="info-superior">
+        <div class="ronda-actual">
+          <span class="icono-ronda">Ronda:</span>
+          <span class="numero-ronda" id="numRonda">1</span>
+        </div>
+        <div class="cantidad-jugadores">
+          <span class="icono-jugadores">Jugadores:</span>
+          <span class="numero-bots" id="numeroBots">2</span>
+        </div>
+      </div>
+      
       <div id="tablero" class="tablero-juego">
         <div class="parent">
           <div class="div1 casilla" data-casilla="1">
@@ -103,9 +98,15 @@ include 'php/includes/head.php';
           </div>
         </div>
       </div>
+
+      <div class="dado-container">
+        <div class="dado-virtual" onclick="lanzarDado()">
+          <img id="imagenDado" src="Recursos/img/dado.png" alt="Dado" />
+        </div>
+        <button id="botonExportar" class="boton-exportar">Exportar</button>
+      </div>
     </section>
 
-    <!-- Zona derecha de dinosaurios -->
     <section class="zona-dinosDerecha">
       <div class="dinosaurio" onclick="seleccionarDino(4)" data-dino="4">
         <img src="Recursos/img/dino4.png" alt="Dino 4" />

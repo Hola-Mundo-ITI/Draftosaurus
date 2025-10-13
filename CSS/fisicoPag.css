@@ -32,8 +32,8 @@ body {
   max-width: 600px;
   margin: 0 auto;
   padding: 30px;
-  background-color: #FFD490;
-  border: 3px solid #764826;
+  background-color: transparent;
+  border: 3px solid transparent;
 }
 
 .col-12.col-md-6 {
@@ -58,6 +58,7 @@ body {
   max-width: 220px;
   height: 45px;
   border: 2px solid #764826;
+  border-radius: 15px;
   font-size: 1.1rem;
   font-weight: bold;
   color: #514132;

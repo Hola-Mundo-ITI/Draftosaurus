@@ -1,7 +1,6 @@
 <?php
 $pageTitle = "Inicio - Draftosaurus";
 $pageDescription = "Página de inicio de Draftosaurus - Elige tu modo de juego favorito";
-$specificCSS = "utilidades/responsive.css";
 $specificCSS = "indexPag.css";
 $specificJS = "indexPag.js";
 

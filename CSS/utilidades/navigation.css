@@ -1,8 +1,8 @@
 :root {
   --nav-width: 250px;
-  --nav-bg: #FFD490; 
-  --nav-accent: #552A0A;
-  --nav-foreground: #552A0A;
+  --nav-bg: #552A0A ; 
+  --nav-accent: #FFD490;
+  --nav-foreground: #FFD490;
   --overlay-bg: rgba(0,0,0,0.45);
   --transition-fast: 0.26s;
   --transition-slow: 0.36s;
