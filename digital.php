@@ -7,8 +7,6 @@ include 'php/includes/head.php';
 ?>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<base href="/proyecto/DraftosaurusVersionFinal/">
-
 <body>
   <?php include 'php/includes/navigation.php'; ?>
   
