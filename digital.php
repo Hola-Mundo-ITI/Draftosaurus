@@ -1,15 +1,13 @@
 <?php
 $pageTitle = "Partida Virtual - Draftosaurus";
-$specificCSS = "utilidades/responsive.css";
 $specificCSS = "digitalPag.css";
-$specificJS = ["digitalPag.js" , "utilidades/puntuacionDigital.js"];
+$specificJS = ["digitalPag.js", "utilidades/puntuacionDigital.js", "multijugador/multijugador.js"];
 
 include 'php/includes/head.php';
 ?>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <base href="/proyecto/DraftosaurusVersionFinal/">
-
 
 <body>
   <?php include 'php/includes/navigation.php'; ?>
@@ -27,15 +25,15 @@ include 'php/includes/head.php';
       </div>
     </section>
 
- <section class="contenedor-tablero">
+    <section class="contenedor-tablero">
       <div class="info-superior">
+        <div class="info-jugador-actual">
+          <span class="etiqueta-turno">Turno de:</span>
+          <span class="nombre-jugador-actual" id="nombreJugadorActual">Jugador 1</span>
+        </div>
         <div class="ronda-actual">
           <span class="icono-ronda">Ronda:</span>
           <span class="numero-ronda" id="numRonda">1</span>
-        </div>
-        <div class="cantidad-jugadores">
-          <span class="icono-jugadores">Jugadores:</span>
-          <span class="numero-bots" id="numeroBots">2</span>
         </div>
       </div>
       
@@ -103,6 +101,7 @@ include 'php/includes/head.php';
         <div class="dado-virtual" onclick="lanzarDado()">
           <img id="imagenDado" src="Recursos/img/dado.png" alt="Dado" />
         </div>
+        <button id="botonPasarTurno" class="boton-pasar-turno">Pasar Turno</button>
         <button id="botonExportar" class="boton-exportar">Exportar</button>
       </div>
     </section>

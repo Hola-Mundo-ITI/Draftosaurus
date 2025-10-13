@@ -1,0 +1,99 @@
+.contenedor-seleccion {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 20px;
+  }
+  
+  .formulario-jugadores {
+    background: rgba(255, 212, 144, 0.95);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(85, 42, 10, 0.4);
+    max-width: 500px;
+    width: 100%;
+    border: 3px solid #552A0A;
+  }
+  
+  .formulario-jugadores h1 {
+    text-align: center;
+    color: #552A0A;
+    margin-bottom: 30px;
+    font-size: 2rem;
+  }
+  
+  .grupo-cantidad {
+    margin-bottom: 30px;
+  }
+  
+  .grupo-cantidad label {
+    display: block;
+    margin-bottom: 10px;
+    color: #552A0A;
+    font-size: 1.2rem;
+  }
+  
+  .grupo-cantidad select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #552A0A;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+    color: #552A0A;
+  }
+  
+  .contenedor-nombres {
+    margin-bottom: 30px;
+  }
+  
+  .grupo-jugador {
+    margin-bottom: 20px;
+  }
+  
+  .grupo-jugador label {
+    display: block;
+    margin-bottom: 8px;
+    color: #552A0A;
+    font-size: 1.1rem;
+  }
+  
+  .grupo-jugador input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #552A0A;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+    color: #552A0A;
+  }
+  
+  .grupo-jugador input:focus {
+    outline: none;
+    border-color: #552A0A;
+    box-shadow: 0 0 5px rgba(255, 212, 144, 0.5);
+  }
+  
+  .btn-iniciar {
+    width: 100%;
+    padding: 15px;
+    background: #552A0A;
+    color: #FFD490;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .btn-iniciar:hover:not(:disabled) {
+    background: #6d3610;
+    box-shadow: 0 4px 10px rgba(85, 42, 10, 0.4);
+  }
+  
+  .btn-iniciar:disabled {
+    background: #8b7355;
+    color: #d4b896;
+    cursor: not-allowed;
+  }

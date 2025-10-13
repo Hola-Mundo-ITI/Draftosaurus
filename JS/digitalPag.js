@@ -1,5 +1,5 @@
 let dinoSeleccionado = null;
-let rondaActual = 1;
+window.rondaActual = window.rondaActual || 1;
 let numeroBots = 2;
 let restriccionActual = null;
 let tableroEstado = {

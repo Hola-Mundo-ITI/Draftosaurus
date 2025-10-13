@@ -24,7 +24,7 @@ include 'php/includes/head.php';
           <a href="fisico.php" class="btn-image-button" role="button">
             <img src="Recursos/img/botonModoFisico.png" alt="Modo Físico" class="button-image" width="150px">
           </a>
-          <a href="digital.php" class="btn-image-button" role="button">
+          <a href="seleccionarJugador.php" class="btn-image-button" role="button">
             <img src="Recursos/img/botonMododDigital.png" alt="Modo Digital" class="button-image" >
           </a>
         <?php else: ?>
