@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+//ajustar para utilizar $_POST en los casos que sea necesario
 $json = file_get_contents('php://input');
 $datos = json_decode($json, true);
 
