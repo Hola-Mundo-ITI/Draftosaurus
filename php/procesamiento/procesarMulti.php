@@ -36,6 +36,10 @@ switch ($accion) {
         siguienteTurno($datos);
         break;
     
+    case 'rotar_mazos':
+        rotarMazos($datos);
+        break;
+    
     case 'obtener_estado':
         obtenerEstado($datos);
         break;
@@ -60,12 +64,30 @@ function inicializarPartida($datos) {
         'jugadores' => $datos['jugadores'],
         'turnoActual' => 1,
         'rondaActual' => 1,
-        'tableros' => []
+        'tableros' => [],
+        'mazos' => []
     ];
     
     foreach ($datos['jugadores'] as $jugador) {
         $_SESSION['partida']['tableros'][$jugador['id']] = [
-            'casillas' => []
+            'casillas' => [],
+            'dinosUsados' => [
+                1 => false,
+                2 => false,
+                3 => false,
+                4 => false,
+                5 => false,
+                6 => false
+            ]
+        ];
+        
+        $_SESSION['partida']['mazos'][$jugador['id']] = [
+            1 => false,
+            2 => false,
+            3 => false,
+            4 => false,
+            5 => false,
+            6 => false
         ];
     }
     
@@ -114,7 +136,17 @@ function cargarTablero($datos) {
     $jugadorId = $datos['jugadorId'];
     $tablero = isset($_SESSION['partida']['tableros'][$jugadorId]) 
         ? $_SESSION['partida']['tableros'][$jugadorId] 
-        : ['casillas' => []];
+        : [
+            'casillas' => [],
+            'dinosUsados' => [
+                1 => false,
+                2 => false,
+                3 => false,
+                4 => false,
+                5 => false,
+                6 => false
+            ]
+        ];
     
     echo json_encode([
         'success' => true,
@@ -135,9 +167,11 @@ function siguienteTurno($datos) {
     
     $partida['turnoActual']++;
     
+    $rondaCompletada = false;
     if ($partida['turnoActual'] > $cantidadJugadores) {
         $partida['turnoActual'] = 1;
         $partida['rondaActual']++;
+        $rondaCompletada = true;
     }
     
     $partidaFinalizada = $partida['rondaActual'] > 12;
@@ -157,7 +191,37 @@ function siguienteTurno($datos) {
         'turnoActual' => $partida['turnoActual'],
         'rondaActual' => $partida['rondaActual'],
         'jugadorActual' => $jugadorActual,
-        'partidaFinalizada' => $partidaFinalizada
+        'partidaFinalizada' => $partidaFinalizada,
+        'rondaCompletada' => $rondaCompletada
+    ]);
+}
+
+function rotarMazos($datos) {
+    session_start();
+    
+    if (!isset($_SESSION['partida'])) {
+        echo json_encode(['success' => false, 'error' => 'No hay partida activa']);
+        return;
+    }
+    
+    $partida = &$_SESSION['partida'];
+    $cantidadJugadores = count($partida['jugadores']);
+    
+    $mazosActuales = [];
+    foreach ($partida['jugadores'] as $jugador) {
+        $mazosActuales[$jugador['id']] = $partida['tableros'][$jugador['id']]['dinosUsados'];
+    }
+    
+    foreach ($partida['jugadores'] as $jugador) {
+        $idActual = $jugador['id'];
+        $idSiguiente = ($idActual % $cantidadJugadores) + 1;
+        
+        $partida['tableros'][$idSiguiente]['dinosUsados'] = $mazosActuales[$idActual];
+    }
+    
+    echo json_encode([
+        'success' => true,
+        'mensaje' => 'Mazos rotados correctamente'
     ]);
 }
 
@@ -203,3 +267,4 @@ function finalizarPartida($datos) {
         'resultados' => $resultados
     ]);
 }
+?>

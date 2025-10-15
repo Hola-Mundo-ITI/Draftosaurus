@@ -55,11 +55,12 @@ async function cargarTableroJugadorActual() {
   
   if (resultado.success) {
     limpiarTablero();
-    restaurarTablero(resultado.tablero);
     
     if (window.resetearDinosauriosDisponibles) {
       window.resetearDinosauriosDisponibles();
     }
+    
+    restaurarTablero(resultado.tablero);
     
     if (window.tableroEstado) {
       window.tableroEstado.casillas = resultado.tablero.casillas || {};
@@ -93,18 +94,25 @@ function restaurarTablero(tablero) {
       casillero.innerHTML = '';
       casillero.appendChild(img);
       casillero.classList.add('ocupada');
-      
-      if (window.dinosUsados) {
-        window.dinosUsados[especie] = true;
-        
-        const dinoElemento = document.querySelector(`[data-dino="${especie}"]`);
-        if (dinoElemento) {
+    }
+  });
+  
+  if (tablero.dinosUsados && window.dinosUsados) {
+    window.dinosUsados = tablero.dinosUsados;
+    
+    for (let especie = 1; especie <= 6; especie++) {
+      const dinoElemento = document.querySelector(`[data-dino="${especie}"]`);
+      if (dinoElemento) {
+        if (window.dinosUsados[especie]) {
           dinoElemento.style.opacity = '0.3';
           dinoElemento.style.pointerEvents = 'none';
+        } else {
+          dinoElemento.style.opacity = '1';
+          dinoElemento.style.pointerEvents = 'auto';
         }
       }
     }
-  });
+  }
 }
 
 function guardarTableroJugadorActual() {
@@ -112,7 +120,8 @@ function guardarTableroJugadorActual() {
   if (!jugadorActivo) return;
   
   const tablero = {
-    casillas: {}
+    casillas: {},
+    dinosUsados: window.dinosUsados || {}
   };
   
   const casilleros = document.querySelectorAll('.casillero-item.ocupada');
@@ -192,13 +201,37 @@ async function pasarTurno() {
     return;
   }
   
+  if (resultado.rondaCompletada) {
+    await rotarMazos();
+  }
+  
   turnoActual = resultado.turnoActual;
   window.rondaActual = resultado.rondaActual;
   
   await cargarTableroJugadorActual();
   actualizarInterfaz();
   
+  if (resultado.rondaCompletada) {
+    alert('Ronda completada! Los mazos rotaron al siguiente jugador');
+  }
+  
   alert(`Turno de ${resultado.jugadorActual.nombre}`);
+}
+
+async function rotarMazos() {
+  const respuesta = await fetch('php/procesamiento/procesarMulti.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      accion: 'rotar_mazos'
+    })
+  });
+  
+  const resultado = await respuesta.json();
+  
+  if (!resultado.success) {
+    console.error('Error al rotar mazos:', resultado.error);
+  }
 }
 
 async function finalizarPartida() {
