@@ -56,6 +56,14 @@ async function cargarTableroJugadorActual() {
   if (resultado.success) {
     limpiarTablero();
     restaurarTablero(resultado.tablero);
+    
+    if (window.resetearDinosauriosDisponibles) {
+      window.resetearDinosauriosDisponibles();
+    }
+    
+    if (window.tableroEstado) {
+      window.tableroEstado.casillas = resultado.tablero.casillas || {};
+    }
   }
 }
 
@@ -85,6 +93,16 @@ function restaurarTablero(tablero) {
       casillero.innerHTML = '';
       casillero.appendChild(img);
       casillero.classList.add('ocupada');
+      
+      if (window.dinosUsados) {
+        window.dinosUsados[especie] = true;
+        
+        const dinoElemento = document.querySelector(`[data-dino="${especie}"]`);
+        if (dinoElemento) {
+          dinoElemento.style.opacity = '0.3';
+          dinoElemento.style.pointerEvents = 'none';
+        }
+      }
     }
   });
 }
@@ -236,12 +254,13 @@ document.addEventListener('DOMContentLoaded', function() {
   
   const colocarOriginal = window.colocarDino;
   if (colocarOriginal) {
-    window.colocarDino = function(casillaId) {
-      const resultado = colocarOriginal(casillaId);
-      if (resultado !== false) {
+    window.colocarDino = async function(casillaId) {
+      await colocarOriginal(casillaId);
+      
+      const casilla = document.querySelector(`[data-casilla="${casillaId}"]`);
+      if (casilla && casilla.querySelector('img')) {
         marcarDinoColocado();
       }
-      return resultado;
     };
   }
 });

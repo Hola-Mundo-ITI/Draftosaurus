@@ -2,12 +2,13 @@ let dinoSeleccionado = null;
 window.rondaActual = window.rondaActual || 1;
 let numeroBots = 2;
 let restriccionActual = null;
-let tableroEstado = {
+
+window.tableroEstado = {
   casillas: {},
   dinosaurios: []
 };
 
-let dinosUsados = {
+window.dinosUsados = {
   1: false,
   2: false,
   3: false,
@@ -15,6 +16,7 @@ let dinosUsados = {
   5: false,
   6: false
 };
+
 let debetirarDado = true;
 let mensajeDado = '';
 
@@ -127,7 +129,7 @@ function lanzarDado() {
     }
   }
   
-  console.log(mensajeDado); // se muestra el msg en la consola directamente
+  console.log(mensajeDado);
   aplicarRestriccionesVisuales(zonasPermitidas, caraAleatoria);
 }
 
@@ -161,7 +163,7 @@ function seleccionarDino(numeroDino) {
     return;
   }
   
-  if (dinosUsados[numeroDino]) {
+  if (window.dinosUsados[numeroDino]) {
     console.log('Ya usaste este dinosaurio');
     return;
   }
@@ -305,14 +307,15 @@ async function colocarDino(numeroCasilla) {
     imagenDino.style.objectFit = 'contain';
 
     casilla.appendChild(imagenDino);
+    casilla.classList.add('ocupada');
 
-    tableroEstado.casillas[numeroCasilla] = dinoSeleccionado;
-    tableroEstado.dinosaurios.push({
+    window.tableroEstado.casillas[numeroCasilla] = dinoSeleccionado;
+    window.tableroEstado.dinosaurios.push({
       dino: dinoSeleccionado,
       casilla: numeroCasilla
     });
 
-    dinosUsados[dinoSeleccionado] = true;
+    window.dinosUsados[dinoSeleccionado] = true;
     
     const dinoElemento = document.querySelector(`[data-dino="${dinoSeleccionado}"]`);
     if (dinoElemento) {
@@ -334,8 +337,8 @@ async function colocarDino(numeroCasilla) {
     
     console.log('Dinosaurio colocado. Tira el dado de nuevo');
     console.log('Dinosaurio colocado en:', numeroCasilla);
-    console.log('Estado actualizado:', tableroEstado);
-    console.log('Dinos usados:', dinosUsados);
+    console.log('Estado actualizado:', window.tableroEstado);
+    console.log('Dinos usados:', window.dinosUsados);
 
     if (window.actualizarPuntos) {
       setTimeout(() => {
@@ -354,6 +357,31 @@ async function colocarDino(numeroCasilla) {
   console.log('=== FIN colocarDino ===');
 }
 
+function resetearDinosauriosDisponibles() {
+  window.dinosUsados = {
+    1: false,
+    2: false,
+    3: false,
+    4: false,
+    5: false,
+    6: false
+  };
+  
+  document.querySelectorAll('.dinosaurio').forEach(dino => {
+    dino.style.opacity = '1';
+    dino.style.pointerEvents = 'auto';
+    dino.classList.remove('seleccionado');
+  });
+  
+  dinoSeleccionado = null;
+  debetirarDado = true;
+  restriccionActual = null;
+  
+  document.querySelectorAll('.casillero-item').forEach(casilla => {
+    casilla.classList.remove('restringido', 'permitido');
+  });
+}
+
 function exportarPartida() {
   const boton = document.getElementById('botonExportar');
   
@@ -367,7 +395,7 @@ function exportarPartida() {
     body: JSON.stringify({
       nombre: 'Partida ' + new Date().toLocaleString(),
       bots_count: numeroBots,
-      gameState: tableroEstado
+      gameState: window.tableroEstado
     })
   })
   .then(respuesta => respuesta.json())
@@ -387,6 +415,7 @@ function exportarPartida() {
 window.lanzarDado = lanzarDado;
 window.seleccionarDino = seleccionarDino;
 window.colocarDino = colocarDino;
+window.resetearDinosauriosDisponibles = resetearDinosauriosDisponibles;
 
 window.addEventListener('DOMContentLoaded', function() {
   console.log('Iniciando Draftosaurus...');
@@ -396,7 +425,10 @@ window.addEventListener('DOMContentLoaded', function() {
   cantidadBots = Math.max(2, Math.min(4, cantidadBots));
   
   numeroBots = cantidadBots;
-  document.getElementById('numeroBots').textContent = cantidadBots;
+  const elementoBots = document.getElementById('numeroBots');
+  if (elementoBots) {
+    elementoBots.textContent = cantidadBots;
+  }
   
   const botonExportar = document.getElementById('botonExportar');
   if (botonExportar) {

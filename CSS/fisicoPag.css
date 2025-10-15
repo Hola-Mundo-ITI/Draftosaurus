@@ -64,14 +64,14 @@ body {
   color: #514132;
   padding: 8px 12px;
   text-align: center;
-  background: #FFEBCC;
+  background: #FFD490;
   outline: none;
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .form-control:hover {
-  background: #FFF0D6;
+  background: #FFD490;
   border-color: #5A3219;
   transform: translateY(-1px);
 }
@@ -171,6 +171,14 @@ input[type="hidden"] {
   text-align: center;
 }
 
+.card-body{
+  background-color: #FFD490;
+}
+
+.list-group-item {
+  background-color: #552A0A;
+  color: #FFD490;
+}
 .card .modal-btn-primary {
   display: inline-block;
   padding: 10px 16px;

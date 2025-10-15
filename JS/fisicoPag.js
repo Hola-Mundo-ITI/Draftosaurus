@@ -1,4 +1,3 @@
-// Esperar a que la página cargue
 document.addEventListener('DOMContentLoaded', function() {
     
     // Obtener elementos del formulario
@@ -8,10 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalValor = document.getElementById('total-dinos-valor');
     const totalHidden = document.getElementById('total-dinos');
     
-    // Todos los campos numéricos
     const inputs = document.querySelectorAll('#form-recintos input[type=number]');
     
-    // Nombres de las zonas para mostrar
     const zonas = {
         'bosque-semejanza': 'Bosque de la Semejanza',
         'prado-diferencia': 'Prado de la Diferencia',
@@ -21,8 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'rey-selva': 'El Rey de la Selva',
         'dinos-rio': 'Dinosaurios en el Río'
     };
-    
-    // Actualizar total cuando cambien los inputs
+
     inputs.forEach(input => {
         input.addEventListener('input', actualizarTotal);
     });
@@ -41,7 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function docClickHandler(e) {
         if (!currentPicker) return;
         if (e.target.closest('.number-picker')) return;
-        // si hacemos click en un input del formulario, no cerrar (permite reabrir)
         if (e.target.tagName === 'INPUT' && e.target.closest('#form-recintos')) return;
         closePicker();
     }
@@ -53,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const picker = document.createElement('div');
         picker.className = 'number-picker';
 
-        // Crear opciones desde min hasta max
         for (let v = min; v <= max; v++) {
             const btn = document.createElement('button');
             btn.type = 'button';
@@ -63,13 +57,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 input.value = v;
                 actualizarTotal();
                 closePicker();
-                // devolver foco al input para accesibilidad
+    
                 input.focus();
             });
             picker.appendChild(btn);
         }
 
-        // Posicionar el picker debajo del input, evitando overflow horizontal
+
         const rect = input.getBoundingClientRect();
         picker.style.position = 'absolute';
         picker.style.left = Math.max(window.scrollX + rect.left, 8) + 'px';
@@ -127,7 +121,6 @@ document.addEventListener('DOMContentLoaded', function() {
         totalHidden.value = total;
     }
     
-    // Cuando se envía el formulario
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         resultado.style.display = 'none';
@@ -149,7 +142,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!valido) return;
         
-        // Enviar formulario
         const formData = new FormData(form);
         
         fetch(window.location.href, {
@@ -172,20 +164,17 @@ document.addEventListener('DOMContentLoaded', function() {
             resultado.textContent = 'Error: ' + error.message;
         });
     });
-    
-    // Botón limpiar
     btnReset.addEventListener('click', function() {
         form.reset();
         resultado.style.display = 'none';
         actualizarTotal();
     });
-    
-    // Mostrar resultado en pantalla grande
+
     function mostrarResultado(report) {
         const total = report.totalScore || 0;
         const detalles = report.baseDetails || {};
 
-        // Crear overlay oscuro
+      
         const overlay = document.createElement('div');
         overlay.style.position = 'fixed';
         overlay.style.top = '0';
@@ -198,7 +187,6 @@ document.addEventListener('DOMContentLoaded', function() {
         overlay.style.alignItems = 'center';
         overlay.style.justifyContent = 'center';
 
-        // Crear tarjeta de resultado
         const card = document.createElement('div');
         card.className = 'card shadow-lg';
         card.style.maxWidth = '760px';
@@ -240,19 +228,14 @@ document.addEventListener('DOMContentLoaded', function() {
         overlay.appendChild(card);
         document.body.appendChild(overlay);
 
-        // Botón cerrar
         document.getElementById('btn-cerrar-modal').addEventListener('click', function() {
             document.body.removeChild(overlay);
         });
-
-        // Cerrar al hacer clic fuera
         overlay.addEventListener('click', function(e) {
             if (e.target === overlay) {
                 document.body.removeChild(overlay);
             }
         });
     }
-
-    // Inicializar total
     actualizarTotal();
 });
