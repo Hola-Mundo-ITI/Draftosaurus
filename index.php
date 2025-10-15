@@ -1,4 +1,5 @@
 <?php
+echo "Hola mundo";
 $pageTitle = "Inicio - Draftosaurus";
 $pageDescription = "Página de inicio de Draftosaurus - Elige tu modo de juego favorito";
 $specificCSS = "inicioPage.css";
