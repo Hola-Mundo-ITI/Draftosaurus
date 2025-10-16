@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Origin: *'); //lo que hace es aceptar que desde cualquier dominio se pueda accedar
+header('Access-Control-Allow-Methods: POST'); 
 header('Access-Control-Allow-Headers: Content-Type');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -59,12 +59,12 @@ function inicializarPartida($datos) {
     }
     
     session_start();
-    
+    //se determina que dentro del metodo partida, del objeto sesion. Se adjudica los pares clave valor
     $_SESSION['partida'] = [
-        'jugadores' => $datos['jugadores'],
+        'jugadores' => $datos['jugadores'], //array donde se toma por Id
         'turnoActual' => 1,
         'rondaActual' => 1,
-        'tableros' => [],
+        'tableros' => [], //en este caso el tablero se trata como array y los mazos tambien
         'mazos' => []
     ];
     
@@ -215,7 +215,7 @@ function rotarMazos($datos) {
     foreach ($partida['jugadores'] as $jugador) {
         $idActual = $jugador['id'];
         $idSiguiente = ($idActual % $cantidadJugadores) + 1;
-        
+        //lo que hace es literalmente recorrer un array con los id de los jugadores, pasando el mazo al siguiente
         $partida['tableros'][$idSiguiente]['dinosUsados'] = $mazosActuales[$idActual];
     }
     

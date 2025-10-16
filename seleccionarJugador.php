@@ -1,6 +1,6 @@
 <?php
 $pageTitle = "Seleccionar Jugadores - Draftosaurus";
-$specificCSS = "seleccionarJugador.css";
+$specificCSS = "multijugador/seleccionarJugador.css";
 $specificJS = ["multijugador/seleccionarJugador.js"];
 include 'php/includes/head.php';
 ?>

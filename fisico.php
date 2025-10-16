@@ -73,22 +73,19 @@ include 'php/includes/navigation.php';
         <input type="number" class="form-control" id="rey-selva" 
                name="rey-selva" min="0" max="1" value="0">
       </div>
-
-      <div class="col-12 col-md-6">
+      <div class="col-12 col-md-6 full-width-item">
         <label for="dinos-rio" class="form-label">Dinosaurios en el Río</label>
         <input type="number" class="form-control" id="dinos-rio" 
-               name="dinos-rio" min="0" max="7" value="0">
-      </div>
-
+              name="dinos-rio" min="0" max="7" value="0"> 
+        </div>
       <div class="col-12 d-flex gap-2 mt-3">
-        <button type="submit" class="btn btn-primary" id="btn-submit">
+        <button type="submit" class="btn-primary" id="btn-submit">
           <img src="Recursos/img/btnCalcular.png" width="150px">
         </button>
-        <button type="button" class="btn btn-secondary" id="btn-reset">
+        <button type="button" class="btn-secondary" id="btn-reset">
           <img src="Recursos/img/btnLimpiar.png" width="150px">
         </button>
       </div>
-
       <div class="col-12 mt-2">
         <div id="total-dinos-display" class="small text-muted">
           Total de dinosaurios: <strong id="total-dinos-valor">0</strong>

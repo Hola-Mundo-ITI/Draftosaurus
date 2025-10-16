@@ -19,6 +19,7 @@ window.dinosUsados = {
 
 let debetirarDado = true;
 let mensajeDado = '';
+let dadosLanzadosEnEsteTurno = 0; // NUEVA VARIABLE
 
 function mostrarDebugServidor(respuesta) {
   try {
@@ -78,7 +79,15 @@ function obtenerZonasVacias() {
 }
 
 function lanzarDado() {
+  // NUEVA VALIDACION: Solo 1 dado por turno
+  if (dadosLanzadosEnEsteTurno >= 1) {
+    console.log('Ya lanzaste el dado en este turno. Coloca tu dinosaurio y pasa turno');
+    alert('Ya lanzaste el dado en este turno. Coloca tu dinosaurio y pasa turno');
+    return;
+  }
+  
   debetirarDado = false;
+  dadosLanzadosEnEsteTurno++; // INCREMENTAR CONTADOR
   
   const caras = ['bosque', 'llanura', 'banos', 'cafeteria', 'recintoVacio'];
   const caraAleatoria = caras[Math.floor(Math.random() * caras.length)];
@@ -92,7 +101,7 @@ function lanzarDado() {
     } else if (caraAleatoria === 'llanura') {
       rutaImagen = 'Recursos/img/dado/Llanura.png';
     } else if (caraAleatoria === 'banos') {
-      rutaImagen = 'Recursos/img/dado/Baños.png';
+      rutaImagen = 'Recursos/img/dado/Banos.png';
     } else if (caraAleatoria === 'cafeteria') {
       rutaImagen = 'Recursos/img/dado/Cafeteria.png';
     } else if (caraAleatoria === 'recintoVacio') {
@@ -114,7 +123,7 @@ function lanzarDado() {
     mensajeDado = 'Dado: Llanura - Solo area Llanura';
   } else if (caraAleatoria === 'banos') {
     zonasPermitidas = ['rey-selva', 'prado-diferencia', 'isla-solitaria'];
-    mensajeDado = 'Dado: Baños - Solo derecha del rio';
+    mensajeDado = 'Dado: Banos - Solo derecha del rio';
   } else if (caraAleatoria === 'cafeteria') {
     zonasPermitidas = ['bosque-semejanza', 'trio-frondoso', 'pradera-amor'];
     mensajeDado = 'Dado: Cafeteria - Solo izquierda del rio';
@@ -376,6 +385,7 @@ function resetearDinosauriosDisponibles() {
   dinoSeleccionado = null;
   debetirarDado = true;
   restriccionActual = null;
+  dadosLanzadosEnEsteTurno = 0; // REINICIAR CONTADOR
   
   document.querySelectorAll('.casillero-item').forEach(casilla => {
     casilla.classList.remove('restringido', 'permitido');

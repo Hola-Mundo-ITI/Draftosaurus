@@ -195,19 +195,19 @@ estilos.textContent = `
     position: fixed;
     top: 70px;
     right: 10px;
-    background-color: #FFD490;
-    color: #552A0A;
-    border: 2px solid #552A0A;
+    background-color:  #552A0A;
+    color: #FFD490;
+    border: 2px solid #FFD490;
     padding: 10px 20px;
     cursor: pointer;
     font-weight: bold;
     border-radius: 5px;
-    z-index: 1200;
+    z-index: 1000;
     transition: background-color 0.3s;
 }
 
 .boton-puntos:hover {
-    background-color: #e6bf82;
+    background-color: #552A0A;
 }
 
 .panel-puntos {
@@ -216,12 +216,11 @@ estilos.textContent = `
     right: -350px;
     width: 350px;
     height: 100%;
-    background-color: #FFD490;
+    background-color: #552A0A;
     padding: 20px;
     z-index: 1100;
     transition: right 0.3s;
     overflow-y: auto;
-    box-shadow: -2px 0 10px rgba(0,0,0,0.3);
 }
 
 .panel-puntos.abierto {
@@ -269,7 +268,7 @@ estilos.textContent = `
 }
 
 .tabla-puntos {
-    background-color: white;
+    background-color: #552A0A;
     border-radius: 5px;
     padding: 10px;
 }
@@ -280,8 +279,8 @@ estilos.textContent = `
 }
 
 .tabla-puntos th {
-    background-color: #552A0A;
-    color: #FFD490;
+    background-color: #FFD490;
+    color: #333;
     padding: 8px;
     text-align: left;
     border: 1px solid #333;
@@ -289,12 +288,14 @@ estilos.textContent = `
 
 .tabla-puntos td {
     padding: 8px;
-    border: 1px solid #ddd;
+    background-color: #FFD490;
+    color: #FFD490;
+    border: 1px  #FFD490;
     color: #333;
 }
 
 .tabla-puntos tr:nth-child(even) {
-    background-color: #f9f9f9;
+    background-color: #FFD490;
 }
 
 .overlay-puntos {

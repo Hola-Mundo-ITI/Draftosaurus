@@ -10,6 +10,29 @@ include 'php/includes/head.php';
 <body>
   <?php include 'php/includes/navigation.php'; ?>
   
+  <header class="header-partida">
+    <div class="header-izquierda">
+      <div class="info-jugador-actual">
+        <span class="etiqueta-turno">Turno de:</span>
+        <span class="nombre-jugador-actual" id="nombreJugadorActual">Jugador 1</span>
+      </div>
+      <div class="ronda-actual">
+        <span class="icono-ronda">Ronda:</span>
+        <span class="numero-ronda" id="numRonda">1</span>
+      </div>
+    </div>
+    
+    <div class="header-derecha">
+      <div class="dado-container">
+        <div class="dado-virtual" onclick="lanzarDado()">
+          <img id="imagenDado" src="Recursos/img/dado.png" alt="Dado" />
+        </div>
+      </div>
+      <button id="botonPasarTurno" class="boton-pasar-turno">Pasar Turno</button>
+      <button id="botonExportar" class="boton-exportar">Exportar</button>
+    </div>
+  </header>
+  
   <main id="mainContent" class="zona-juego">
     <section class="zona-dinos izquierda">
       <div class="dinosaurio" onclick="seleccionarDino(1)" data-dino="1">
@@ -24,17 +47,6 @@ include 'php/includes/head.php';
     </section>
 
     <section class="contenedor-tablero">
-      <div class="info-superior">
-        <div class="info-jugador-actual">
-          <span class="etiqueta-turno">Turno de:</span>
-          <span class="nombre-jugador-actual" id="nombreJugadorActual">Jugador 1</span>
-        </div>
-        <div class="ronda-actual">
-          <span class="icono-ronda">Ronda:</span>
-          <span class="numero-ronda" id="numRonda">1</span>
-        </div>
-      </div>
-      
       <div id="tablero" class="tablero-juego">
         <div class="parent">
           <div class="div1 casilla" data-casilla="1">
@@ -93,14 +105,6 @@ include 'php/includes/head.php';
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="dado-container">
-        <div class="dado-virtual" onclick="lanzarDado()">
-          <img id="imagenDado" src="Recursos/img/dado.png" alt="Dado" />
-        </div>
-        <button id="botonPasarTurno" class="boton-pasar-turno">Pasar Turno</button>
-        <button id="botonExportar" class="boton-exportar">Exportar</button>
       </div>
     </section>
 

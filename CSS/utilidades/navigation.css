@@ -14,8 +14,8 @@
   top: 10px;
   left: 10px;
   font-size: 30px;
-  background-color: var(--nav-bg);
-  color: var(--nav-accent);
+  background-color: transparent;
+  color: #552A0A;
   border: none;
   padding: 10px 15px;
   cursor: pointer;
