@@ -69,7 +69,7 @@ class Sesion {
     public function iniciarSesion($email, $password) {
         $email = trim(strtolower($email));
         $password = trim($password);
-        
+        //Agregar validacion de EMAIL https://www.php.net/manual/en/filter.examples.validation.php
         if (empty($email) || empty($password)) {
             return ['success' => false, 'error' => 'Email y contrasena son obligatorios'];
         }
