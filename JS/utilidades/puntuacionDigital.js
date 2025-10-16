@@ -1,15 +1,52 @@
 let panelPuntosAbierto = false;
 
+// Variable global con traducciones cargadas desde PHP
+window.traducciones = window.traducciones || {};
+
 window.addEventListener('DOMContentLoaded', function() {
+    cargarTraducciones();
     crearBotonPuntos();
     crearPanelPuntos();
 });
+
+async function cargarTraducciones() {
+    try {
+        const respuesta = await fetch('php/idioma/obtenerTraduccion.php');
+        const datos = await respuesta.json();
+        if (datos.success) {
+            window.traducciones = datos.traducciones;
+        }
+    } catch (error) {
+        console.error('Error cargando traducciones:', error);
+        // Usar traducciones por defecto en espanol
+        window.traducciones = {
+            'ver_puntos': 'Ver Puntos',
+            'puntuacion': 'Puntuacion',
+            'total': 'Total:',
+            'zona': 'Zona',
+            'dinos': 'Dinos',
+            'puntos': 'Puntos',
+            'cerrar': 'Cerrar',
+            'bosque_semejanza': 'Bosque Semejanza',
+            'prado_diferencia': 'Prado Diferencia',
+            'trio_frondoso': 'Trio Frondoso',
+            'pradera_amor': 'Pradera Amor',
+            'isla_solitaria': 'Isla Solitaria',
+            'rey_selva': 'Rey Selva',
+            'dinos_rio': 'Dinos Rio'
+        };
+    }
+}
+
+function t(clave) {
+    return window.traducciones[clave] || clave;
+}
 
 function crearBotonPuntos() {
     const boton = document.createElement('button');
     boton.id = 'botonPuntos';
     boton.className = 'boton-puntos';
-    boton.textContent = 'Ver Puntos';
+    boton.textContent = t('ver_puntos');
     boton.onclick = togglePanelPuntos;
     
     document.body.appendChild(boton);
@@ -22,55 +59,55 @@ function crearPanelPuntos() {
     
     panel.innerHTML = `
         <div class="panel-header">
-            <h3>Puntuación</h3>
+            <h3>${t('puntuacion')}</h3>
             <button onclick="togglePanelPuntos()" class="btn-cerrar">✕</button>
         </div>
         <div class="total-puntos">
-            <strong>Total:</strong> 
+            <strong>${t('total')}</strong> 
             <span id="puntosTotal">0</span> pts
         </div>
         <div class="tabla-puntos">
             <table>
                 <thead>
                     <tr>
-                        <th>Zona</th>
-                        <th>Dinos</th>
-                        <th>Puntos</th>
+                        <th>${t('zona')}</th>
+                        <th>${t('dinos')}</th>
+                        <th>${t('puntos')}</th>
                     </tr>
                 </thead>
                 <tbody id="tablaPuntosBody">
                     <tr>
-                        <td>Bosque Semejanza</td>
+                        <td>${t('bosque_semejanza')}</td>
                         <td id="cantidad-bosque">0</td>
                         <td id="puntos-bosque">0</td>
                     </tr>
                     <tr>
-                        <td>Prado Diferencia</td>
+                        <td>${t('prado_diferencia')}</td>
                         <td id="cantidad-prado">0</td>
                         <td id="puntos-prado">0</td>
                     </tr>
                     <tr>
-                        <td>Trío Frondoso</td>
+                        <td>${t('trio_frondoso')}</td>
                         <td id="cantidad-trio">0</td>
                         <td id="puntos-trio">0</td>
                     </tr>
                     <tr>
-                        <td>Pradera Amor</td>
+                        <td>${t('pradera_amor')}</td>
                         <td id="cantidad-pradera">0</td>
                         <td id="puntos-pradera">0</td>
                     </tr>
                     <tr>
-                        <td>Isla Solitaria</td>
+                        <td>${t('isla_solitaria')}</td>
                         <td id="cantidad-isla">0</td>
                         <td id="puntos-isla">0</td>
                     </tr>
                     <tr>
-                        <td>Rey Selva</td>
+                        <td>${t('rey_selva')}</td>
                         <td id="cantidad-rey">0</td>
                         <td id="puntos-rey">0</td>
                     </tr>
                     <tr>
-                        <td>Dinos Río</td>
+                        <td>${t('dinos_rio')}</td>
                         <td id="cantidad-rio">0</td>
                         <td id="puntos-rio">0</td>
                     </tr>
@@ -98,7 +135,7 @@ function togglePanelPuntos() {
     if (panelPuntosAbierto) {
         panel.classList.add('abierto');
         overlay.classList.add('activo');
-        actualizarPuntos(); // Actualizar al abrir
+        actualizarPuntos();
     } else {
         panel.classList.remove('abierto');
         overlay.classList.remove('activo');
@@ -106,7 +143,6 @@ function togglePanelPuntos() {
 }
 
 async function actualizarPuntos() {
-    // Obtener el estado actual del tablero
     const estadoActual = obtenerEstadoTablero();
     
     try {
@@ -136,13 +172,11 @@ async function actualizarPuntos() {
 function obtenerEstadoTablero() {
     const casillas = {};
     
-    // Recorrer todas las casillas del tablero
     document.querySelectorAll('.casillero-item').forEach(casilla => {
         const casillaId = casilla.getAttribute('data-casilla');
         const imagen = casilla.querySelector('img');
         
         if (imagen) {
-            // Extraer el número del dinosaurio de la imagen
             let especie = null;
             let match = imagen.src.match(/dino(\d+)/i);
             if (match) {
@@ -161,7 +195,6 @@ function obtenerEstadoTablero() {
 function mostrarPuntos(datos) {
     document.getElementById('puntosTotal').textContent = datos.totalScore;
     
-    // Actualizar cada zona
     const detalles = datos.detalles;
     
     document.getElementById('cantidad-bosque').textContent = detalles['bosque-semejanza'].cantidad;
@@ -185,7 +218,7 @@ function mostrarPuntos(datos) {
     document.getElementById('cantidad-rio').textContent = detalles['dinos-rio'].cantidad;
     document.getElementById('puntos-rio').textContent = detalles['dinos-rio'].puntos;
 }
-//funcion global para poder llamar desde digitalPag.js
+
 window.actualizarPuntos = actualizarPuntos;
 window.togglePanelPuntos = togglePanelPuntos;
 

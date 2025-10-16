@@ -1,6 +1,9 @@
 <?php
-$pageTitle = "Iniciar Sesión - Draftosaurus";
-$pageDescription = "Iniciar sesión o crear cuenta en Draftosaurus";
+session_start();
+require_once 'php/idioma/idiomas.php';
+
+$pageTitle = t('iniciar_sesion') . " - Draftosaurus";
+$pageDescription = "Iniciar sesion o crear cuenta en Draftosaurus";
 $specificCSS = "utilidades/responsive.css";
 $specificCSS = "sesion.css";
 $specificJS = "auth/sesion.js";
@@ -13,21 +16,21 @@ include 'php/includes/head.php';
       <div class="caja-formulario">
         <header class="form-header">
           <img src="Recursos/img/logo.png" alt="Logo de Draftosaurus - Juego de mesa de dinosaurios" class="imagen-logo" width="150px">
-          <h1>Iniciar Sesión</h1>
+          <h1><?php echo t('iniciar_sesion'); ?></h1>
         </header>
         
-        <form id="form-iniciarSesion" aria-label="Formulario de inicio de sesión" method="post">
+        <form id="form-iniciarSesion" aria-label="Formulario de inicio de sesion" method="post">
           <fieldset>
-            <legend class="visually-hidden">Datos de acceso</legend>
+            <legend class="visually-hidden"><?php echo t('datos_acceso'); ?></legend>
             <div class="grupo-campo">
-              <label for="email">Correo electrónico</label>
+              <label for="email"><?php echo t('correo'); ?></label>
               <input type="email" id="email" name="email" required aria-describedby="email-help" />
-              <small id="email-help" class="form-text">Ingresa tu correo electrónico</small>
+              <small id="email-help" class="form-text"><?php echo t('ingresa_correo'); ?></small>
             </div>
             <div class="grupo-campo">
-              <label for="password">Contraseña</label>
+              <label for="password"><?php echo t('contrasena'); ?></label>
               <input type="password" id="password" name="password" required aria-describedby="password-help" />
-              <small id="password-help" class="form-text">Ingresa tu contraseña</small>
+              <small id="password-help" class="form-text"><?php echo t('ingresa_contrasena'); ?></small>
             </div>
           </fieldset>
           
@@ -38,10 +41,10 @@ include 'php/includes/head.php';
           </div>
           
           <nav class="form-navigation">
-            <p>¿No tenés cuenta? 
-              <button type="button" class="enlace-texto" onclick="mostrarRegistro()" aria-describedby="registro-help">Registrate</button>
+            <p><?php echo t('no_tienes_cuenta'); ?> 
+              <button type="button" class="enlace-texto" onclick="mostrarRegistro()" aria-describedby="registro-help"><?php echo t('registrate'); ?></button>
             </p>
-            <small id="registro-help" class="form-text">Crea una nueva cuenta</small>
+            <small id="registro-help" class="form-text"><?php echo t('crea_cuenta'); ?></small>
           </nav>
         </form>
       </div>
@@ -51,31 +54,31 @@ include 'php/includes/head.php';
       <div class="caja-formulario">
         <header class="form-header">
           <img src="Recursos/img/logo.png" alt="Logo de Draftosaurus - Juego de mesa de dinosaurios" class="imagen-logo" width="150px">
-          <h1>Crear Cuenta</h1>
+          <h1><?php echo t('crear_cuenta'); ?></h1>
         </header>
         
         <form id="form-registro" aria-label="Formulario de registro" method="post">
           <fieldset>
-            <legend class="visually-hidden">Datos para nueva cuenta</legend>
+            <legend class="visually-hidden"><?php echo t('datos_nueva_cuenta'); ?></legend>
             <div class="grupo-campo">
-              <label for="nombre">Nombre de usuario</label>
+              <label for="nombre"><?php echo t('nombre_usuario'); ?></label>
               <input type="text" id="nombre" name="nombre" required aria-describedby="nombre-help" />
-              <small id="nombre-help" class="form-text">Elige un nombre único</small>
+              <small id="nombre-help" class="form-text"><?php echo t('elige_nombre'); ?></small>
             </div>
             <div class="grupo-campo">
-              <label for="emailRegistro">Correo electrónico</label>
+              <label for="emailRegistro"><?php echo t('correo'); ?></label>
               <input type="email" id="emailRegistro" name="email" required aria-describedby="email-registro-help" />
-              <small id="email-registro-help" class="form-text">Tu correo para acceder</small>
+              <small id="email-registro-help" class="form-text"><?php echo t('correo_acceso'); ?></small>
             </div>
             <div class="grupo-campo">
-              <label for="passwordRegistro">Contraseña</label>
+              <label for="passwordRegistro"><?php echo t('contrasena'); ?></label>
               <input type="password" id="passwordRegistro" name="password" required aria-describedby="password-registro-help" />
-              <small id="password-registro-help" class="form-text">Mínimo 8 caracteres</small>
+              <small id="password-registro-help" class="form-text"><?php echo t('minimo_caracteres'); ?></small>
             </div>
             <div class="grupo-campo">
-              <label for="confirmarPassword">Confirmar tu contraseña</label>
+              <label for="confirmarPassword"><?php echo t('confirmar_contrasena'); ?></label>
               <input type="password" id="confirmarPassword" name="confirmarPassword" required aria-describedby="confirmar-help" />
-              <small id="confirmar-help" class="form-text">Repite la contraseña</small>
+              <small id="confirmar-help" class="form-text"><?php echo t('repite_contrasena'); ?></small>
             </div>
           </fieldset>
           
@@ -86,10 +89,10 @@ include 'php/includes/head.php';
           </div>
           
           <nav class="form-navigation">
-            <p>¿Ya tenés cuenta? 
-              <button type="button" class="enlace-texto" onclick="mostrarLogin()" aria-describedby="login-help">Volver a iniciar sesión</button>
+            <p><?php echo t('ya_tienes_cuenta'); ?> 
+              <button type="button" class="enlace-texto" onclick="mostrarLogin()" aria-describedby="login-help"><?php echo t('volver_login'); ?></button>
             </p>
-            <small id="login-help" class="form-text">Accede con tu cuenta existente</small>
+            <small id="login-help" class="form-text"><?php echo t('accede_cuenta'); ?></small>
           </nav>
         </form>
       </div>

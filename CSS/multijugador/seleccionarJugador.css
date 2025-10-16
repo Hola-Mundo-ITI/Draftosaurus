@@ -7,7 +7,7 @@
   }
   
   .formulario-jugadores {
-    background: rgba(255, 212, 144, 0.95);
+    background: #552A0A;
     border-radius: 15px;
     padding: 40px;
     box-shadow: 0 10px 30px rgba(85, 42, 10, 0.4);
@@ -18,7 +18,7 @@
   
   .formulario-jugadores h1 {
     text-align: center;
-    color: #552A0A;
+    color: #FFD490;
     margin-bottom: 30px;
     font-size: 2rem;
   }
@@ -30,7 +30,7 @@
   .grupo-cantidad label {
     display: block;
     margin-bottom: 10px;
-    color: #552A0A;
+    color: #FFD490;;
     font-size: 1.2rem;
   }
   
@@ -40,7 +40,7 @@
     border: 2px solid #552A0A;
     border-radius: 8px;
     font-size: 1rem;
-    background: white;
+    background: #FFD490;;
     color: #552A0A;
   }
   
@@ -65,7 +65,7 @@
     border: 2px solid #552A0A;
     border-radius: 8px;
     font-size: 1rem;
-    background: white;
+    background: #FFD490;;
     color: #552A0A;
   }
   
@@ -78,8 +78,8 @@
   .btn-iniciar {
     width: 100%;
     padding: 15px;
-    background: #552A0A;
-    color: #FFD490;
+    background: #FFD490;;
+    color: #552A0A;
     border: none;
     border-radius: 8px;
     font-size: 1.3rem;

@@ -1,6 +1,24 @@
-document.addEventListener('DOMContentLoaded', function() {
+window.traducciones = window.traducciones || {};
+
+async function cargarTraduccionesFisico() {
+    try {
+        const respuesta = await fetch('php/idioma/obtenerTraduccion.php');
+        const datos = await respuesta.json();
+        if (datos.success) {
+            window.traducciones = datos.traducciones;
+        }
+    } catch (error) {
+        console.error('Error cargando traducciones:', error);
+    }
+}
+
+function t(clave) {
+    return window.traducciones[clave] || clave;
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
+    await cargarTraduccionesFisico();
     
-    // Obtener elementos del formulario
     const form = document.getElementById('form-recintos');
     const btnReset = document.getElementById('btn-reset');
     const resultado = document.getElementById('resultado-form');
@@ -10,20 +28,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputs = document.querySelectorAll('#form-recintos input[type=number]');
     
     const zonas = {
-        'bosque-semejanza': 'Bosque de la Semejanza',
-        'prado-diferencia': 'Prado de la Diferencia',
-        'trio-frondoso': 'El Trío Frondoso',
-        'pradera-amor': 'La Pradera del Amor',
-        'isla-solitaria': 'La Isla Solitaria',
-        'rey-selva': 'El Rey de la Selva',
-        'dinos-rio': 'Dinosaurios en el Río'
+        'bosque-semejanza': t('bosque_semejanza'),
+        'prado-diferencia': t('prado_diferencia'),
+        'trio-frondoso': t('trio_frondoso'),
+        'pradera-amor': t('pradera_amor'),
+        'isla-solitaria': t('isla_solitaria'),
+        'rey-selva': t('rey_selva'),
+        'dinos-rio': t('dinos_rio')
     };
 
     inputs.forEach(input => {
         input.addEventListener('input', actualizarTotal);
     });
 
-   
     let currentPicker = null;
 
     function closePicker() {
@@ -63,7 +80,6 @@ document.addEventListener('DOMContentLoaded', function() {
             picker.appendChild(btn);
         }
 
-
         const rect = input.getBoundingClientRect();
         picker.style.position = 'absolute';
         picker.style.left = Math.max(window.scrollX + rect.left, 8) + 'px';
@@ -73,24 +89,20 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(picker);
         currentPicker = picker;
 
-        // Cerrar al clicar fuera
         setTimeout(() => {
             document.addEventListener('click', docClickHandler);
         }, 0);
     }
 
-    // Asociar eventos a cada input (focus / click / teclado)
     inputs.forEach(input => {
         input.addEventListener('focus', function () {
             openPickerFor(input);
         });
         input.addEventListener('click', function (e) {
-            // evitar que el click en el input cierre inmediatamente por el docClickHandler
             e.stopPropagation();
             openPickerFor(input);
         });
         input.addEventListener('keydown', function (e) {
-            // permitir cambiar con flechas y cerrar con Escape
             if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
                 e.preventDefault();
                 let val = parseInt(input.value) || 0;
@@ -107,11 +119,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Cerrar picker si se hace scroll o resize para evitar desalineado
     window.addEventListener('scroll', function () { if (currentPicker) closePicker(); }, true);
     window.addEventListener('resize', function () { if (currentPicker) closePicker(); });
 
-    // Calcular total de dinosaurios
     function actualizarTotal() {
         let total = 0;
         inputs.forEach(input => {
@@ -125,7 +135,6 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         resultado.style.display = 'none';
         
-        // Validar inputs
         let valido = true;
         inputs.forEach(input => {
             const min = parseInt(input.min);
@@ -164,6 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
             resultado.textContent = 'Error: ' + error.message;
         });
     });
+    
     btnReset.addEventListener('click', function() {
         form.reset();
         resultado.style.display = 'none';
@@ -174,7 +184,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const total = report.totalScore || 0;
         const detalles = report.baseDetails || {};
 
-      
         const overlay = document.createElement('div');
         overlay.style.position = 'fixed';
         overlay.style.top = '0';
@@ -192,14 +201,12 @@ document.addEventListener('DOMContentLoaded', function() {
         card.style.maxWidth = '760px';
         card.style.width = '90%';
 
-        // Contenido de la tarjeta
         let html = '<div class="card-body">';
-        html += '<h3 class="card-title mb-3">Resultado de Puntuación</h3>';
-        html += `<div class="mb-3 lead"><strong>Puntuación Total:</strong> <span class="fs-4">${total} pts</span></div>`;
-        html += '<h5>Desglose por Zona:</h5>';
+        html += `<h3 class="card-title mb-3">${t('resultado_puntuacion')}</h3>`;
+        html += `<div class="mb-3 lead"><strong>${t('puntuacion_total')}</strong> <span class="fs-4">${total} pts</span></div>`;
+        html += `<h5>${t('desglose_zona')}</h5>`;
         html += '<ul class="list-group list-group-flush">';
 
-        // Agregar cada zona
         for (let zonaId in zonas) {
             const det = detalles[zonaId] || {};
             const puntos = det.points || 0;
@@ -216,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         html += '</ul>';
         html += '<div class="d-flex justify-content-end gap-2 mt-3">';
-        html += '<button class="btn btn-secondary modal-btn-secondary" id="btn-cerrar-modal">Cerrar</button>';
+        html += `<button class="btn btn-secondary modal-btn-secondary" id="btn-cerrar-modal">${t('cerrar')}</button>`;
         html += '</div>';
         html += '</div>';
 
@@ -237,5 +244,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
     actualizarTotal();
 });

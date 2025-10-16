@@ -1,5 +1,8 @@
 <?php
-$pageTitle = "Seleccionar Jugadores - Draftosaurus";
+session_start();
+require_once 'php/idioma/idiomas.php';
+
+$pageTitle = t('configurar_partida') . " - Draftosaurus";
 $specificCSS = "multijugador/seleccionarJugador.css";
 $specificJS = ["multijugador/seleccionarJugador.js"];
 include 'php/includes/head.php';
@@ -10,18 +13,18 @@ include 'php/includes/head.php';
   
   <main class="contenedor-seleccion">
     <div class="formulario-jugadores">
-      <h1>Configurar Partida Multijugador</h1>
+      <h1><?php echo t('configurar_partida'); ?></h1>
       
       <form id="formJugadores" action="digital.php" method="POST">
         <div class="grupo-cantidad">
-          <label for="cantidadJugadores">Cantidad de Jugadores:</label>
+          <label for="cantidadJugadores"><?php echo t('cantidad_jugadores'); ?></label>
           <select id="cantidadJugadores" name="cantidadJugadores" required>
-            <option value="">Seleccionar...</option>
-            <option value="1">1 Jugador</option>
-            <option value="2">2 Jugadores</option>
-            <option value="3">3 Jugadores</option>
-            <option value="4">4 Jugadores</option>
-            <option value="5">5 Jugadores</option>
+            <option value=""><?php echo t('seleccionar'); ?></option>
+            <option value="1">1 <?php echo t('jugador'); ?></option>
+            <option value="2">2 <?php echo t('jugadores'); ?></option>
+            <option value="3">3 <?php echo t('jugadores'); ?></option>
+            <option value="4">4 <?php echo t('jugadores'); ?></option>
+            <option value="5">5 <?php echo t('jugadores'); ?></option>
           </select>
         </div>
 
@@ -29,7 +32,7 @@ include 'php/includes/head.php';
         </div>
 
         <button type="submit" id="btnIniciar" class="btn-iniciar" disabled>
-          Iniciar Partida
+          <?php echo t('iniciar_partida'); ?>
         </button>
       </form>
     </div>

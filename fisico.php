@@ -1,4 +1,6 @@
 <?php
+session_start();
+require_once 'php/idioma/idiomas.php';
 require_once 'php/procesamiento/puntosFisico.php';
 
 // Si el formulario fue enviado, procesar y devolver JSON
@@ -22,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-$pageTitle = "Registro del Tablero - Draftosaurus";
+$pageTitle = t('registra_tablero') . " - Draftosaurus";
 $specificCSS = "utilidades/responsive.css";
 $specificCSS = "fisicoPag.css";
 $specificJS = "fisicoPag.js";
@@ -33,48 +35,48 @@ include 'php/includes/navigation.php';
 
 <main id="mainContent" data-player-id="1">
   <section class="tracking-section container py-4">
-    <h1>Registra lo que pasa en tu tablero:</h1>
+    <h1><?php echo t('registra_tablero'); ?></h1>
 
     <form id="form-recintos" class="row g-3" method="POST">
       <input type="hidden" name="action" value="calcular-puntuacion">
 
       <div class="col-12 col-md-6">
-        <label for="bosque-semejanza" class="form-label">Bosque de la Semejanza</label>
+        <label for="bosque-semejanza" class="form-label"><?php echo t('bosque_semejanza'); ?></label>
         <input type="number" class="form-control" id="bosque-semejanza" 
                name="bosque-semejanza" min="0" max="6" value="0">
       </div>
 
       <div class="col-12 col-md-6">
-        <label for="prado-diferencia" class="form-label">Prado de la Diferencia</label>
+        <label for="prado-diferencia" class="form-label"><?php echo t('prado_diferencia'); ?></label>
         <input type="number" class="form-control" id="prado-diferencia" 
                name="prado-diferencia" min="0" max="6" value="0">
       </div>
 
       <div class="col-12 col-md-6">
-        <label for="trio-frondoso" class="form-label">El Trío Frondoso</label>
+        <label for="trio-frondoso" class="form-label"><?php echo t('trio_frondoso'); ?></label>
         <input type="number" class="form-control" id="trio-frondoso" 
                name="trio-frondoso" min="0" max="3" value="0">
       </div>
 
       <div class="col-12 col-md-6">
-        <label for="pradera-amor" class="form-label">La Pradera del Amor</label>
+        <label for="pradera-amor" class="form-label"><?php echo t('pradera_amor'); ?></label>
         <input type="number" class="form-control" id="pradera-amor" 
                name="pradera-amor" min="0" max="6" value="0">
       </div>
 
       <div class="col-12 col-md-6">
-        <label for="isla-solitaria" class="form-label">La Isla Solitaria</label>
+        <label for="isla-solitaria" class="form-label"><?php echo t('isla_solitaria'); ?></label>
         <input type="number" class="form-control" id="isla-solitaria" 
                name="isla-solitaria" min="0" max="1" value="0">
       </div>
 
       <div class="col-12 col-md-6">
-        <label for="rey-selva" class="form-label">El Rey de la Selva</label>
+        <label for="rey-selva" class="form-label"><?php echo t('rey_selva'); ?></label>
         <input type="number" class="form-control" id="rey-selva" 
                name="rey-selva" min="0" max="1" value="0">
       </div>
       <div class="col-12 col-md-6 full-width-item">
-        <label for="dinos-rio" class="form-label">Dinosaurios en el Río</label>
+        <label for="dinos-rio" class="form-label"><?php echo t('dinos_rio'); ?></label>
         <input type="number" class="form-control" id="dinos-rio" 
               name="dinos-rio" min="0" max="7" value="0"> 
         </div>
@@ -88,7 +90,7 @@ include 'php/includes/navigation.php';
       </div>
       <div class="col-12 mt-2">
         <div id="total-dinos-display" class="small text-muted">
-          Total de dinosaurios: <strong id="total-dinos-valor">0</strong>
+          <?php echo t('total_dinos'); ?> <strong id="total-dinos-valor">0</strong>
         </div>
       </div>
 

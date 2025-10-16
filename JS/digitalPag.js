@@ -19,7 +19,25 @@ window.dinosUsados = {
 
 let debetirarDado = true;
 let mensajeDado = '';
-let dadosLanzadosEnEsteTurno = 0; // NUEVA VARIABLE
+let dadosLanzadosEnEsteTurno = 0;
+
+window.traducciones = window.traducciones || {};
+
+async function cargarTraduccionesDigital() {
+    try {
+        const respuesta = await fetch('php/idioma/obtenerTraduccion.php');
+        const datos = await respuesta.json();
+        if (datos.success) {
+            window.traducciones = datos.traducciones;
+        }
+    } catch (error) {
+        console.error('Error cargando traducciones:', error);
+    }
+}
+
+function t(clave) {
+    return window.traducciones[clave] || clave;
+}
 
 function mostrarDebugServidor(respuesta) {
   try {
@@ -79,15 +97,14 @@ function obtenerZonasVacias() {
 }
 
 function lanzarDado() {
-  // NUEVA VALIDACION: Solo 1 dado por turno
   if (dadosLanzadosEnEsteTurno >= 1) {
-    console.log('Ya lanzaste el dado en este turno. Coloca tu dinosaurio y pasa turno');
-    alert('Ya lanzaste el dado en este turno. Coloca tu dinosaurio y pasa turno');
+    console.log(t('ya_lanzaste_dado'));
+    alert(t('ya_lanzaste_dado'));
     return;
   }
   
   debetirarDado = false;
-  dadosLanzadosEnEsteTurno++; // INCREMENTAR CONTADOR
+  dadosLanzadosEnEsteTurno++;
   
   const caras = ['bosque', 'llanura', 'banos', 'cafeteria', 'recintoVacio'];
   const caraAleatoria = caras[Math.floor(Math.random() * caras.length)];
@@ -385,7 +402,7 @@ function resetearDinosauriosDisponibles() {
   dinoSeleccionado = null;
   debetirarDado = true;
   restriccionActual = null;
-  dadosLanzadosEnEsteTurno = 0; // REINICIAR CONTADOR
+  dadosLanzadosEnEsteTurno = 0;
   
   document.querySelectorAll('.casillero-item').forEach(casilla => {
     casilla.classList.remove('restringido', 'permitido');
@@ -411,7 +428,7 @@ function exportarPartida() {
   .then(respuesta => respuesta.json())
   .then(resultado => {
     if (resultado.success) {
-      console.log('Partida guardada correctamente');
+      console.log(t('partida_guardada'));
     } else {
       console.log('Error al guardar: ' + (resultado.error || 'Desconocido'));
     }
@@ -427,8 +444,10 @@ window.seleccionarDino = seleccionarDino;
 window.colocarDino = colocarDino;
 window.resetearDinosauriosDisponibles = resetearDinosauriosDisponibles;
 
-window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('DOMContentLoaded', async function() {
   console.log('Iniciando Draftosaurus...');
+  
+  await cargarTraduccionesDigital();
   
   const parametrosUrl = new URLSearchParams(window.location.search);
   let cantidadBots = parseInt(parametrosUrl.get('bots')) || 2;
@@ -444,8 +463,4 @@ window.addEventListener('DOMContentLoaded', function() {
   if (botonExportar) {
     botonExportar.addEventListener('click', exportarPartida);
   }
-  
-  console.log('Draftosaurus cargado - Sistema de restricciones activo');
-  console.log('Jugando con', cantidadBots, 'bots');
-  console.log('IMPORTANTE: Debes tirar el dado antes de cada movimiento');
 });

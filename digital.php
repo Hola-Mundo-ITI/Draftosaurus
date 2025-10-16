@@ -1,4 +1,7 @@
 <?php
+session_start();
+require_once 'php/idioma/idiomas.php';
+
 $pageTitle = "Partida Virtual - Draftosaurus";
 $specificCSS = "digitalPag.css";
 $specificJS = ["digitalPag.js", "utilidades/puntuacionDigital.js", "multijugador/multijugador.js"];
@@ -12,11 +15,11 @@ include 'php/includes/head.php';
   <?php include 'php/includes/navigation.php'; ?>
     <div class="header-izquierda">
       <div class="info-jugador-actual">
-        <span class="etiqueta-turno">Turno de:</span>
-        <span class="nombre-jugador-actual" id="nombreJugadorActual">Jugador 1</span>
+        <span class="etiqueta-turno"><?php echo t('turno_de'); ?></span>
+        <span class="nombre-jugador-actual" id="nombreJugadorActual"><?php echo t('jugador'); ?> 1</span>
       </div>
       <div class="ronda-actual">
-        <span class="icono-ronda">Ronda:</span>
+        <span class="icono-ronda"><?php echo t('ronda'); ?></span>
         <span class="numero-ronda" id="numRonda">1</span>
       </div>
     </div>
@@ -27,8 +30,8 @@ include 'php/includes/head.php';
           <img id="imagenDado" src="Recursos/img/dado.png" alt="Dado" />
         </div>
       </div>
-      <button id="botonPasarTurno" class="boton-pasar-turno">Pasar Turno</button>
-      <button id="botonExportar" class="boton-exportar">Exportar</button>
+      <button id="botonPasarTurno" class="boton-pasar-turno"><?php echo t('pasar_turno'); ?></button>
+      <button id="botonExportar" class="boton-exportar"><?php echo t('exportar'); ?></button>
     </div>
   </header>
   

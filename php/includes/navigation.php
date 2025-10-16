@@ -7,6 +7,9 @@ if (!isset($specificCSS)) {
 if (!isset($specificJS)) {
     $specificJS = "utilidades/navigation.js";
 }
+if (!function_exists('traducir')) {
+    require_once __DIR__ . '/../idioma/idiomas.php';
+}
 
 require_once __DIR__ . '/../auth/Sesion.php';
 $sesion = new Sesion();
@@ -26,10 +29,10 @@ $nombreUsuario = $sesionActiva ? $verificacion['usuario']['nombre'] : '';
     <?php if ($sesionActiva): ?>
       <div class="user-info">
         <p class="user-name"><?php echo htmlspecialchars($nombreUsuario); ?></p>
-        <button id="btn-cerrar-sesion" class="btn-logout">Cerrar sesion</button>
+        <button id="btn-cerrar-sesion" class="btn-logout"><?php echo t('menu_cerrar_sesion'); ?></button>
       </div>
     <?php else: ?>
-      <a href="sesion.php" id="link-iniciar-sesion">Iniciar sesion</a>
+      <a href="sesion.php" id="link-iniciar-sesion"><?php echo t('iniciar_sesion'); ?></a>
     <?php endif; ?>
   </div>
 
@@ -37,18 +40,18 @@ $nombreUsuario = $sesionActiva ? $verificacion['usuario']['nombre'] : '';
     <ul class="menu-list">
       <li>
         <a href="index.php" <?php if($currentPage == 'index') echo 'class="active"'; ?>>
-          Inicio
+          <?php echo t('menu_inicio'); ?>
         </a>
       </li>
       
       <li>
         <?php if ($sesionActiva): ?>
           <a href="fisico.php" <?php if($currentPage == 'fisico') echo 'class="active"'; ?>>
-            Modo Fisico
+            <?php echo t('menu_fisica'); ?>
           </a>
         <?php else: ?>
           <a href="sesion.php">
-            Modo Fisico
+            <?php echo t('menu_fisica'); ?>
           </a>
         <?php endif; ?>
       </li>
@@ -56,11 +59,11 @@ $nombreUsuario = $sesionActiva ? $verificacion['usuario']['nombre'] : '';
       <li>
         <?php if ($sesionActiva): ?>
           <a href="digital.php" <?php if($currentPage == 'seleccionarBots') echo 'class="active"'; ?>>
-            Modo Digital
+            <?php echo t('menu_digital'); ?>
           </a>
         <?php else: ?>
           <a href="sesion.php">
-            Modo Digital
+            <?php echo t('menu_digital'); ?>
           </a>
         <?php endif; ?>
       </li>
@@ -79,7 +82,7 @@ $nombreUsuario = $sesionActiva ? $verificacion['usuario']['nombre'] : '';
       
       <li>
         <a href="configuracion.php" <?php if($currentPage == 'configuracion') echo 'class="active"'; ?>>
-          Configuracion
+          <?php echo t('menu_configuracion'); ?>
         </a>
       </li>
     </ul>
