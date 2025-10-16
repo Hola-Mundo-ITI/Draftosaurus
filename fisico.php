@@ -94,8 +94,6 @@ include 'php/includes/navigation.php';
 
       <input type="hidden" name="total-dinos" id="total-dinos" value="0">
     </form>
-
-    <hr class="my-4">
     <div id="resultado-form" style="display:none;" class="alert alert-info"></div>
   </section>
 </main>

@@ -8,9 +8,8 @@ include 'php/includes/head.php';
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <body>
-  <?php include 'php/includes/navigation.php'; ?>
-  
   <header class="header-partida">
+  <?php include 'php/includes/navigation.php'; ?>
     <div class="header-izquierda">
       <div class="info-jugador-actual">
         <span class="etiqueta-turno">Turno de:</span>

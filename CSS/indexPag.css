@@ -44,15 +44,8 @@
   
   .button-image {
     width: 150px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    transition: box-shadow 0.2s ease;
     object-fit: cover;
   }
-  
-  .btn-image-button:hover .button-image {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-  }
-  
   
   .logo-image {
     max-width: 250px;
