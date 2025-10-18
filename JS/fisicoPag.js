@@ -37,6 +37,17 @@ document.addEventListener('DOMContentLoaded', async function() {
         'dinos-rio': t('dinos_rio')
     };
 
+    // Mapeo de descripciones traducidas por zona
+    const descripciones = {
+        'bosque-semejanza': 'desc_bosque',
+        'prado-diferencia': 'desc_prado',
+        'trio-frondoso': 'desc_trio',
+        'pradera-amor': 'desc_pradera',
+        'isla-solitaria': 'desc_isla',
+        'rey-selva': 'desc_rey',
+        'dinos-rio': 'desc_rio'
+    };
+
     inputs.forEach(input => {
         input.addEventListener('input', actualizarTotal);
     });
@@ -211,9 +222,11 @@ document.addEventListener('DOMContentLoaded', async function() {
             const det = detalles[zonaId] || {};
             const puntos = det.points || 0;
             const cantidad = det.dinosaurCount || 0;
+            
+            const descripcionTraducida = t(descripciones[zonaId]);
 
             html += '<li class="list-group-item d-flex justify-content-between align-items-center">';
-            html += `<div><strong>${zonas[zonaId]}:</strong> ${det.description || ''}</div>`;
+            html += `<div><strong>${zonas[zonaId]}:</strong> ${descripcionTraducida}</div>`;
             html += '<div>';
             html += `<span class="badge bg-primary rounded-pill me-2">${cantidad}</span>`;
             html += `<span>${puntos} pts</span>`;

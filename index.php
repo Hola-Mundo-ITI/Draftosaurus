@@ -11,6 +11,7 @@ require_once 'php/auth/Sesion.php';
 $sesion = new Sesion();
 $verificacion = $sesion->verificarSesion();
 $sesionActiva = $verificacion['activa'];
+$idiomaActual = obtenerIdioma();
 
 include 'php/includes/head.php';
 ?>
@@ -25,17 +26,33 @@ include 'php/includes/head.php';
       <div class="button-group" role="group" aria-label="Opciones de modo de juego">
         <?php if ($sesionActiva): ?>
           <a href="fisico.php" class="btn-image-button" role="button">
-            <img src="Recursos/img/botonModoFisico.png" alt="<?php echo t('modo_fisico'); ?>" class="button-image" width="150px">
+            <?php if ($idiomaActual === 'en'): ?>
+              <img src="Recursos/img/PhysicalMode.png" alt="<?php echo t('modo_fisico'); ?>" class="button-image" width="150px">
+            <?php else: ?>
+              <img src="Recursos/img/botonModoFisico.png" alt="<?php echo t('modo_fisico'); ?>" class="button-image" width="150px">
+            <?php endif; ?>
           </a>
           <a href="seleccionarJugador.php" class="btn-image-button" role="button">
-            <img src="Recursos/img/botonMododDigital.png" alt="<?php echo t('modo_digital'); ?>" class="button-image" >
+            <?php if ($idiomaActual === 'en'): ?>
+              <img src="Recursos/img/DigitalMode.png" alt="<?php echo t('modo_digital'); ?>" class="button-image" >
+            <?php else: ?>
+              <img src="Recursos/img/botonMododDigital.png" alt="<?php echo t('modo_digital'); ?>" class="button-image" >
+            <?php endif; ?>
           </a>
         <?php else: ?>
           <a href="sesion.php" class="btn-image-button" role="button">
-            <img src="Recursos/img/botonModoFisico.png" alt="<?php echo t('modo_fisico'); ?>" class="button-image" width="150px">
+            <?php if ($idiomaActual === 'en'): ?>
+              <img src="Recursos/img/PhysicalMode.png" alt="<?php echo t('modo_fisico'); ?>" class="button-image" width="150px">
+            <?php else: ?>
+              <img src="Recursos/img/botonModoFisico.png" alt="<?php echo t('modo_fisico'); ?>" class="button-image" width="150px">
+            <?php endif; ?>
           </a>
           <a href="sesion.php" class="btn-image-button" role="button">
-            <img src="Recursos/img/botonMododDigital.png" alt="<?php echo t('modo_digital'); ?>" class="button-image" >
+            <?php if ($idiomaActual === 'en'): ?>
+              <img src="Recursos/img/DigitalMode.png" alt="<?php echo t('modo_digital'); ?>" class="button-image" >
+            <?php else: ?>
+              <img src="Recursos/img/botonMododDigital.png" alt="<?php echo t('modo_digital'); ?>" class="button-image" >
+            <?php endif; ?>
           </a>
         <?php endif; ?>
       </div>

@@ -122,11 +122,18 @@ function traducir($clave) {
             'no_jugadores' => 'No hay jugadores configurados. Redirigiendo...',
             'ya_lanzaste_dado' => 'Ya lanzaste el dado en este turno. Coloca tu dinosaurio y pasa turno',
             'partida_guardada' => 'Partida guardada correctamente',
-            
-            // Textos adicionales
             'pts' => 'pts',
             'error' => 'Error',
-            'exito' => 'Exito'
+            'exito' => 'Exito',
+            
+            // Descripciones de zonas para puntuacion
+            'desc_bosque' => 'Puntos por dinosaurios del mismo tipo',
+            'desc_prado' => 'Puntos por variedad de tipos',
+            'desc_trio' => '7 puntos si tiene exactamente 3 dinosaurios',
+            'desc_pradera' => 'Puntos por parejas completas',
+            'desc_isla' => '7 puntos por el dinosaurio solitario',
+            'desc_rey' => 'Puntos por el dinosaurio mas grande',
+            'desc_rio' => 'Puntos por secuencia en el rio'
         ],
         'en' => [
             // Navigation
@@ -164,7 +171,7 @@ function traducir($clave) {
             'crea_cuenta' => 'Create a new account',
             'accede_cuenta' => 'Access with your existing account',
             
-            // Select Player
+            // seleccionar jugador
             'configurar_partida' => 'Configure Multiplayer Game',
             'cantidad_jugadores' => 'Number of Players:',
             'seleccionar' => 'Select...',
@@ -200,7 +207,7 @@ function traducir($clave) {
             'guardar_cambios' => 'Save Changes',
             'cambios_guardados' => 'Changes saved successfully',
             
-            // Score
+            // puntos
             'ver_puntos' => 'View Points',
             'puntuacion' => 'Score',
             'total' => 'Total:',
@@ -212,7 +219,7 @@ function traducir($clave) {
             'puntuacion_total' => 'Total Score:',
             'desglose_zona' => 'Breakdown by Zone:',
             
-            // Messages
+            // Mensaje
             'debe_lanzar_dado' => 'You must roll the dice before passing turn',
             'debe_colocar_dino' => 'You must place a dinosaur before passing turn',
             'ronda_completada' => 'Round completed! The decks rotated to the next player',
@@ -221,7 +228,19 @@ function traducir($clave) {
             'completa_nombres' => 'Please complete all names',
             'no_jugadores' => 'No players configured. Redirecting...',
             'ya_lanzaste_dado' => 'You already rolled the dice this turn. Place your dinosaur and pass turn',
-            'partida_guardada' => 'Game saved successfully'
+            'partida_guardada' => 'Game saved successfully',
+            'pts' => 'pts',
+            'error' => 'Error',
+            'exito' => 'Success',
+            
+            //descripcion zona puntuacion
+            'desc_bosque' => 'Points for same type dinosaurs',
+            'desc_prado' => 'Points for variety of types',
+            'desc_trio' => '7 points if exactly 3 dinosaurs',
+            'desc_pradera' => 'Points for complete pairs',
+            'desc_isla' => '7 points for the solitary dinosaur',
+            'desc_rey' => 'Points for the biggest dinosaur',
+            'desc_rio' => 'Points for river sequence'
         ]
     ];
     

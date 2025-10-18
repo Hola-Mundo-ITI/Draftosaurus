@@ -5,8 +5,6 @@ window.traducciones = window.traducciones || {};
 
 window.addEventListener('DOMContentLoaded', function() {
     cargarTraducciones();
-    crearBotonPuntos();
-    crearPanelPuntos();
 });
 
 async function cargarTraducciones() {
@@ -15,10 +13,13 @@ async function cargarTraducciones() {
         const datos = await respuesta.json();
         if (datos.success) {
             window.traducciones = datos.traducciones;
+            // Crear los elementos después de cargar las traducciones
+            crearBotonPuntos();
+            crearPanelPuntos();
         }
     } catch (error) {
         console.error('Error cargando traducciones:', error);
-        // Usar traducciones por defecto en espanol
+        // Usar traducciones por defecto en español
         window.traducciones = {
             'ver_puntos': 'Ver Puntos',
             'puntuacion': 'Puntuacion',
@@ -35,6 +36,8 @@ async function cargarTraducciones() {
             'rey_selva': 'Rey Selva',
             'dinos_rio': 'Dinos Rio'
         };
+        crearBotonPuntos();
+        crearPanelPuntos();
     }
 }
 
@@ -64,7 +67,7 @@ function crearPanelPuntos() {
         </div>
         <div class="total-puntos">
             <strong>${t('total')}</strong> 
-            <span id="puntosTotal">0</span> pts
+            <span id="puntosTotal">0</span> ${t('pts')}
         </div>
         <div class="tabla-puntos">
             <table>
@@ -266,11 +269,11 @@ estilos.textContent = `
     align-items: center;
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #552A0A;
+    border-bottom: 2px solid #FFD490;
 }
 
 .panel-header h3 {
-    color: #552A0A;
+    color: #FFD490;
     margin: 0;
 }
 
@@ -278,7 +281,7 @@ estilos.textContent = `
     background: none;
     border: none;
     font-size: 24px;
-    color: #552A0A;
+    color: #FFD490;
     cursor: pointer;
     padding: 0;
     width: 30px;
@@ -286,7 +289,7 @@ estilos.textContent = `
 }
 
 .total-puntos {
-    background-color: #552A0A;
+    background-color: #3d1f07;
     color: #FFD490;
     padding: 15px;
     border-radius: 5px;
@@ -301,7 +304,7 @@ estilos.textContent = `
 }
 
 .tabla-puntos {
-    background-color: #552A0A;
+    background-color: #3d1f07;
     border-radius: 5px;
     padding: 10px;
 }
@@ -312,23 +315,22 @@ estilos.textContent = `
 }
 
 .tabla-puntos th {
-    background-color: #FFD490;
-    color: #333;
+    background-color: #3d1f07;
+    color: #FFD490;
     padding: 8px;
     text-align: left;
-    border: 1px solid #333;
+    border: 1px solid #FFD490;
 }
 
 .tabla-puntos td {
     padding: 8px;
-    background-color: #FFD490;
+    background-color: #552A0A;
     color: #FFD490;
-    border: 1px  #FFD490;
-    color: #333;
+    border: 1px solid #FFD490;
 }
 
-.tabla-puntos tr:nth-child(even) {
-    background-color: #FFD490;
+.tabla-puntos tr:nth-child(even) td {
+    background-color: #3d1f07;
 }
 
 .overlay-puntos {

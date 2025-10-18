@@ -2,6 +2,7 @@
 session_start();
 require_once 'php/idioma/idiomas.php';
 require_once 'php/procesamiento/puntosFisico.php';
+$idiomaActual = obtenerIdioma();
 
 // Si el formulario fue enviado, procesar y devolver JSON
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -82,10 +83,18 @@ include 'php/includes/navigation.php';
         </div>
       <div class="col-12 d-flex gap-2 mt-3">
         <button type="submit" class="btn-primary" id="btn-submit">
-          <img src="Recursos/img/btnCalcular.png" width="150px">
+          <?php if ($idiomaActual === 'en'): ?>
+            <img src="Recursos/img/calculate.png" width="150px" alt="<?php echo t('calcular'); ?>">
+          <?php else: ?>
+            <img src="Recursos/img/btnCalcular.png" width="150px" alt="<?php echo t('calcular'); ?>">
+          <?php endif; ?>
         </button>
         <button type="button" class="btn-secondary" id="btn-reset">
-          <img src="Recursos/img/btnLimpiar.png" width="150px">
+          <?php if ($idiomaActual === 'en'): ?>
+            <img src="Recursos/img/clear.png" width="150px" alt="<?php echo t('limpiar'); ?>">
+          <?php else: ?>
+            <img src="Recursos/img/btnLimpiar.png" width="150px" alt="<?php echo t('limpiar'); ?>">
+          <?php endif; ?>
         </button>
       </div>
       <div class="col-12 mt-2">

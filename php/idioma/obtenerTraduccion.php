@@ -31,7 +31,14 @@ $traducciones = [
     'partida_guardada' => t('partida_guardada'),
     'resultado_puntuacion' => t('resultado_puntuacion'),
     'puntuacion_total' => t('puntuacion_total'),
-    'desglose_zona' => t('desglose_zona')
+    'desglose_zona' => t('desglose_zona'),
+    'desc_bosque' => t('desc_bosque'),
+    'desc_prado' => t('desc_prado'),
+    'desc_trio' => t('desc_trio'),
+    'desc_pradera' => t('desc_pradera'),
+    'desc_isla' => t('desc_isla'),
+    'desc_rey' => t('desc_rey'),
+    'desc_rio' => t('desc_rio')
 ];
 
 echo json_encode([
