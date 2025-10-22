@@ -1,7 +1,6 @@
 <?php
 session_start();
-require_once 'php/idioma/idiomas.php';
-
+require_once 'negocio/utilidades/idioma/idiomas.php';
 $pageTitle = t('iniciar_sesion') . " - Draftosaurus";
 $pageDescription = "Iniciar sesion o crear cuenta en Draftosaurus";
 $specificCSS = "utilidades/responsive.css";

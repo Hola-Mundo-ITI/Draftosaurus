@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const idioma = document.getElementById('selectorIdioma').value;
         
         try {
-            const respuesta = await fetch('php/idioma/cambiarIdioma.php', {
+            const respuesta = await fetch('negocio/utilidades/idioma/cambiarIdioma.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

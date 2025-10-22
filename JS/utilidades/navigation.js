@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function cerrarSesion() {
   try {
-    const respuesta = await fetch('php/auth/borrarSesion.php', {
+    const respuesta = await fetch('datos/sesion/borrarSesion.php', {
       method: 'POST',
       credentials: 'include',
       headers: {

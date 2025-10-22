@@ -8,10 +8,10 @@ if (!isset($specificJS)) {
     $specificJS = "utilidades/navigation.js";
 }
 if (!function_exists('traducir')) {
-    require_once __DIR__ . '/../idioma/idiomas.php';
+    require_once __DIR__ . '/../../negocio/utilidades/idioma/idiomas.php';
 }
 
-require_once __DIR__ . '/../auth/Sesion.php';
+require_once __DIR__ . '/../../datos/conexion/conexionBD.php';
 $sesion = new Sesion();
 $verificacion = $sesion->verificarSesion();
 $sesionActiva = $verificacion['activa'];

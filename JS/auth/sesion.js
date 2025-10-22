@@ -36,7 +36,7 @@ async function manejarInicioSesion(event) {
   if (!password) { mostrarMensaje(mensajeId, 'Contrasena requerida.', 'error'); return; }
 
   try {
-    const resp = await fetch('php/auth/iniciarSesion.php', {
+    const resp = await fetch('datos/sesion/iniciarSesion.php', {
       method: 'POST',
       credentials: 'include',
       headers: { 
@@ -92,7 +92,7 @@ async function manejarRegistro(event) {
   }
 
   try {
-    const resp = await fetch('php/auth/crearSesion.php', {
+    const resp = await fetch('datos/sesion/crearSesion.php', {
       method: 'POST',
       headers: { 
         'Accept': 'application/json', 

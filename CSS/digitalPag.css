@@ -78,13 +78,15 @@
 }
 
 .dado-virtual {
+  top: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   padding: 8px;
   border-radius: 5px;
-  background-color: #764826;
+  width: 90px;
+  background-color: transparent;
   border: 2px #FFD490;
   transition: transform 0.2s ease;
 }
@@ -94,8 +96,8 @@
 }
 
 .dado-virtual img {
-  width: 50px;
-  height: 50px;
+  width: 90px;
+  height: 90px;
 }
 
 .boton-pasar-turno,

@@ -9,7 +9,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
 async function cargarTraducciones() {
     try {
-        const respuesta = await fetch('php/idioma/obtenerTraduccion.php');
+        const respuesta = await fetch('negocio/utilidades/idioma/obtenerTraduccion.php');
         const datos = await respuesta.json();
         if (datos.success) {
             window.traducciones = datos.traducciones;
@@ -149,7 +149,7 @@ async function actualizarPuntos() {
     const estadoActual = obtenerEstadoTablero();
     
     try {
-        const respuesta = await fetch('php/utilidades/puntuacionDigital.php', {
+        const respuesta = await fetch('negocio/puntuacion/puntosDigital.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

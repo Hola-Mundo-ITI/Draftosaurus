@@ -2,7 +2,7 @@ window.traducciones = window.traducciones || {};
 
 async function cargarTraduccionesFisico() {
     try {
-        const respuesta = await fetch('php/idioma/obtenerTraduccion.php');
+        const respuesta = await fetch('negocio/utilidades/idioma/obtenerTraduccion.php');
         const datos = await respuesta.json();
         if (datos.success) {
             window.traducciones = datos.traducciones;

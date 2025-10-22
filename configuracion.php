@@ -1,16 +1,16 @@
 <?php
 session_start();
-require_once 'php/idioma/idiomas.php';
+require_once 'negocio/utilidades/idioma/idiomas.php';
 
 $pageTitle = t('configuracion') . " - Draftosaurus";
 $specificCSS = "configuracion.css";
 $specificJS = "configuracion.js";
 
-include 'php/includes/head.php';
+include 'presentacion/includes/head.php';
 ?>
 
 <body>
-  <?php include 'php/includes/navigation.php'; ?>
+  <?php include 'presentacion/includes/navigation.php'; ?>
   
   <main class="contenedor-configuracion">
     <div class="caja-configuracion">
@@ -38,6 +38,6 @@ include 'php/includes/head.php';
     </div>
   </main>
 
-  <?php include 'php/includes/footer.php'; ?>
+  <?php include 'presentacion/includes/footer.php'; ?>
 </body>
 </html>

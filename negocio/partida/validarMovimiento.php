@@ -1,5 +1,4 @@
 <?php
-
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
@@ -9,15 +8,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-require_once __DIR__ . '/../tablero.php';
+require_once '../tablero/tablero.php';
 
 $json = file_get_contents('php://input');
 $datos = json_decode($json, true);
 
-// Log para depuración (se verá en el log de PHP/Apache)
 error_log('[validarMovimiento] payload: ' . $json);
 
-// Verificar que llegaron los datos mínimos necesarios
 if (!isset($datos['casillaId']) || !isset($datos['species'])) {
     echo json_encode([
         'valid' => false,
@@ -27,34 +24,21 @@ if (!isset($datos['casillaId']) || !isset($datos['species'])) {
     exit;
 }
 
-// Extraer los datos
 $casillaId = $datos['casillaId'];
 $dino = (int)$datos['species'];
 $tableroEstado = isset($datos['tableroEstado']) ? $datos['tableroEstado'] : ['casillas' => []];
 $restriccionDado = isset($datos['restriccionActiva']) ? $datos['restriccionActiva'] : null;
 
 try {
-    // Crear el tablero y cargar el estado actual del juego
     $tablero = new Tablero();
     $tablero->cargarEstado($tableroEstado);
     
-    // Validar si se puede colocar el dinosaurio
     $resultado = $tablero->puedoColocar($casillaId, $dino, $restriccionDado);
     
-    // Determinar zona localmente (para debug)
-    $nombreZona = null;
-    if (strpos($casillaId, '1-') === 0) $nombreZona = 'bosque-semejanza';
-    elseif (strpos($casillaId, '6-') === 0) $nombreZona = 'prado-diferencia';
-    elseif (strpos($casillaId, '4-') === 0) $nombreZona = 'trio-frondoso';
-    elseif (strpos($casillaId, '7-') === 0) $nombreZona = 'pradera-amor';
-    elseif ($casillaId === '9-1') $nombreZona = 'isla-solitaria';
-    elseif ($casillaId === '3-1') $nombreZona = 'rey-selva';
-    elseif (strpos($casillaId, '8-') === 0) $nombreZona = 'dinos-rio';
-
-    // Log resultado de validación
+    $nombreZona = obtenerNombreZona($casillaId);
+    
     error_log('[validarMovimiento] resultado: ' . json_encode($resultado) . ' zona: ' . $nombreZona);
     
-    // Devolver respuesta en el formato que espera el frontend
     if ($resultado['valido']) {
         echo json_encode([
             'valid' => true,
@@ -83,5 +67,16 @@ try {
         'reason' => 'Error del servidor: ' . $e->getMessage(),
         'debug' => ['received' => $datos]
     ]);
+}
+
+function obtenerNombreZona($casillaId) {
+    if (strpos($casillaId, '1-') === 0) return 'bosque-semejanza';
+    if (strpos($casillaId, '6-') === 0) return 'prado-diferencia';
+    if (strpos($casillaId, '4-') === 0) return 'trio-frondoso';
+    if (strpos($casillaId, '7-') === 0) return 'pradera-amor';
+    if ($casillaId === '9-1') return 'isla-solitaria';
+    if ($casillaId === '3-1') return 'rey-selva';
+    if (strpos($casillaId, '8-') === 0) return 'dinos-rio';
+    return 'desconocida';
 }
 ?>

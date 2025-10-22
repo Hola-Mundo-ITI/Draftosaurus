@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once 'php/idioma/idiomas.php';
-require_once 'php/procesamiento/puntosFisico.php';
+require_once 'negocio/utilidades/idioma/idiomas.php';
+require_once 'negocio/puntuacion/puntosFisico.php';
 $idiomaActual = obtenerIdioma();
 
 // Si el formulario fue enviado, procesar y devolver JSON
@@ -30,8 +30,8 @@ $specificCSS = "utilidades/responsive.css";
 $specificCSS = "fisicoPag.css";
 $specificJS = "fisicoPag.js";
 
-include 'php/includes/head.php';
-include 'php/includes/navigation.php';
+include 'presentacion/includes/head.php';
+include 'presentacion/includes/navigation.php';
 ?>
 
 <main id="mainContent" data-player-id="1">
@@ -108,4 +108,4 @@ include 'php/includes/navigation.php';
     <div id="resultado-form" style="display:none;" class="alert alert-info"></div>
   </section>
 </main>
-<?php include 'php/includes/footer.php'; ?>
+<?php include 'presentacion/includes/footer.php'; ?>

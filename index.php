@@ -1,22 +1,22 @@
 <?php
 session_start();
-require_once 'php/idioma/idiomas.php';
+require_once __DIR__ . '/negocio/utilidades/idioma/idiomas.php';
 
 $pageTitle = t('menu_inicio') . " - Draftosaurus";
 $pageDescription = "Pagina de inicio de Draftosaurus - Elige tu modo de juego favorito";
 $specificCSS = "indexPag.css";
 $specificJS = "indexPag.js";
 
-require_once 'php/auth/Sesion.php';
+require_once __DIR__ . '/datos/conexion/conexionBD.php';
 $sesion = new Sesion();
 $verificacion = $sesion->verificarSesion();
 $sesionActiva = $verificacion['activa'];
 $idiomaActual = obtenerIdioma();
 
-include 'php/includes/head.php';
+include __DIR__ . '/presentacion/includes/head.php';
 ?>
 <body class="bg-light">
-  <?php include 'php/includes/navigation.php'; ?>
+  <?php include __DIR__ . '/presentacion/includes/navigation.php'; ?>
 
   <main id="mainContent" class="container text-center main-content" role="main">
     <section class="hero-section">
@@ -59,6 +59,6 @@ include 'php/includes/head.php';
     </section>
   </main>
 
-  <?php include 'php/includes/footer.php'; ?>
+<?php include __DIR__ . '/presentacion/includes/footer.php'; ?>
 </body>
 </html>

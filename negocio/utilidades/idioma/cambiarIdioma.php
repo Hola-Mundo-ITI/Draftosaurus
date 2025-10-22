@@ -16,18 +16,18 @@ if (!isset($datos['idioma'])) {
 
 $nuevoIdioma = $datos['idioma'];
 
-if ($nuevoIdioma !== 'es' && $nuevoIdioma !== 'en') {
+$traductor = new Traductor();
+$resultado = $traductor->cambiarIdioma($nuevoIdioma);
+
+if ($resultado) {
+    echo json_encode([
+        'success' => true,
+        'idioma' => $nuevoIdioma
+    ]);
+} else {
     echo json_encode([
         'success' => false,
         'error' => 'Idioma no valido'
     ]);
-    exit;
 }
-
-$_SESSION['idioma'] = $nuevoIdioma;
-
-echo json_encode([
-    'success' => true,
-    'idioma' => $nuevoIdioma
-]);
 ?>

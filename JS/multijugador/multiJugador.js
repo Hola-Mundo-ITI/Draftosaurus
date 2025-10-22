@@ -9,7 +9,7 @@ window.traducciones = window.traducciones || {};
 
 async function cargarTraduccionesMulti() {
     try {
-        const respuesta = await fetch('php/idioma/obtenerTraduccion.php');
+        const respuesta = await fetch('negocio/utilidades/idioma/obtenerTraduccion.php');
         const datos = await respuesta.json();
         if (datos.success) {
             window.traducciones = datos.traducciones;
@@ -36,7 +36,7 @@ async function inicializarMultijugador() {
   
     jugadores = JSON.parse(jugadoresGuardados);
   
-    const respuesta = await fetch('php/procesamiento/procesarMulti.php', {
+    const respuesta = await fetch('negocio/partida/procesarMulti.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -63,7 +63,7 @@ async function cargarTableroJugadorActual() {
     const jugadorActivo = jugadores.find(j => j.id === turnoActual);
     if (!jugadorActivo) return;
   
-    const respuesta = await fetch('php/procesamiento/procesarMulti.php', {
+    const respuesta = await fetch('negocio/partida/procesarMulti.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -159,7 +159,7 @@ function guardarTableroJugadorActual() {
         }
     });
   
-    fetch('php/procesamiento/procesarMulti.php', {
+    fetch('negocio/partida/procesarMulti.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -202,7 +202,7 @@ async function pasarTurno() {
     dadoLanzado = false;
     dinoColocado = false;
   
-    const respuesta = await fetch('php/procesamiento/procesarMulti.php', {
+    const respuesta = await fetch('negocio/partida/procesarMulti.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -240,7 +240,7 @@ async function pasarTurno() {
 }
 
 async function rotarMazos() {
-    const respuesta = await fetch('php/procesamiento/procesarMulti.php', {
+    const respuesta = await fetch('negocio/partida/procesarMulti.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -256,7 +256,7 @@ async function rotarMazos() {
 }
 
 async function finalizarPartida() {
-    const respuesta = await fetch('php/procesamiento/procesarMulti.php', {
+    const respuesta = await fetch('negocio/partida/procesarMulti.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
