@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'negocio/utilidades/idioma/idiomas.php';
+require_once '/negocio/utilidades/idioma/idiomas.php';
 
 $pageTitle = t('configuracion') . " - Draftosaurus";
 $specificCSS = "configuracion.css";
