@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-require_once 'ManejadorPartida.php';
+require_once 'manejadorPartida.php';
 
 $json = file_get_contents('php://input');
 $datos = json_decode($json, true);
