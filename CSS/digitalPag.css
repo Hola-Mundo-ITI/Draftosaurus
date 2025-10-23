@@ -29,7 +29,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  background-color: #764826;
+  background-color: #552A0A;
   padding: 8px 15px;
   border-radius: 5px;
   border: 2px solid #FFD490;
@@ -51,8 +51,9 @@
   color: #FFD490;
   display: flex;
   align-items: center;
+  align-self: center;
   gap: 8px;
-  background-color: #764826;
+  background-color: #552A0A;
   padding: 8px 15px;
   border-radius: 5px;
   border: 2px solid #FFD490;
@@ -78,7 +79,8 @@
 }
 
 .dado-virtual {
-  top: 20px;
+  margin-top: 70px;
+  margin-right: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -114,7 +116,7 @@
 
 .boton-pasar-turno:hover,
 .boton-exportar:hover {
-  background-color: #764826;
+  background-color: #552A0A;
   color: #FFD490;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -142,10 +144,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  background-image: url('../Recursos/img/tablero/FondoDeTablero.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+  
   width: 500px;
   height: 500px;
   margin: 0 auto;
@@ -153,7 +152,11 @@
 
 .contenedor-tablero {
   display: flex;
-  object-fit: contain;
+  background-image: url('../Recursos/img/tablero/FondoDeTablero.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  object-fit: cover;
   flex-direction: column;
   width: 100%;
   height: 100%;
@@ -172,6 +175,19 @@
 .div8 { grid-area: 3 / 2 / 4 / 3; }
 .div9 { grid-area: 3 / 3 / 4 / 4; }
 
+.superior{
+  margin-top: 10%;
+}
+
+.abajo{
+  margin-bottom: 10%;
+}
+.izquierda{
+  margin-left: 10%;
+}
+.derecha{
+  margin-right: 5%;
+}
 .casilla {
   background-color: transparent;
   display: flex;
@@ -195,7 +211,6 @@
   grid-row-gap: 0px;
   width: 100%;
   height: 100%;
-  background-position: center;
   padding: 5px;
 }
 

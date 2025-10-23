@@ -1,6 +1,5 @@
 let panelPuntosAbierto = false;
 
-// Variable global con traducciones cargadas desde PHP
 window.traducciones = window.traducciones || {};
 
 window.addEventListener('DOMContentLoaded', function() {
@@ -13,13 +12,11 @@ async function cargarTraducciones() {
         const datos = await respuesta.json();
         if (datos.success) {
             window.traducciones = datos.traducciones;
-            // Crear los elementos después de cargar las traducciones
             crearBotonPuntos();
             crearPanelPuntos();
         }
     } catch (error) {
         console.error('Error cargando traducciones:', error);
-        // Usar traducciones por defecto en español
         window.traducciones = {
             'ver_puntos': 'Ver Puntos',
             'puntuacion': 'Puntuacion',
@@ -46,13 +43,28 @@ function t(clave) {
 }
 
 function crearBotonPuntos() {
-    const boton = document.createElement('button');
-    boton.id = 'botonPuntos';
-    boton.className = 'boton-puntos';
-    boton.textContent = t('ver_puntos');
-    boton.onclick = togglePanelPuntos;
+    const botonExportar = document.getElementById('botonExportar');
     
-    document.body.appendChild(boton);
+    if (botonExportar) {
+        botonExportar.remove();
+    }
+    
+    const headerDerecha = document.querySelector('.header-derecha');
+    
+    if (headerDerecha) {
+        const boton = document.createElement('button');
+        boton.id = 'botonPuntos';
+        boton.className = 'boton-puntos';
+        
+        boton.innerHTML = `
+            <span id="textoPuntos">0pts</span>
+            <img src="Recursos/img/imgPts.png" alt="puntos" style="width: 20px; height: 20px; margin-left: 8px;">
+        `;
+        
+        boton.onclick = togglePanelPuntos;
+        
+        headerDerecha.appendChild(boton);
+    }
 }
 
 function crearPanelPuntos() {
@@ -121,7 +133,6 @@ function crearPanelPuntos() {
     
     document.body.appendChild(panel);
     
-    // Crear overlay
     const overlay = document.createElement('div');
     overlay.id = 'overlayPuntos';
     overlay.className = 'overlay-puntos';
@@ -220,6 +231,8 @@ function mostrarPuntos(datos) {
     
     document.getElementById('cantidad-rio').textContent = detalles['dinos-rio'].cantidad;
     document.getElementById('puntos-rio').textContent = detalles['dinos-rio'].puntos;
+    
+    document.getElementById('textoPuntos').textContent = datos.totalScore + 'pts';
 }
 
 window.actualizarPuntos = actualizarPuntos;
@@ -228,22 +241,23 @@ window.togglePanelPuntos = togglePanelPuntos;
 const estilos = document.createElement('style');
 estilos.textContent = `
 .boton-puntos {
-    position: fixed;
-    top: 70px;
-    right: 10px;
-    background-color:  #552A0A;
+    background-color: #552A0A;
     color: #FFD490;
-    border: 2px solid #FFD490;
+    border: none;
     padding: 10px 20px;
     cursor: pointer;
-    font-weight: bold;
     border-radius: 5px;
-    z-index: 1000;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .boton-puntos:hover {
-    background-color: #552A0A;
+    background-color: #764826;
+    transform: translateY(-2px);
 }
 
 .panel-puntos {
@@ -330,7 +344,7 @@ estilos.textContent = `
 }
 
 .tabla-puntos tr:nth-child(even) td {
-    background-color: #3d1f07;
+    background-color: #552A0A;
 }
 
 .overlay-puntos {

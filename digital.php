@@ -30,7 +30,7 @@ include 'presentacion/includes/head.php';
           <img id="imagenDado" src="Recursos/img/dado.png" alt="Dado" />
         </div>
       </div>
-      <button id="botonPasarTurno" class="boton-pasar-turno"><?php echo t('pasar_turno'); ?></button>
+      <button id="botonPasarTurno" class="boton-pasar-turno"><img src="Recursos/img/cambioDeTurno.png" width="40px" height="40px"></button>
       <button id="botonExportar" class="boton-exportar"><?php echo t('exportar'); ?></button>
     </div>
   </header>
@@ -51,7 +51,7 @@ include 'presentacion/includes/head.php';
     <section class="contenedor-tablero">
       <div id="tablero" class="tablero-juego">
         <div class="parent">
-          <div class="div1 casilla" data-casilla="1">
+          <div class="div1 casilla superior izquierda" data-casilla="1">
             <div class="casillerosBosqueSemejanza">
               <div class="casillero-item clickeable" onclick="colocarDino('1-1')" data-casilla="1-1"></div>
               <div class="casillero-item clickeable" onclick="colocarDino('1-2')" data-casilla="1-2"></div>
@@ -61,13 +61,13 @@ include 'presentacion/includes/head.php';
               <div class="casillero-item clickeable" onclick="colocarDino('1-6')" data-casilla="1-6"></div>
             </div>
           </div>
-          <div class="div2 casilla" data-casilla="2"></div>
-          <div class="div3 casilla" data-casilla="3">
+          <div class="div2 casilla superior" data-casilla="2"></div>
+          <div class="div3 casilla superior derecha" data-casilla="3">
             <div class="reySelva">
               <div class="casillero-item clickeable" onclick="colocarDino('3-1')" data-casilla="3-1"></div>
             </div>
           </div>
-          <div class="div4 casilla" data-casilla="4">
+          <div class="div4 casilla izquierda" data-casilla="4">
             <div class="casillerosTrioFrondoso">
               <div class="casillero-item clickeable" onclick="colocarDino('4-1')" data-casilla="4-1"></div>
               <div class="casillero-item clickeable" onclick="colocarDino('4-2')" data-casilla="4-2"></div>
@@ -75,7 +75,7 @@ include 'presentacion/includes/head.php';
             </div>
           </div>
           <div class="div5 casilla" data-casilla="5"></div>
-          <div class="div6 casilla" data-casilla="6">
+          <div class="div6 casilla derecha" data-casilla="6">
             <div class="casillerosPradoDiferencia">
               <div class="casillero-item clickeable" onclick="colocarDino('6-1')" data-casilla="6-1"></div>
               <div class="casillero-item clickeable" onclick="colocarDino('6-2')" data-casilla="6-2"></div>
@@ -85,13 +85,13 @@ include 'presentacion/includes/head.php';
               <div class="casillero-item clickeable" onclick="colocarDino('6-6')" data-casilla="6-6"></div>
             </div>
           </div>
-          <div class="div7 casilla" data-casilla="7">
+          <div class="div7 casilla abajo izquierda" data-casilla="7">
             <div class="praderaDelAmor">
               <div class="casillero-item clickeable" onclick="colocarDino('7-1')" data-casilla="7-1"></div>
               <div class="casillero-item clickeable" onclick="colocarDino('7-2')" data-casilla="7-2"></div>
             </div>
           </div>
-          <div class="div8 casilla" data-casilla="8">
+          <div class="div8 casilla abajo" data-casilla="8">
             <div class="casillerosAgua">
               <div class="casillero-item clickeable" onclick="colocarDino('8-1')" data-casilla="8-1"></div>
               <div class="casillero-item clickeable" onclick="colocarDino('8-2')" data-casilla="8-2"></div>
@@ -101,7 +101,7 @@ include 'presentacion/includes/head.php';
               <div class="casillero-item clickeable" onclick="colocarDino('8-6')" data-casilla="8-6"></div>
             </div>
           </div>
-          <div class="div9 casilla" data-casilla="9">
+          <div class="div9 casilla abajo derecha" data-casilla="9">
             <div class="casillerosIslaSolitaria">
               <div class="casillero-item clickeable" onclick="colocarDino('9-1')" data-casilla="9-1"></div>
             </div>
