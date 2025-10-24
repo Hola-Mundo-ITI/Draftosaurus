@@ -57,7 +57,7 @@ function crearBotonPuntos() {
         boton.className = 'boton-puntos';
         
         boton.innerHTML = `
-            <span id="textoPuntos">0pts</span>
+            <span id="textoPuntos"><span class="numero-puntos">0</span><span class="texto-pts">pts</span></span>
             <img src="Recursos/img/imgPts.png" alt="puntos" style="width: 20px; height: 20px; margin-left: 8px;">
         `;
         
@@ -232,7 +232,8 @@ function mostrarPuntos(datos) {
     document.getElementById('cantidad-rio').textContent = detalles['dinos-rio'].cantidad;
     document.getElementById('puntos-rio').textContent = detalles['dinos-rio'].puntos;
     
-    document.getElementById('textoPuntos').textContent = datos.totalScore + 'pts';
+    // ACTUALIZAMOS EL BOTON CON EL NUMERO MAS GRANDE
+    document.querySelector('#textoPuntos .numero-puntos').textContent = datos.totalScore;
 }
 
 window.actualizarPuntos = actualizarPuntos;
@@ -258,6 +259,23 @@ estilos.textContent = `
 .boton-puntos:hover {
     background-color: #764826;
     transform: translateY(-2px);
+}
+
+/* ESTILOS PARA HACER EL NUMERO MAS GRANDE */
+#textoPuntos {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+}
+
+.numero-puntos {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.texto-pts {
+    font-size: 12px;
+    font-weight: normal;
 }
 
 .panel-puntos {

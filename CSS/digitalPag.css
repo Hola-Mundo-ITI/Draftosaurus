@@ -32,7 +32,7 @@
   background-color: #552A0A;
   padding: 8px 15px;
   border-radius: 5px;
-  border: 2px solid #FFD490;
+  border: none;
 }
 
 .etiqueta-turno {
@@ -56,7 +56,7 @@
   background-color: #552A0A;
   padding: 8px 15px;
   border-radius: 5px;
-  border: 2px solid #FFD490;
+  border: none;
 }
 
 .icono-ronda {
@@ -106,7 +106,7 @@
 .boton-exportar {
   background-color: #552A0A;
   color: #FFD490;
-  border: 2px #FFD490;
+  border: none;
   padding: 10px 20px;
   cursor: pointer;
   border-radius: 5px;
@@ -193,6 +193,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  object-fit: contain;
   position: relative;
 }
 
@@ -325,4 +326,25 @@
 .dinosaurio img {
   width: 80px;
   height: 80px;
+}
+
+@keyframes brillar {
+  0% {
+    box-shadow: 0 0 5px #FFD490, 0 0 10px #FFD490;
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 20px #FFD490, 0 0 30px #FFD490, 0 0 40px #FFD490;
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 5px #FFD490, 0 0 10px #FFD490;
+    transform: scale(1);
+  }
+}
+
+.boton-pasar-turno.brillando {
+  animation: brillar 1.5s ease-in-out infinite;
+  border: 2px solid #FFD490 !important;
+  background-color: #764826 !important;
 }

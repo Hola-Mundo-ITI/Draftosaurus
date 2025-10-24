@@ -20,6 +20,7 @@ window.dinosUsados = {
 let debetirarDado = true;
 let mensajeDado = '';
 let dadosLanzadosEnEsteTurno = 0;
+let dinoColocadoEnEsteTurno = false;
 
 window.traducciones = window.traducciones || {};
 
@@ -96,10 +97,31 @@ function obtenerZonasVacias() {
   return zonasVacias;
 }
 
+// FUNCION PARA HACER BRILLAR EL BOTON
+function activarBrilloBotonPasarTurno() {
+  const boton = document.getElementById('botonPasarTurno');
+  if (boton) {
+    boton.classList.add('brillando');
+  }
+}
+
+// FUNCION PARA QUITAR EL BRILLO DEL BOTON
+function quitarBrilloBotonPasarTurno() {
+  const boton = document.getElementById('botonPasarTurno');
+  if (boton) {
+    boton.classList.remove('brillando');
+  }
+}
+
 function lanzarDado() {
   if (dadosLanzadosEnEsteTurno >= 1) {
     console.log(t('ya_lanzaste_dado'));
-    alert(t('ya_lanzaste_dado'));
+    
+    const imagenDado = document.getElementById('imagenDado');
+    if (imagenDado) {
+      imagenDado.style.opacity = '0.3';
+    }
+    
     return;
   }
   
@@ -127,6 +149,8 @@ function lanzarDado() {
     
     imagenDado.src = rutaImagen;
     imagenDado.alt = 'Dado - ' + caraAleatoria;
+    
+    imagenDado.style.opacity = '0.3';
     
     console.log('Imagen del dado actualizada a:', rutaImagen);
   }
@@ -356,10 +380,14 @@ async function colocarDino(numeroCasilla) {
 
     debetirarDado = true;
     restriccionActual = null;
+    dinoColocadoEnEsteTurno = true; // MARCAMOS QUE YA COLOCO EL DINO
     
     document.querySelectorAll('.casillero-item').forEach(casilla => {
       casilla.classList.remove('restringido', 'permitido');
     });
+    
+    // ACTIVAMOS EL BRILLO DEL BOTON
+    activarBrilloBotonPasarTurno();
     
     console.log('Dinosaurio colocado. Tira el dado de nuevo');
     console.log('Dinosaurio colocado en:', numeroCasilla);
@@ -403,6 +431,15 @@ function resetearDinosauriosDisponibles() {
   debetirarDado = true;
   restriccionActual = null;
   dadosLanzadosEnEsteTurno = 0;
+  dinoColocadoEnEsteTurno = false; // RESETEAMOS EL ESTADO
+  
+  const imagenDado = document.getElementById('imagenDado');
+  if (imagenDado) {
+    imagenDado.style.opacity = '1';
+  }
+  
+  // QUITAMOS EL BRILLO DEL BOTON
+  quitarBrilloBotonPasarTurno();
   
   document.querySelectorAll('.casillero-item').forEach(casilla => {
     casilla.classList.remove('restringido', 'permitido');
