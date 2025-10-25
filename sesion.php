@@ -7,9 +7,9 @@ $specificCSS = "utilidades/responsive.css";
 $specificCSS = "sesion.css";
 $specificJS = "auth/sesion.js";
 
-include 'php/includes/head.php';
+include 'presentacion/includes/head.php';
 ?>
-<?php include __DIR__ . '/php/includes/navigation.php'; ?>
+<?php include __DIR__ . '/presentacion/includes/navigation.php'; ?>
   <main role="main">
     <section class="pantalla" id="seccion-login">
       <div class="caja-formulario">
@@ -98,4 +98,4 @@ include 'php/includes/head.php';
     </section>
   </main>
   
-<?php include 'php/includes/footer.php'; ?>
+<?php include 'presentacion/includes/footer.php'; ?>

@@ -4,7 +4,6 @@ window.rondaActual = window.rondaActual || 1;
 let dadoLanzado = false;
 let dinoColocado = false;
 
-// Variable global con traducciones
 window.traducciones = window.traducciones || {};
 
 async function cargarTraduccionesMulti() {
@@ -23,6 +22,18 @@ function t(clave) {
     return window.traducciones[clave] || clave;
 }
 
+async function verificarPartidaEnCurso() {
+    const jugadoresGuardados = localStorage.getItem('jugadoresPartida');
+    
+    if (!jugadoresGuardados) {
+        alert('No hay partida en curso. Redirigiendo');
+        window.location.href = 'seleccionarJugador.php';
+        return false;
+    }
+    
+    return true;
+}
+
 async function inicializarMultijugador() {
     await cargarTraduccionesMulti();
     
@@ -30,7 +41,7 @@ async function inicializarMultijugador() {
   
     if (!jugadoresGuardados) {
         alert(t('no_jugadores'));
-        window.location.href = 'seleccionarJugadores.php';
+        window.location.href = 'seleccionarJugador.php';
         return;
     }
   
@@ -54,6 +65,7 @@ async function inicializarMultijugador() {
         await cargarTableroJugadorActual();
         actualizarInterfaz();
         configurarBotonPasarTurno();
+        configurarBotonTerminarPartida();
     } else {
         alert('Error al inicializar partida: ' + resultado.error);
     }
@@ -198,9 +210,77 @@ function configurarBotonPasarTurno() {
     });
 }
 
+function configurarBotonTerminarPartida() {
+    const boton = document.getElementById('botonTerminarPartida');
+    
+    if (boton) {
+        boton.addEventListener('click', async function() {
+            const confirmacion = confirm('Estas seguro de que quieres terminar la partida ahora?');
+            
+            if (confirmacion) {
+                guardarTableroJugadorActual();
+                await finalizarPartidaForzada();
+            }
+        });
+    }
+}
+
+function jugadorSinDinosDisponibles() {
+    let dinosUsados = 0;
+    for (let i = 1; i <= 6; i++) {
+        if (window.dinosUsados[i] === true) {
+            dinosUsados++;
+        }
+    }
+    return dinosUsados >= 6;
+}
+
+async function verificarSiTodosTerminaron() {
+    for (let jugador of jugadores) {
+        const respuesta = await fetch('negocio/partida/procesarMulti.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                accion: 'cargar_tablero',
+                jugadorId: jugador.id
+            })
+        });
+        
+        const resultado = await respuesta.json();
+        
+        if (resultado.success) {
+            const tablero = resultado.tablero;
+            let dinosColocados = 0;
+            
+            if (tablero.casillas) {
+                dinosColocados = Object.keys(tablero.casillas).length;
+            }
+            
+            if (dinosColocados < 6) {
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}
+
 async function pasarTurno() {
     dadoLanzado = false;
     dinoColocado = false;
+  
+    if (jugadorSinDinosDisponibles()) {
+        alert('Ya usaste todos tus dinosaurios. Fin de tu turno.');
+        guardarTableroJugadorActual();
+        
+        const todosTerminaron = await verificarSiTodosTerminaron();
+        if (todosTerminaron) {
+            finalizarPartida();
+            return;
+        }
+    }
+  
+    guardarTableroJugadorActual();
   
     const respuesta = await fetch('negocio/partida/procesarMulti.php', {
         method: 'POST',
@@ -255,6 +335,42 @@ async function rotarMazos() {
     }
 }
 
+async function finalizarPartidaForzada() {
+    const puntosJugadores = [];
+    
+    for (let jugador of jugadores) {
+        const respTablero = await fetch('negocio/partida/procesarMulti.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                accion: 'cargar_tablero',
+                jugadorId: jugador.id
+            })
+        });
+        
+        const datosTablero = await respTablero.json();
+        
+        const respPuntos = await fetch('negocio/puntuacion/puntosDigital.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                tableroEstado: datosTablero.tablero
+            })
+        });
+        
+        const datosPuntos = await respPuntos.json();
+        
+        puntosJugadores.push({
+            nombre: jugador.nombre,
+            puntos: datosPuntos.totalScore || 0
+        });
+    }
+    
+    puntosJugadores.sort((a, b) => b.puntos - a.puntos);
+    
+    mostrarPantallaResultados(puntosJugadores);
+}
+
 async function finalizarPartida() {
     const respuesta = await fetch('negocio/partida/procesarMulti.php', {
         method: 'POST',
@@ -267,24 +383,85 @@ async function finalizarPartida() {
     const resultado = await respuesta.json();
   
     if (resultado.success) {
-        alert(t('partida_finalizada'));
-        mostrarResultadosFinales(resultado.resultados);
+        const puntosJugadores = [];
+        
+        for (let jugador of jugadores) {
+            const respTablero = await fetch('negocio/partida/procesarMulti.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    accion: 'cargar_tablero',
+                    jugadorId: jugador.id
+                })
+            });
+            
+            const datosTablero = await respTablero.json();
+            
+            const respPuntos = await fetch('negocio/puntuacion/puntosDigital.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    tableroEstado: datosTablero.tablero
+                })
+            });
+            
+            const datosPuntos = await respPuntos.json();
+            
+            puntosJugadores.push({
+                nombre: jugador.nombre,
+                puntos: datosPuntos.totalScore || 0
+            });
+        }
+        
+        puntosJugadores.sort((a, b) => b.puntos - a.puntos);
+        
+        mostrarPantallaResultados(puntosJugadores);
     }
 }
 
-function mostrarResultadosFinales(resultados) {
-    let texto = 'RESULTADOS FINALES:\n\n';
-  
-    resultados.forEach(res => {
-        texto += `${res.jugador}: Puntos por calcular\n`;
+function mostrarPantallaResultados(puntosJugadores) {
+    // aca se genera la pantalla
+    let html = '<div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(30, 30, 30, 0.95) 50%, rgba(0, 0, 0, 0.9) 100%); display: flex; justify-content: center; align-items: center; z-index: 9999;">';
+    html += '<div style="background: #FFD490; padding: 40px; border-radius: 15px; max-width: 600px; width: 90%; text-align: center; border: 4px solid #552A0A; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);">';
+    html += '<h2 style="color: #552A0A; margin-bottom: 10px; font-size: 2.2em; font-weight: bold;">PARTIDA FINALIZADA</h2>';
+    html += '<h3 style="color: #764826; margin-bottom: 30px; font-size: 1.3em;">Resultados Finales</h3>';
+    html += '<table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">';
+    html += '<thead><tr style="background: #552A0A;"><th style="padding: 12px; border: 2px solid #552A0A; color: #FFD490; font-size: 1.1em;">Posicion</th><th style="padding: 12px; border: 2px solid #552A0A; color: #FFD490; font-size: 1.1em;">Jugador</th><th style="padding: 12px; border: 2px solid #552A0A; color: #FFD490; font-size: 1.1em;">Puntos</th></tr></thead>';
+    html += '<tbody>';
+    
+    puntosJugadores.forEach((jugador, index) => {
+        let bgColor = '#FFF';
+        let textColor = '#552A0A';
+        let medalText = '';
+        
+        if (index === 0) {
+            bgColor = '#FFD700';
+            medalText = '1er';
+        } else if (index === 1) {
+            bgColor = '#C0C0C0';
+            medalText = '2do';
+        } else if (index === 2) {
+            bgColor = '#CD7F32';
+            medalText = '3ro';
+        }
+        
+        html += `<tr style="background: ${bgColor};">`;
+        html += `<td style="padding: 12px; border: 2px solid #552A0A; color: ${textColor}; font-weight: bold; font-size: 1.2em;">${medalText || (index + 1)}</td>`;
+        html += `<td style="padding: 12px; border: 2px solid #552A0A; color: ${textColor}; font-weight: bold; font-size: 1.1em;">${jugador.nombre}</td>`;
+        html += `<td style="padding: 12px; border: 2px solid #552A0A; color: ${textColor}; font-weight: bold; font-size: 1.2em;">${jugador.puntos}</td>`;
+        html += '</tr>';
     });
-  
-    alert(texto);
-  
-    if (confirm(t('nueva_partida'))) {
-        localStorage.removeItem('jugadoresPartida');
-        window.location.href = 'seleccionarJugadores.php';
-    }
+    
+    html += '</tbody></table>';
+    html += '<button onclick="reiniciarPartida()" style="background: #552A0A; color: #FFD490; border: 2px solid #764826; padding: 15px 30px; border-radius: 8px; cursor: pointer; font-size: 1.2em; font-weight: bold; transition: all 0.3s;">Nueva Partida</button>';
+    html += '</div></div>';
+    
+    document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function reiniciarPartida() {
+    localStorage.removeItem('jugadoresPartida');
+    window.location.href = 'seleccionarJugador.php';
 }
 
 function marcarDadoLanzado() {
@@ -295,7 +472,13 @@ function marcarDinoColocado() {
     dinoColocado = true;
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    const hayPartida = await verificarPartidaEnCurso();
+    
+    if (!hayPartida) {
+        return;
+    }
+    
     inicializarMultijugador();
   
     const dadoOriginal = window.lanzarDado;

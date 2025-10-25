@@ -103,7 +103,8 @@
 }
 
 .boton-pasar-turno,
-.boton-exportar {
+.boton-exportar,
+.boton-terminar-partida {
   background-color: #552A0A;
   color: #FFD490;
   border: none;

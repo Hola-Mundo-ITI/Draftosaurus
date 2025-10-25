@@ -31,7 +31,7 @@ include 'presentacion/includes/head.php';
         </div>
       </div>
       <button id="botonPasarTurno" class="boton-pasar-turno"><img src="Recursos/img/cambioDeTurno.png" width="40px" height="40px"></button>
-      <button id="botonExportar" class="boton-exportar"><?php echo t('exportar'); ?></button>
+      <button id="botonTerminarPartida" class="boton-terminar-partida">Terminar Partida</button>
     </div>
   </header>
   
