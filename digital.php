@@ -14,13 +14,13 @@ include 'presentacion/includes/head.php';
   <header class="header-partida">
   <?php include 'presentacion/includes/navigation.php'; ?>
     <div class="header-izquierda">
-      <div class="info-jugador-actual">
-        <span class="etiqueta-turno"><?php echo t('turno_de'); ?></span>
-        <span class="nombre-jugador-actual" id="nombreJugadorActual"><?php echo t('jugador'); ?> 1</span>
-      </div>
       <div class="ronda-actual">
-        <span class="icono-ronda"><?php echo t('ronda'); ?></span>
+        <span class="icono-ronda"><?php echo t('ronda'); ?> </span>
         <span class="numero-ronda" id="numRonda">1</span>
+      </div>
+      <div class="info-jugador-actual">
+        <span class="etiqueta-turno"><?php echo t('turno_de'); ?> </span>
+        <span class="nombre-jugador-actual" id="nombreJugadorActual"><?php echo t('jugador'); ?> 1</span>
       </div>
     </div>
     
