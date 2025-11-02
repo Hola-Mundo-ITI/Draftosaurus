@@ -69,12 +69,6 @@ $nombreUsuario = $sesionActiva ? $verificacion['usuario']['nombre'] : '';
       </li>
       
       <li>
-        <a href="admin.php" <?php if($currentPage == 'admin') echo 'class="active"'; ?>>
-          Panel Admin
-        </a>
-      </li>
-      
-      <li>
         <a href="https://drive.google.com/file/d/138qY_aZfQ-RXYDA0j6HshSk-_1mmJIrG/view" target="_blank">
           Reglas
         </a>
